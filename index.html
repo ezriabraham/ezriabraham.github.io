@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Resume Timeline</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 60px 20px 40px;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            font-weight: 200;
+            letter-spacing: 0.3em;
+            margin-bottom: 8px;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 0.9em;
+            letter-spacing: 0.2em;
+            font-weight: 200;
+            text-transform: uppercase;
+        }
+
+        .legend {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 20px;
+            z-index: 99;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85em;
+            color: #999;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .timeline-container {
+            position: relative;
+            padding: 50px 20px 100px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Central vertical line */
+        .center-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 1px;
+            background: #444;
+            transform: translateX(-50%);
+            opacity: 0.6;
+        }
+
+        /* Year markers */
+        .year-marker {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 8em;
+            font-weight: 100;
+            color: #1f1f1f;
+            width: 400px;
+            text-align: center;
+            z-index: 1;
+            pointer-events: none;
+            letter-spacing: 0.15em;
+        }
+
+        /* Vertical bars for events */
+        .vertical-bar {
+            position: absolute;
+            left: 50%;
+            width: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+            z-index: 10;
+        }
+
+        .vertical-bar:hover {
+            width: 4px;
+            filter: brightness(1.5);
+            box-shadow: 0 0 30px currentColor;
+        }
+
+        /* Stars for point events */
+        .event-star {
+            position: absolute;
+            left: 50%;
+            width: 12px;
+            height: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            z-index: 10;
+        }
+
+        .event-star:hover {
+            filter: brightness(1.5) drop-shadow(0 0 10px currentColor);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 0.95;
+            }
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: fixed;
+            background: rgba(20, 20, 20, 0.98);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 380px;
+            max-width: 90vw;
+            pointer-events: none;
+            backdrop-filter: blur(10px);
+            display: none;
+            z-index: 1000;
+        }
+
+        .tooltip.show {
+            display: block;
+        }
+
+        .tooltip-title {
+            font-size: 1.1em;
+            font-weight: 300;
+            margin-bottom: 10px;
+            color: #ffffff;
+            line-height: 1.4;
+        }
+
+        .tooltip-date {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: -8px;
+            margin-bottom: 10px;
+        }
+
+        .tooltip-org {
+            font-size: 0.9em;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .tooltip-location {
+            color: #666;
+            font-size: 0.85em;
+            margin-bottom: 12px;
+        }
+
+        .tooltip-description {
+            color: #ccc;
+            line-height: 1.6;
+            font-size: 0.9em;
+            white-space: pre-line;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Ezri Abraham</h1>
+        <div class="subtitle">Interactive Timeline</div>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-dot" style="background: #7E6B8F;"></div>
+            <span>Academic</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background: #F96E46;"></div>
+            <span>Biotech</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background: #28AFB0;"></div>
+            <span>Art</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background: #B1CC74;"></div>
+            <span>Volunteering</span>
+        </div>
+    </div>
+
+    <div class="timeline-container" id="timeline">
+        <div class="center-line" id="center-line"></div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // Your CSV data
+        const resumeData = [
+            {"title":"Bachelor's in Biology, Minor in Art","organisation":"Northeastern University","topic":"Academic","dateStart":"September 2021","dateEnd":"May 2025","location":"Boston, MA","description":"Thesis Title: \"Engineering a Nanoplastic-Binding Probiotic\"\r\nGPA: 4.0 (Summa Cum Laude)\r\nHonors In Biology Distinction (achieved by less than 3% of graduating Biology students)\r\nJohn Martinson Honors Program\r\nTriBeta Biological Honors Society"},
+            {"title":"Ph.D. Student in Biology","organisation":"California Institute of Technology","topic":"Academic","dateStart":"September 2025","dateEnd":"","location":"Pasadena, CA","description":""},
+            {"title":"Synthetic Biology Undergraduate Researcher","organisation":"The Joshi Lab @ Northeastern University","topic":"Academic","dateStart":"September 2022","dateEnd":"August 2025","location":"Boston, MA","description":"Built a probiotic to remove nanoplastics from the gut with $4,000+ in independent research funding"},
+            {"title":"Research and Development Intern","organisation":"BioCell Innovations","topic":"Biotech","dateStart":"January 2024","dateEnd":"June 2024","location":"Singapore","description":"Designed and tested novel CAR-T cell binders using various in silico and in vitro methods"},
+            {"title":"Research Intern","organisation":"JURA Bio","topic":"Biotech","dateStart":"January 2023","dateEnd":"Jun 2023","location":"Boston, MA","description":"Worked on the bio side of Bio-AI and met with leaders across the biotech space"},
+            {"title":"Undergraduate Research Fellow for Organic Chemistry II","organisation":"Northeastern University","topic":"Academic","dateStart":"January 2023","dateEnd":"December 2023","location":"Boston, MA","description":""},
+            {"title":"Virtual Lab Meeting Training Program","organisation":"RCN-ECS (Research Coordinated Network for Evolution in Changing Seas)","topic":"Academic","dateStart":"October 2021","dateEnd":"May 2022","location":"Virtual","description":"Learned about evolutionary biology at the Wogan (Eco-Evo-Omics) Lab @ OK State"},
+            {"title":"Novel Antibiotic Discovery and Landscape Photography","organisation":"Godoy-Carter Lab @ Northeastern University","topic":"Academic","dateStart":"July 2024","dateEnd":"August 2024","location":"Chile","description":"Under Dr. Veronica Godoy-Carter, isolated extremophile bacteria from Patagonia and the Atacama desert and used a variety of assays to examine antibiotic production, biofilm formation, and pigment expression."},
+            {"title":"Climate Science, Engineering, and Policy","organisation":"Sustainability and Data Science Lab @ Northeastern University","topic":"Academic","dateStart":"June 2022","dateEnd":"July 2022","location":"Tanzania","description":"Under Dr. Auroop Ganguly, collaborated with students and researchers from Tanzanian research institutions to discuss, research, and develop solutions to the climate crisis."},
+            {"title":"Global Photography Fellow","organisation":"Northeastern University","topic":"Art","dateStart":"June 2022","dateEnd":"July 2022","location":"Tanzania","description":"Selected to receive $1500 in funding to document my travels with Professor Ganguly"},
+            {"title":"Reform Community Founder/Leader, Executive Board Member","organisation":"Northeastern University Hillel","topic":"Volunteering","dateStart":"September 2021","dateEnd":"May 2025","location":"Boston, MA","description":"Executive Board Member - Interviewed executive director candidates, wrote Hillel's new constitution, planned campus-wide events, and met with University leadership after the October 7th attacks to discuss rising division on campus\nNefesh Founder and President - Founded Nefesh, Northeastern Hillel's Progressive Jewish community, appointed and oversaw a board of 6 people, and planned and led services and other events. In total, trained 9 student leaders to ensure the longevity of the organization."},
+            {"title":"Faculty","organisation":"URJ Six Points Sci-Tech Academy","topic":"Volunteering","dateStart":"July 2025","dateEnd":"August 2025","location":"Byfield, MA","description":"Returned as a Faculty Volunteer to my Childhood Jewish science camp, which instilled in me the love for science I have today"},
+            {"title":"SquidKid","organisation":"BioDesign Challenge","topic":"Art","dateStart":"June 2025","dateEnd":"","location":"New York, NY","description":"My team, \"SquidKid\", was finalist and received the \"Best Display\" award among over 60 teams from across the world at the Biodesign Challenge in The Museum of Modern Art (MoMA). SquidKid is a educational toy bioreactor that replicated the relationship between the hawaiian bobtail squid and its symbiotic bioluminsecent bacteria that gave kids a tangible relationship with ecology."},
+            {"title":"Woodworking","organisation":"","topic":"Art","dateStart":"April 2025","dateEnd":"","location":"Boston, MA","description":"After graduation, I spent 30+ hours a week learning woodworking"},
+            {"title":"Pandora's Box","organisation":"","topic":"Art","dateStart":"November 2023","dateEnd":"","location":"Boston, MA","description":"Pandora's Box was a mixed media mechanical sculpture in which moving shadows representing demons from history and myth moved through and transluecent glowing chamber."}
+        ];
+
+        // Parse dates
+        function parseDate(dateStr) {
+            if (!dateStr) return new Date();
+            const months = {
+                'January': 0, 'February': 1, 'March': 2, 'April': 3,
+                'May': 4, 'June': 5, 'Jun': 5, 'July': 6, 'August': 7,
+                'September': 8, 'October': 9, 'November': 10, 'December': 11
+            };
+            const parts = dateStr.split(' ');
+            const month = months[parts[0]] || 0;
+            const year = parseInt(parts[1]) || 2025;
+            return new Date(year, month);
+        }
+
+        // Get color for topic
+        function getTopicColor(topic) {
+            const colors = {
+                'academic': '#7E6B8F',
+                'biotech': '#F96E46',
+                'art': '#28AFB0',
+                'volunteering': '#B1CC74'
+            };
+            return colors[topic.toLowerCase()] || '#666';
+        }
+
+        // Create timeline
+        function createTimeline() {
+            const timeline = document.getElementById('timeline');
+            const tooltip = document.getElementById('tooltip');
+            
+            // Timeline bounds
+            const startDate = new Date(2021, 0);
+            const endDate = new Date(2027, 0);
+            const totalMonths = (endDate - startDate) / (1000 * 60 * 60 * 24 * 30);
+            const pixelsPerMonth = 95; // Good balance
+            const totalHeight = totalMonths * pixelsPerMonth;
+            
+            // Set heights
+            timeline.style.height = totalHeight + 'px';
+            document.getElementById('center-line').style.height = totalHeight + 'px';
+            
+            // Add year markers
+            for (let year = 2021; year <= 2027; year++) {
+                const yearDate = new Date(year, 0);
+                const monthsFromStart = (yearDate - startDate) / (1000 * 60 * 60 * 24 * 30);
+                const topPosition = monthsFromStart * pixelsPerMonth;
+                
+                const marker = document.createElement('div');
+                marker.className = 'year-marker';
+                marker.textContent = year;
+                marker.style.top = topPosition + 'px';
+                timeline.appendChild(marker);
+            }
+            
+            // Track positions for layout
+            const leftItems = [];
+            const rightItems = [];
+            let sideCounter = 0; // For more even distribution
+            
+            // Sort by start date
+            resumeData.sort((a, b) => parseDate(a.dateStart) - parseDate(b.dateStart));
+            
+            // Create items
+            resumeData.forEach((item, index) => {
+                const startDateObj = parseDate(item.dateStart);
+                const endDateObj = item.dateEnd && item.dateEnd.trim() ? parseDate(item.dateEnd) : null;
+                const isPhD = item.title.includes("Ph.D.");
+                
+                const monthsFromStart = (startDateObj - startDate) / (1000 * 60 * 60 * 24 * 30);
+                const topPosition = monthsFromStart * pixelsPerMonth;
+                
+                const color = getTopicColor(item.topic);
+                
+                // Better distribution between sides
+                const side = sideCounter % 2 === 0 ? 'left' : 'right';
+                sideCounter++;
+                const positions = side === 'left' ? leftItems : rightItems;
+                
+                // Check for overlaps with more spacing
+                let offset = 0;
+                const itemBottom = endDateObj ? 
+                    topPosition + ((endDateObj - startDateObj) / (1000 * 60 * 60 * 24 * 30) * pixelsPerMonth) :
+                    isPhD ? topPosition + ((new Date(2026, 6) - startDateObj) / (1000 * 60 * 60 * 24 * 30) * pixelsPerMonth) : 
+                    topPosition + 10;
+                    
+                for (let pos of positions) {
+                    if (!(itemBottom < pos.top - 20 || topPosition > pos.bottom + 20)) {
+                        offset += 35; // Even more spacing between overlapping items
+                    }
+                }
+                positions.push({ top: topPosition, bottom: itemBottom });
+                
+                if (endDateObj || isPhD) {
+                    // Create vertical bar
+                    const bar = document.createElement('div');
+                    bar.className = 'vertical-bar';
+                    const endDate = endDateObj || (isPhD ? new Date(2026, 6) : null);
+                    const duration = (endDate - startDateObj) / (1000 * 60 * 60 * 24 * 30);
+                    const height = Math.max(20, duration * pixelsPerMonth);
+                    
+                    bar.style.top = topPosition + 'px';
+                    bar.style.height = height + 'px';
+                    bar.style.backgroundColor = color;
+                    bar.style.color = color; // For box-shadow
+                    bar.style.animationDelay = `${index * 0.08}s`;
+                    
+                    // Position horizontally with more spacing
+                    const horizontalOffset = 20 + offset; // Increased base offset
+                    const baseTransform = side === 'left' 
+                        ? `translateX(-${horizontalOffset}px)`
+                        : `translateX(${horizontalOffset}px)`;
+                    bar.style.transform = baseTransform;
+                    
+                    // Tooltip data
+                    bar.dataset.title = item.title;
+                    bar.dataset.dates = endDateObj ? 
+                        `${item.dateStart} - ${item.dateEnd}` : 
+                        `${item.dateStart} - Present`;
+                    bar.dataset.org = item.organisation || '';
+                    bar.dataset.location = item.location || '';
+                    bar.dataset.description = item.description || '';
+                    
+                    timeline.appendChild(bar);
+                    
+                    // Add hover events
+                    bar.addEventListener('mouseenter', showTooltip);
+                    bar.addEventListener('mouseleave', hideTooltip);
+                    bar.addEventListener('mousemove', moveTooltip);
+                } else {
+                    // Create star for point events
+                    const star = document.createElement('div');
+                    star.className = 'event-star';
+                    
+                    star.style.top = topPosition + 'px';
+                    star.style.backgroundColor = color;
+                    star.style.color = color; // For box-shadow
+                    star.style.animationDelay = `${index * 0.08}s`;
+                    
+                    // Position horizontally
+                    const horizontalOffset = 25 + offset; // Increased base offset
+                    const baseTransform = side === 'left'
+                        ? `translateX(-${horizontalOffset + 6}px)` // Account for star width
+                        : `translateX(${horizontalOffset - 6}px)`;
+                    star.style.transform = baseTransform;
+                    
+                    // Tooltip data
+                    star.dataset.title = item.title;
+                    star.dataset.dates = item.dateStart;
+                    star.dataset.org = item.organisation || '';
+                    star.dataset.location = item.location || '';
+                    star.dataset.description = item.description || '';
+                    
+                    timeline.appendChild(star);
+                    
+                    // Add hover events
+                    star.addEventListener('mouseenter', function(e) {
+                        showTooltip(e);
+                        this.style.transform = baseTransform + ' scale(2) rotate(72deg)';
+                    });
+                    star.addEventListener('mouseleave', function(e) {
+                        hideTooltip(e);
+                        this.style.transform = baseTransform;
+                    });
+                    star.addEventListener('mousemove', moveTooltip);
+                }
+            });
+        }
+        
+        // Tooltip functions
+        function showTooltip(e) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.innerHTML = `
+                <div class="tooltip-title">${e.target.dataset.title}</div>
+                <div class="tooltip-date">${e.target.dataset.dates}</div>
+                ${e.target.dataset.org ? `<div class="tooltip-org">${e.target.dataset.org}</div>` : ''}
+                ${e.target.dataset.location ? `<div class="tooltip-location">${e.target.dataset.location}</div>` : ''}
+                ${e.target.dataset.description ? `<div class="tooltip-description">${e.target.dataset.description}</div>` : ''}
+            `;
+            tooltip.classList.add('show');
+        }
+        
+        function hideTooltip() {
+            document.getElementById('tooltip').classList.remove('show');
+        }
+        
+        function moveTooltip(e) {
+            const tooltip = document.getElementById('tooltip');
+            let x = e.clientX;
+            let y = e.clientY;
+            
+            if (x + 380 > window.innerWidth) {
+                x = e.clientX - 380;
+            }
+            if (y + tooltip.offsetHeight > window.innerHeight - 10) {
+                y = e.clientY - tooltip.offsetHeight;
+            }
+            
+            tooltip.style.left = x + 'px';
+            tooltip.style.top = y + 'px';
+        }
+        
+        // Initialize
+        createTimeline();
+    </script>
+</body>
+</html>
