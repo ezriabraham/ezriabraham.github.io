@@ -19,6 +19,59 @@
             color: #ffffff;
             min-height: 100vh;
             overflow-x: hidden;
+            padding-top: 60px; /* Add space for fixed navbar */
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 1000;
+            padding: 25px 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-links a {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.85em;
+            font-weight: 300;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 1px;
+            background: #28AFB0;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
         .header {
@@ -146,6 +199,79 @@
             }
         }
 
+        /* Return to Top Button */
+        .return-to-top {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
+            background: rgba(40, 175, 176, 0.15);
+            border: 1px solid rgba(40, 175, 176, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .return-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .return-to-top:hover {
+            background: rgba(40, 175, 176, 0.3);
+            border-color: #28AFB0;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(40, 175, 176, 0.3);
+        }
+
+        .return-to-top svg {
+            width: 20px;
+            height: 20px;
+            stroke: #28AFB0;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 20px 20px;
+            }
+            
+            .nav-links {
+                gap: 30px;
+            }
+            
+            .nav-links a {
+                font-size: 0.8em;
+            }
+            
+            .year-marker {
+                font-size: 4em;
+            }
+            
+            .legend {
+                bottom: 10px;
+                right: 10px;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .return-to-top {
+                bottom: 10px;
+                left: 10px;
+                width: 45px;
+                height: 45px;
+            }
+        }
+
         /* Tooltip */
         .tooltip {
             position: fixed;
@@ -153,7 +279,7 @@
             padding: 20px;
             border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            width: 380px;
+            width: min(380px, calc(100vw - 40px)); /* Responsive width */
             max-width: 90vw;
             pointer-events: none;
             backdrop-filter: blur(10px);
@@ -163,6 +289,46 @@
 
         .tooltip.show {
             display: block;
+        }
+
+        /* Mobile-responsive tooltip with better breakpoints */
+        @media (max-width: 768px) {
+            .tooltip {
+                width: min(300px, calc(100vw - 30px));
+                padding: 15px;
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tooltip {
+                width: min(250px, calc(100vw - 20px));
+                padding: 12px;
+            }
+            
+            .tooltip-title {
+                font-size: 1em;
+            }
+            
+            .tooltip-description {
+                font-size: 0.85em;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .tooltip {
+                width: calc(100vw - 20px);
+                padding: 10px;
+                font-size: 0.85em;
+            }
+            
+            .tooltip-title {
+                font-size: 0.95em;
+            }
+            
+            .tooltip-description {
+                font-size: 0.8em;
+            }
         }
 
         .tooltip-title {
@@ -201,6 +367,34 @@
     </style>
 </head>
 <body>
+    <!-- ========== NAVIGATION BAR ========== -->
+    <!-- UPDATE THESE LINKS WITH YOUR ACTUAL URLS -->
+    <nav class="navbar">
+        <div class="nav-links">
+            <!-- Photography Portfolio -->
+            <a href="https://ezriabraham.com" target="_blank" rel="noopener noreferrer">
+                Photography
+            </a>
+            
+            <!-- Resume PDF - Update "resume.pdf" to your actual resume file path/name -->
+            <a href="resume.pdf" target="_blank" rel="noopener noreferrer">
+                Resume
+            </a>
+            
+            <!-- LinkedIn - Update with your actual LinkedIn profile URL -->
+            <a href="https://www.linkedin.com/in/ezriabraham/" target="_blank" rel="noopener noreferrer">
+                LinkedIn
+            </a>
+            
+            <!-- Add more links here as needed:
+            <a href="your-url" target="_blank" rel="noopener noreferrer">
+                Link Text
+            </a>
+            -->
+        </div>
+    </nav>
+    <!-- ========== END NAVIGATION BAR ========== -->
+
     <div class="header">
         <h1>Ezri Abraham</h1>
         <div class="subtitle">Synthetic Biologist and Award-Winning Biodesigner</div>
@@ -223,6 +417,13 @@
             <div class="legend-dot" style="background: #B1CC74;"></div>
             <span>Volunteering</span>
         </div>
+    </div>
+
+    <!-- Return to Top Button -->
+    <div class="return-to-top" id="returnToTop">
+        <svg viewBox="0 0 24 24">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
     </div>
 
     <div class="timeline-container" id="timeline">
@@ -438,19 +639,62 @@
         
         function moveTooltip(e) {
             const tooltip = document.getElementById('tooltip');
-            let x = e.clientX;
-            let y = e.clientY;
             
-            if (x + 380 > window.innerWidth) {
-                x = e.clientX - 380;
+            // Get actual tooltip width based on screen size
+            let tooltipWidth = 380;
+            const screenWidth = window.innerWidth;
+            
+            if (screenWidth <= 360) {
+                tooltipWidth = screenWidth - 20;
+            } else if (screenWidth <= 480) {
+                tooltipWidth = Math.min(250, screenWidth - 20);
+            } else if (screenWidth <= 768) {
+                tooltipWidth = Math.min(300, screenWidth - 30);
+            } else {
+                tooltipWidth = Math.min(380, screenWidth - 40);
             }
+            
+            let x = e.clientX + 10; // Add small offset from cursor
+            let y = e.clientY + 10;
+            
+            // Check right edge
+            if (x + tooltipWidth > screenWidth - 10) {
+                x = e.clientX - tooltipWidth - 10;
+            }
+            
+            // Check left edge
+            if (x < 10) {
+                x = 10;
+            }
+            
+            // Check bottom edge
             if (y + tooltip.offsetHeight > window.innerHeight - 10) {
-                y = e.clientY - tooltip.offsetHeight;
+                y = e.clientY - tooltip.offsetHeight - 10;
             }
             
             tooltip.style.left = x + 'px';
             tooltip.style.top = y + 'px';
         }
+        
+        // Return to Top functionality
+        const returnToTopBtn = document.getElementById('returnToTop');
+        
+        // Show/hide button based on scroll position
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                returnToTopBtn.classList.add('visible');
+            } else {
+                returnToTopBtn.classList.remove('visible');
+            }
+        });
+        
+        // Smooth scroll to top when clicked
+        returnToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
         
         // Initialize
         createTimeline();
