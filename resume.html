@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ezri Abraham - Resume</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            padding-top: 60px;
+            line-height: 1.6;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 1000;
+            padding: 25px 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-links a {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.85em;
+            font-weight: 300;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 1px;
+            background: #28AFB0;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Resume Container */
+        .resume-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 40px 100px;
+        }
+
+        /* Header */
+        .resume-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .resume-header h1 {
+            font-size: 2.5em;
+            font-weight: 200;
+            letter-spacing: 0.2em;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 0.9em;
+            color: #999;
+        }
+
+        .contact-info span {
+            position: relative;
+        }
+
+        .contact-info span:not(:last-child)::after {
+            content: '|';
+            position: absolute;
+            right: -12px;
+            color: #444;
+        }
+
+        .contact-info a {
+            color: #28AFB0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-info a:hover {
+            color: #3fd1d2;
+        }
+
+        /* Section Styles */
+        .resume-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #28AFB0;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(40, 175, 176, 0.3);
+        }
+
+        /* Entry Styles */
+        .entry {
+            margin-bottom: 25px;
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 5px;
+            flex-wrap: wrap;
+        }
+
+        .entry-title {
+            font-size: 1.1em;
+            font-weight: 400;
+            color: #ffffff;
+        }
+
+        .entry-date {
+            font-size: 0.9em;
+            color: #666;
+            font-style: italic;
+        }
+
+        .entry-subtitle {
+            font-size: 0.95em;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .entry-location {
+            font-size: 0.9em;
+            color: #666;
+            font-style: italic;
+        }
+
+        .entry-description {
+            color: #ccc;
+            font-size: 0.95em;
+            margin-top: 8px;
+        }
+
+        .entry-description ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .entry-description li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 5px;
+        }
+
+        .entry-description li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #28AFB0;
+        }
+
+        /* Education specific */
+        .education-details {
+            color: #ccc;
+            font-size: 0.95em;
+            margin-top: 5px;
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .skill-category {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .skill-label {
+            font-weight: 400;
+            color: #28AFB0;
+            min-width: 150px;
+            font-size: 0.95em;
+        }
+
+        .skill-content {
+            color: #ccc;
+            font-size: 0.95em;
+            flex: 1;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 20px 20px;
+            }
+            
+            .nav-links {
+                gap: 30px;
+            }
+            
+            .nav-links a {
+                font-size: 0.8em;
+            }
+
+            .resume-container {
+                padding: 40px 20px 80px;
+            }
+
+            .resume-header h1 {
+                font-size: 1.8em;
+                letter-spacing: 0.1em;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .contact-info span::after {
+                display: none;
+            }
+
+            .entry-header {
+                flex-direction: column;
+            }
+
+            .skill-category {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .skill-label {
+                min-width: auto;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+                padding-top: 0;
+            }
+
+            .navbar {
+                display: none;
+            }
+
+            .resume-container {
+                max-width: 100%;
+                padding: 20px;
+            }
+
+            .section-title {
+                color: black;
+                border-bottom-color: #ccc;
+            }
+
+            .entry-description li::before {
+                color: black;
+            }
+
+            .skill-label {
+                color: black;
+                font-weight: 600;
+            }
+
+            a {
+                color: black !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="index.html">Timeline</a>
+            <a href="https://ezriabraham.com" target="_blank" rel="noopener noreferrer">Photography</a>
+            <a href="resume.html">Resume</a>
+            <a href="https://www.linkedin.com/in/ezriabraham/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </div>
+    </nav>
+
+    <!-- Resume Content -->
+    <div class="resume-container">
+        <!-- Header -->
+        <div class="resume-header">
+            <h1>Ezri Abraham</h1>
+            <div class="contact-info">
+                <span>ezribabraham@gmail.com</span>
+                <span>(908) 546-8084</span>
+                <span><a href="https://www.linkedin.com/in/ezriabraham/" target="_blank">linkedin.com/in/ezriabraham/</a></span>
+            </div>
+        </div>
+
+        <!-- Education -->
+        <div class="resume-section">
+            <h2 class="section-title">Education</h2>
+            
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">California Institute of Technology</div>
+                    <div class="entry-date">Starting September 2025</div>
+                </div>
+                <div class="entry-subtitle">Doctor of Philosophy in Biology</div>
+                <div class="entry-location">Pasadena, CA</div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">Northeastern University</div>
+                    <div class="entry-date">May 2025</div>
+                </div>
+                <div class="entry-subtitle">Candidate for Bachelor of Science degree in Biology, Minor in Art</div>
+                <div class="entry-location">Boston, MA</div>
+                <div class="education-details">
+                    <strong>GPA:</strong> 4.0/4.0<br>
+                    <strong>Relevant Courses:</strong> Advanced Topics in Genome Editing, Genetics and Molecular Biology, Biochemistry, Biostatistics<br>
+                    <strong>Activities:</strong> TriBeta Biological Honor Society, Pep Band Drummer + Section Leader, American Society for Biochemistry and Molecular Biology, Professional Nature Photography (ezriabraham.com)
+                </div>
+            </div>
+        </div>
+
+        <!-- Research Experience -->
+        <div class="resume-section">
+            <h2 class="section-title">Research Experience</h2>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">The Joshi Lab at Northeastern University</div>
+                    <div class="entry-date">Fall 2022, Fall 2023, Fall 2024-Present</div>
+                </div>
+                <div class="entry-subtitle">Synthetic Biology Undergraduate Researcher</div>
+                <div class="entry-location">Boston, MA</div>
+                <div class="entry-description">
+                    <ul>
+                        <li>Currently engineering a probiotic to remove plastics from the gut and developing assays for bacterial plastic adsorption</li>
+                        <li>Collaborating with the Stubbins Lab to develop a method for generating trackable, biologically-relevant nanoplastics</li>
+                        <li>Built a python program to calculate real-time analyte concentration for a fluorescence-based biosensor (publication forthcoming)</li>
+                        <li>Contributed to a variety of bacteria engineering projects, including constructing genetic circuits using a CRISPR/Cas9 derivative and creating hydrogels that can respond to their environment</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">Independent Computational Biomining Research</div>
+                    <div class="entry-date">April-May 2024</div>
+                </div>
+                <div class="entry-location">Remote</div>
+                <div class="entry-description">
+                    <ul>
+                        <li>Built and trained an random forest classifier using Python to identify fluorescent proteins based on sequence-derived features, ultimately achieving 99.8% accuracy without relying on sequence homology</li>
+                        <li>Discussed making it publicly available with Dr. Talley Lambert, Associate Director of Harvard University's Cell Biology Microscopy Facility</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">BioCell Innovations</div>
+                    <div class="entry-date">January 2024 - June 2024</div>
+                </div>
+                <div class="entry-subtitle">Research and Development Intern</div>
+                <div class="entry-location">Singapore</div>
+                <div class="entry-description">
+                    <ul>
+                        <li>Invented, designed, and tested in vitro a novel CAR binder system with the goal of eliminating mutation-induced antigen escape while minimizing binder size for future bispecific applications</li>
+                        <li>Developed a python-based AI-powered application to generate and screen 150+ scFv's, ultimately testing cytotoxicity and expression for predicted top constructs</li>
+                        <li>Refined an existing antibody humanization platform, resolving a key expression issue, validating my hypothesis in vitro and creating a new top candidate for in vivo testing</li>
+                        <li>Pioneered CRISPR at BioCell, designing and screening sgRNAs and developing initial experiments</li>
+                        <li>Developed gene and protein designs, along with corresponding figures and data, which were presented to collaborators and company leadership</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">JURA Bio, Inc.</div>
+                    <div class="entry-date">January 2023 - June 2023</div>
+                </div>
+                <div class="entry-subtitle">Research Intern</div>
+                <div class="entry-location">Boston, MA</div>
+                <div class="entry-description">
+                    <ul>
+                        <li>Developed SOPs and experiments and designed constructs and primers for a yeast surface display system, with the purpose of screening AI-generated libraries</li>
+                        <li>Executed experiments in the field of synthetic biology and immunology, including the generation of JURA's engineered MHC-CAR systems, and proficiently producing and analyzing flow cytometry data</li>
+                        <li>Orchestrated the development of a repurposed lab, oversaw digital infrastructure implementation, and coordinated with suppliers to ensure seamless operations</li>
+                        <li>Communicated research findings effectively by presenting data, SOPs, and conclusions to company leadership</li>
+                        <li>Initiated relationships with potential partners and investors through proactive engagement at conferences, while authoring and disseminating 65+ comprehensive whitepapers from these events to the company and its investors</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">Research Coordinated Network for Evolution in Changing Seas</div>
+                    <div class="entry-date">2021-22</div>
+                </div>
+                <div class="entry-subtitle">Virtual Lab Meeting Training Program</div>
+                <div class="entry-location">Remote</div>
+                <div class="entry-description">
+                    <ul>
+                        <li>Virtually attended lab meetings each week at the Wogan (Eco-Evo-Omics) Lab, discussing contemporary scientific publications, providing insights on grant proposals, and engaging in professional development</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Honors and Awards -->
+        <div class="resume-section">
+            <h2 class="section-title">Honors and Awards</h2>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">PEAK Summit Award</div>
+                    <div class="entry-date">2024</div>
+                </div>
+                <div class="entry-description">
+                    Northeastern's highest undergraduate research award, providing funding for my senior honors thesis, "Engineering E. coli Nissle 1917 for Bioadsorption of Common Plastics: A Novel Approach for Removing Nanoplastics from the Gut"
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">PEAK Ascent Award</div>
+                    <div class="entry-date">2023</div>
+                </div>
+                <div class="entry-description">
+                    $1,500 to fund my research project in the Joshi Lab, entitled "Engineering E. coli Nissle 1917 for the Degradation of Polyethylene Terephthalate: A Novel Approach for Breaking Down Microplastics in the Gut"
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">PEAK Base Camp Award</div>
+                    <div class="entry-date">2022</div>
+                </div>
+                <div class="entry-description">
+                    $750 to fund my assistance on a research project in the Joshi Lab, entitled "Engineering a Generalizable Feedback Regulation Platform to Enhance Protein Secretion in E. coli Nissle 1917"
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">Dean's List</div>
+                    <div class="entry-date">All Semesters</div>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">Honor's Scholarship</div>
+                    <div class="entry-date">2021</div>
+                </div>
+                <div class="entry-description">
+                    $116,000 over 4 years for Undergraduate Study within the John Martinson Honors Program at Northeastern University
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills and Techniques -->
+        <div class="resume-section">
+            <h2 class="section-title">Skills and Techniques</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <div class="skill-label">Molecular Biology:</div>
+                    <div class="skill-content">PCR, Primer and Construct Design, Gel Electrophoresis, SDS-PAGE, In Vitro Transcription, Restriction Digestion, Molecular Cloning including Gibson Assembly, Site-directed Mutagenesis</div>
+                </div>
+                <div class="skill-category">
+                    <div class="skill-label">Cell Biology:</div>
+                    <div class="skill-content">Mammalian Cell Culture (Adherent, Suspension, and Primary), Lentiviral Production, Lentiviral Transduction, Viability Assays, Bacterial Culture, Bacterial Transformation via Heat Shock and Electroporation, Cell Staining, PBMC Isolation from Patient Samples, Cell Kill Assays, DNA Extraction</div>
+                </div>
+                <div class="skill-category">
+                    <div class="skill-label">Instruments:</div>
+                    <div class="skill-content">Flow Cytometry, Cell Imaging, Spectrophotometry, Chemidoc Imaging, Autoclaving, Countess</div>
+                </div>
+                <div class="skill-category">
+                    <div class="skill-label">Software:</div>
+                    <div class="skill-content">Python, Pymol, Benchling, SnapGene, NCBI BLAST, FlowJo, Microsoft Office (Excel, PowerPoint, Word), Adobe Creative Cloud (Illustrator, InDesign, Photoshop, Lightroom), R, MEGA</div>
+                </div>
+                <div class="skill-category">
+                    <div class="skill-label">Prototyping & Fabrication:</div>
+                    <div class="skill-content">Arduino, Laser Cutting, 3D Printing, Woodworking (Machine and Hand Tools), Soldering</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- International Research and Study -->
+        <div class="resume-section">
+            <h2 class="section-title">International Research and Study</h2>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">Novel Antibiotic Discovery and Landscape Photography</div>
+                    <div class="entry-date">2024</div>
+                </div>
+                <div class="entry-location">Chile</div>
+                <div class="entry-description">
+                    Under Dr. Veronica Godoy-Carter, isolated extremophile bacteria from Patagonia and the Atacama desert and used a variety of assays to examine antibiotic production, biofilm formation, and pigment expression.
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">SGInnovate Summation Program</div>
+                    <div class="entry-date">2024</div>
+                </div>
+                <div class="entry-location">Singapore</div>
+                <div class="entry-description">
+                    Chosen by SGInnovate, Singapore's state-backed venture capital fund, to receive full funding (transportation, housing, salary) to engage in project-based work at a deep tech startup in Singapore.
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">Climate Science, Engineering, and Policy</div>
+                    <div class="entry-date">2022</div>
+                </div>
+                <div class="entry-location">Tanzania</div>
+                <div class="entry-description">
+                    Under Dr. Auroop Ganguly, collaborated with students and researchers from Tanzanian research institutions to discuss, research, and develop solutions to the climate crisis. Received $1,500 in funding to document this experience as a Northeastern Global Photography Fellow.
+                </div>
+            </div>
+        </div>
+
+        <!-- Leadership Experience -->
+        <div class="resume-section">
+            <h2 class="section-title">Leadership Experience</h2>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">Northeastern University College of Science</div>
+                    <div class="entry-date">January 2023 - December 2023</div>
+                </div>
+                <div class="entry-subtitle">Undergraduate Teaching Fellow for Organic Chemistry II</div>
+                <div class="entry-location">Boston, MA</div>
+                <div class="entry-description">
+                    <ul>
+                        <li>Led review sessions for 130+ attendees, graded assignments with faculty, and held weekly office hours</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">Northeastern University Hillel</div>
+                    <div class="entry-location">Boston, MA</div>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <div class="entry-header">
+                        <div style="font-weight: 400;">Executive Board Member</div>
+                        <div class="entry-date">January 2022 - December 2023</div>
+                    </div>
+                    <div class="entry-description">
+                        <ul>
+                            <li>Interviewed executive director candidates, wrote Hillel's new constitution, planned campus-wide events, and met with University leadership after the October 7th attacks to discuss rising division on campus</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <div class="entry-header">
+                        <div style="font-weight: 400;">Nefesh Founder and President</div>
+                        <div class="entry-date">September 2021 - December 2023</div>
+                    </div>
+                    <div class="entry-description">
+                        <ul>
+                            <li>Founded Nefesh, Northeastern Hillel's Progressive Jewish community, appointed and oversaw a board of 6 people, and planned and led services and other events. In total, trained 9 student leaders to ensure the longevity of the organization.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">URJ Six Points Sci-Tech Academy</div>
+                    <div class="entry-location">Byfield, MA</div>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <div class="entry-header">
+                        <div style="font-weight: 400;">Unit Head</div>
+                        <div class="entry-date">Summer 2023</div>
+                    </div>
+                    <div class="entry-description">
+                        <ul>
+                            <li>Planned and led programming for 220+ participants and supervised a team of 13 staff members</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <div class="entry-header">
+                        <div style="font-weight: 400;">STEM Instructor</div>
+                        <div class="entry-date">Summers 2020, 2021, and 2022</div>
+                    </div>
+                    <div class="entry-description">
+                        <ul>
+                            <li>Instructed in marine science and chemistry courses, including overseeing experiments, dissections, and research projects</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Speaking Engagements -->
+        <div class="resume-section">
+            <h2 class="section-title">Speaking Engagements</h2>
+            <div class="entry-description">
+                <ul>
+                    <li>Northeastern Global Co-op Panel, November 2024</li>
+                    <li>Northeastern Undergraduate Research Panel, October 2024</li>
+                    <li>Northeastern Honors Program Student Guest Speaker, October 2024</li>
+                    <li>Northeastern Synthetic Biology Seminar Series, September 2024</li>
+                    <li>USC Marshall School of Business International Commerce Panel, April 2024</li>
+                    <li>Northeastern Global Leadership Conference, March 2024</li>
+                    <li>Joshi Lab Meeting, October 2023</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
