@@ -37,8 +37,8 @@
 
         .subtitle {
             color: #666;
-            font-size: 0.9em;
-            letter-spacing: 0.2em;
+            font-size: 0.85em;
+            letter-spacing: 0.15em;
             font-weight: 200;
             text-transform: uppercase;
         }
@@ -117,22 +117,24 @@
             box-shadow: 0 0 30px currentColor;
         }
 
-        /* Stars for point events */
-        .event-star {
+        /* Circles for point events */
+        .event-circle {
             position: absolute;
             left: 50%;
             width: 12px;
             height: 12px;
+            border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
             opacity: 0;
             animation: fadeIn 0.8s ease forwards;
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
             z-index: 10;
         }
 
-        .event-star:hover {
-            filter: brightness(1.5) drop-shadow(0 0 10px currentColor);
+        .event-circle:hover {
+            transform: scale(2.2);
+            filter: brightness(1.5);
+            box-shadow: 0 0 20px currentColor;
         }
 
         @keyframes fadeIn {
@@ -201,7 +203,7 @@
 <body>
     <div class="header">
         <h1>Ezri Abraham</h1>
-        <div class="subtitle">Interactive Timeline</div>
+        <div class="subtitle">Synthetic Biologist and Award-Winning Biodesigner</div>
     </div>
 
     <div class="legend">
@@ -280,10 +282,10 @@
             const tooltip = document.getElementById('tooltip');
             
             // Timeline bounds
-            const startDate = new Date(2021, 0);
-            const endDate = new Date(2027, 0);
+            const startDate = new Date(2021, 7); // August 2021
+            const endDate = new Date(2026, 0); // January 2026
             const totalMonths = (endDate - startDate) / (1000 * 60 * 60 * 24 * 30);
-            const pixelsPerMonth = 95; // Good balance
+            const pixelsPerMonth = 120; // Adjusted for better spacing
             const totalHeight = totalMonths * pixelsPerMonth;
             
             // Set heights
@@ -291,7 +293,7 @@
             document.getElementById('center-line').style.height = totalHeight + 'px';
             
             // Add year markers
-            for (let year = 2021; year <= 2027; year++) {
+            for (let year = 2021; year <= 2026; year++) {
                 const yearDate = new Date(year, 0);
                 const monthsFromStart = (yearDate - startDate) / (1000 * 60 * 60 * 24 * 30);
                 const topPosition = monthsFromStart * pixelsPerMonth;
@@ -331,7 +333,7 @@
                 let offset = 0;
                 const itemBottom = endDateObj ? 
                     topPosition + ((endDateObj - startDateObj) / (1000 * 60 * 60 * 24 * 30) * pixelsPerMonth) :
-                    isPhD ? topPosition + ((new Date(2026, 6) - startDateObj) / (1000 * 60 * 60 * 24 * 30) * pixelsPerMonth) : 
+                    isPhD ? topPosition + ((new Date(2026, 0) - startDateObj) / (1000 * 60 * 60 * 24 * 30) * pixelsPerMonth) : 
                     topPosition + 10;
                     
                 for (let pos of positions) {
@@ -345,7 +347,7 @@
                     // Create vertical bar
                     const bar = document.createElement('div');
                     bar.className = 'vertical-bar';
-                    const endDate = endDateObj || (isPhD ? new Date(2026, 6) : null);
+                    const endDate = endDateObj || (isPhD ? new Date(2026, 0) : null);
                     const duration = (endDate - startDateObj) / (1000 * 60 * 60 * 24 * 30);
                     const height = Math.max(20, duration * pixelsPerMonth);
                     
@@ -378,41 +380,41 @@
                     bar.addEventListener('mouseleave', hideTooltip);
                     bar.addEventListener('mousemove', moveTooltip);
                 } else {
-                    // Create star for point events
-                    const star = document.createElement('div');
-                    star.className = 'event-star';
+                    // Create circle for point events
+                    const circle = document.createElement('div');
+                    circle.className = 'event-circle';
                     
-                    star.style.top = topPosition + 'px';
-                    star.style.backgroundColor = color;
-                    star.style.color = color; // For box-shadow
-                    star.style.animationDelay = `${index * 0.08}s`;
+                    circle.style.top = topPosition + 'px';
+                    circle.style.backgroundColor = color;
+                    circle.style.color = color; // For box-shadow
+                    circle.style.animationDelay = `${index * 0.08}s`;
                     
                     // Position horizontally
                     const horizontalOffset = 25 + offset; // Increased base offset
                     const baseTransform = side === 'left'
-                        ? `translateX(-${horizontalOffset + 6}px)` // Account for star width
+                        ? `translateX(-${horizontalOffset + 6}px)` // Account for circle width
                         : `translateX(${horizontalOffset - 6}px)`;
-                    star.style.transform = baseTransform;
+                    circle.style.transform = baseTransform;
                     
                     // Tooltip data
-                    star.dataset.title = item.title;
-                    star.dataset.dates = item.dateStart;
-                    star.dataset.org = item.organisation || '';
-                    star.dataset.location = item.location || '';
-                    star.dataset.description = item.description || '';
+                    circle.dataset.title = item.title;
+                    circle.dataset.dates = item.dateStart;
+                    circle.dataset.org = item.organisation || '';
+                    circle.dataset.location = item.location || '';
+                    circle.dataset.description = item.description || '';
                     
-                    timeline.appendChild(star);
+                    timeline.appendChild(circle);
                     
                     // Add hover events
-                    star.addEventListener('mouseenter', function(e) {
+                    circle.addEventListener('mouseenter', function(e) {
                         showTooltip(e);
-                        this.style.transform = baseTransform + ' scale(2) rotate(72deg)';
+                        this.style.transform = baseTransform + ' scale(2.2)';
                     });
-                    star.addEventListener('mouseleave', function(e) {
+                    circle.addEventListener('mouseleave', function(e) {
                         hideTooltip(e);
                         this.style.transform = baseTransform;
                     });
-                    star.addEventListener('mousemove', moveTooltip);
+                    circle.addEventListener('mousemove', moveTooltip);
                 }
             });
         }
