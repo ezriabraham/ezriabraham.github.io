@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Science — Ezri Abraham</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    /* ── View toggle ── */
+    .view-toggle {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin: 0 auto 3rem;
+      border: 1px solid var(--border2);
+      border-radius: 4px;
+      width: fit-content;
+    }
+    .view-btn {
+      background: none;
+      border: none;
+      padding: 0.55rem 1.5rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text2);
+      transition: background var(--t), color var(--t);
+    }
+    .view-btn:first-child { border-radius: 3px 0 0 3px; }
+    .view-btn:last-child  { border-radius: 0 3px 3px 0; }
+    .view-btn.active {
+      background: var(--accent);
+      color: #fff;
+    }
+    .view-panel { display: none; }
+    .view-panel.active { display: block; }
+
+    /* ── Timeline ── */
+    .tl-wrap {
+      position: relative;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 2.5rem 6rem;
+    }
+    .tl-center {
+      position: absolute;
+      left: 50%;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: var(--border2);
+      transform: translateX(-50%);
+    }
+    .tl-year {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-serif);
+      font-size: 6rem;
+      font-weight: 400;
+      color: var(--border);
+      pointer-events: none;
+      letter-spacing: 0.1em;
+      line-height: 1;
+      z-index: 0;
+      user-select: none;
+    }
+    /* bars & circles are JS-generated; tooltip below */
+    .tl-bar {
+      position: absolute;
+      left: 50%;
+      width: 3px;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: width 0.2s, filter 0.2s;
+      opacity: 0;
+      animation: tlFade 0.6s ease forwards;
+      z-index: 10;
+    }
+    .tl-bar:hover { width: 5px; filter: brightness(1.4); box-shadow: 0 0 20px currentColor; }
+    .tl-dot {
+      position: absolute;
+      left: 50%;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s, filter 0.2s;
+      opacity: 0;
+      animation: tlFade 0.6s ease forwards;
+      z-index: 10;
+    }
+    .tl-dot:hover { filter: brightness(1.5); box-shadow: 0 0 16px currentColor; }
+    @keyframes tlFade { to { opacity: 0.92; } }
+
+    /* Legend */
+    .tl-legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--text2);
+      letter-spacing: 0.08em;
+    }
+    .legend-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+
+    /* Tooltip */
+    .tl-tooltip {
+      position: fixed;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      width: min(360px, calc(100vw - 32px));
+      pointer-events: none;
+      backdrop-filter: blur(12px);
+      display: none;
+      z-index: 2000;
+      box-shadow: var(--shadow);
+    }
+    .tl-tooltip.show { display: block; }
+    .tt-title  { font-family: var(--font-serif); font-size: 1.05rem; margin-bottom: 0.4rem; color: var(--text); line-height: 1.35; }
+    .tt-date   { font-size: 0.78rem; color: var(--text3); margin-bottom: 0.5rem; }
+    .tt-org    { font-size: 0.85rem; color: var(--text2); margin-bottom: 0.2rem; }
+    .tt-loc    { font-size: 0.8rem;  color: var(--text3); margin-bottom: 0.75rem; font-style: italic; }
+    .tt-desc   { font-size: 0.82rem; color: var(--text2); line-height: 1.6; white-space: pre-line; }
+    .tt-color-bar { height: 2px; border-radius: 1px; margin-bottom: 1rem; }
+
+    /* ── Resume ── */
+    .resume-wrap { max-width: 800px; margin: 0 auto; padding: 0 2.5rem 5rem; }
+    .r-section { margin-bottom: 3.5rem; }
+    .r-section-title {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border2);
+      margin-bottom: 2rem;
+    }
+    .r-entry { margin-bottom: 2rem; }
+    .r-entry-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      margin-bottom: 0.3rem;
+    }
+    .r-title  { font-family: var(--font-serif); font-size: 1.05rem; font-weight: 400; }
+    .r-date   { font-size: 0.78rem; color: var(--text3); font-style: italic; white-space: nowrap; }
+    .r-org    { font-size: 0.88rem; color: var(--text2); margin-bottom: 0.2rem; }
+    .r-loc    { font-size: 0.82rem; color: var(--text3); font-style: italic; margin-bottom: 0.6rem; }
+    .r-desc   { color: var(--text2); font-size: 0.88rem; line-height: 1.7; }
+    .r-desc ul { padding-left: 0; display: flex; flex-direction: column; gap: 0.35rem; }
+    .r-desc li { position: relative; padding-left: 1.2rem; }
+    .r-desc li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-size: 0.65rem; top: 0.25rem; }
+
+    .skills-table { display: flex; flex-direction: column; gap: 1rem; }
+    .skill-row { display: flex; gap: 1.25rem; align-items: baseline; }
+    .skill-cat { min-width: 160px; font-size: 0.82rem; color: var(--accent); font-weight: 400; flex-shrink: 0; }
+    .skill-val { font-size: 0.85rem; color: var(--text2); line-height: 1.6; }
+
+    @media (max-width: 640px) {
+      .tl-wrap { padding: 2rem 1.25rem 5rem; }
+      .resume-wrap { padding: 0 1.25rem 4rem; }
+      .skill-row { flex-direction: column; gap: 0.2rem; }
+      .skill-cat { min-width: auto; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="site-nav">
+    <a href="index.html" class="nav-logo">Ezri Abraham</a>
+    <ul class="nav-links">
+      <li><a href="index.html">About</a></li>
+      <li><a href="science.html" class="active">Science</a></li>
+      <li><a href="photos/index.html">Photos</a></li>
+      <li><a href="art/index.html">Art</a></li>
+      <li><a href="music/index.html">Music</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <svg id="themeIcon" viewBox="0 0 24 24"></svg>
+    </button>
+  </nav>
+
+  <header class="page-header">
+    <span class="page-label">Ezri Abraham</span>
+    <h1>Science</h1>
+    <p>Synthetic Biology, Biotech, and Research — from Boston to Singapore to Pasadena.</p>
+  </header>
+
+  <div class="container-narrow" style="padding-bottom: 0;">
+    <div class="view-toggle">
+      <button class="view-btn active" data-view="timeline">Timeline</button>
+      <button class="view-btn"        data-view="resume">Full CV</button>
+    </div>
+  </div>
+
+  <!-- ═══ TIMELINE ═══ -->
+  <div class="view-panel active" id="panel-timeline">
+    <div class="tl-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#7E6B8F"></div> Academic</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#F96E46"></div> Biotech</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#29b5b6"></div> Art</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#8faa70"></div> Volunteering</div>
+    </div>
+    <div class="tl-wrap" id="tl-wrap">
+      <div class="tl-center"></div>
+    </div>
+  </div>
+
+  <!-- ═══ RESUME ═══ -->
+  <div class="view-panel" id="panel-resume">
+    <div class="resume-wrap">
+
+      <div class="r-section">
+        <h2 class="r-section-title">Education</h2>
+        <div class="r-entry">
+          <div class="r-entry-head">
+            <div class="r-title">California Institute of Technology</div>
+            <div class="r-date">Starting September 2025</div>
+          </div>
+          <div class="r-org">Doctor of Philosophy in Biology</div>
+          <div class="r-loc">Pasadena, CA</div>
+        </div>
+        <div class="r-entry">
+          <div class="r-entry-head">
+            <div class="r-title">Northeastern University</div>
+            <div class="r-date">May 2025</div>
+          </div>
+          <div class="r-org">Bachelor of Science in Biology, Minor in Art</div>
+          <div class="r-loc">Boston, MA</div>
+          <div class="r-desc">
+            GPA 4.0/4.0 &nbsp;·&nbsp; Summa Cum Laude &nbsp;·&nbsp; Honors in Biology (top 3% of graduating Biology students)<br>
+            John Martinson Honors Program &nbsp;·&nbsp; TriBeta Biological Honors Society<br>
+            Thesis: <em>"Engineering a Nanoplastic-Binding Probiotic"</em>
+          </div>
+        </div>
+      </div>
+
+      <div class="r-section">
+        <h2 class="r-section-title">Research Experience</h2>
+        <div class="r-entry">
+          <div class="r-entry-head">
+            <div class="r-title">The Joshi Lab — Northeastern University</div>
+            <div class="r-date">Fall 2022, Fall 2023, Fall 2024–2025</div>
+          </div>
+          <div class="r-org">Synthetic Biology Undergraduate Researcher</div>
+          <div class="r-loc">Boston, MA</div>
+          <div class="r-desc"><ul>
+            <li>Engineered a probiotic to remove plastics from the gut and developed assays for bacterial plastic adsorption with $4,000+ in independent research funding</li>
+            <li>Collaborated with the Stubbins Lab to develop a method for generating trackable, biologically-relevant nanoplastics</li>
+            <li>Built a Python program to calculate real-time analyte concentration for a fluorescence-based biosensor (publication forthcoming)</li>
+            <li>Contributed to genetic circuit construction using a CRISPR/Cas9 derivative and created environment-responsive hydrogels</li>
+          </ul></div>
+        </div>
+        <div class="r-entry">
+          <div class="r-entry-head">
+            <div class="r-title">Independent Computational Biomining Research</div>
+            <div class="r-date">April–May 2024</div>
+          </div>
+          <div class="r-loc">Remote</div>
+          <div class="r-desc"><ul>
+            <li>Built and trained a random forest classifier in Python to identify fluorescent proteins by sequence-derived features — 99.8% accuracy without sequence homology</li>
+            <li>Discussed public release with Dr. Talley Lambert, Associate Director of Harvard's Cell Biology Microscopy Facility</li>
+          </ul></div>
+        </div>
+        <div class="r-entry">
+          <div class="r-entry-head">
+            <div class="r-title">BioCell Innovations</div>
+            <div class="r-date">January–June 2024</div>
+          </div>
+          <div class="r-org">Research and Development Intern</div>
+          <div class="r-loc">Singapore</div>
+          <div class="r-desc"><ul>
+            <li>Invented and tested a novel CAR binder system targeting mutation-induced antigen escape</li>
+            <li>Developed a Python AI application to generate and screen 150+ scFv's; tested cytotoxicity and expression for top constructs</li>
+            <li>Refined an existing antibody humanization platform, resolving a key expression issue and creating a new top candidate for in vivo testing</li>
+            <li>Pioneered CRISPR at BioCell — designed sgRNAs and developed initial experiments</li>
+          </ul></div>
+        </div>
+        <div class="r-entry">
+          <div class="r-entry-head">
+            <div class="r-title">JURA Bio, Inc.</div>
+            <div class="r-date">January–June 2023</div>
+          </div>
+          <div class="r-org">Research Intern</div>
+          <div class="r-loc">Boston, MA</div>
+          <div class="r-desc"><ul>
+            <li>Developed SOPs and designed constructs for a yeast surface display system to screen AI-generated libraries</li>
+            <li>Generated and analyzed JURA's engineered MHC-CAR systems using flow cytometry</li>
+            <li>Authored and distributed 65+ comprehensive whitepapers from biotech conferences to company investors</li>
+          </ul></div>
+        </div>
+        <div class="r-entry">
+          <div class="r-entry-head">
+            <div class="r-title">RCN-ECS — Wogan Lab, Oklahoma State</div>
+            <div class="r-date">2021–2022</div>
+          </div>
+          <div class="r-org">Virtual Lab Meeting Training Program</div>
+          <div class="r-loc">Remote</div>
+          <div class="r-desc"><ul>
+            <li>Attended weekly lab meetings discussing contemporary publications, grant proposals, and professional development in evolutionary biology</li>
+          </ul></div>
+        </div>
+      </div>
+
+      <div class="r-section">
+        <h2 class="r-section-title">Honors &amp; Awards</h2>
+        <div class="r-entry">
+          <div class="r-entry-head"><div class="r-title">PEAK Summit Award</div><div class="r-date">2024</div></div>
+          <div class="r-desc">Northeastern's highest undergraduate research award, funding my senior honors thesis on engineering <em>E. coli</em> Nissle 1917 for nanoplastic bioadsorption.</div>
+        </div>
+        <div class="r-entry">
+          <div class="r-entry-head"><div class="r-title">PEAK Ascent Award</div><div class="r-date">2023</div></div>
+          <div class="r-desc">$1,500 to fund research in the Joshi Lab on engineering <em>E. coli</em> Nissle 1917 for PET microplastic degradation.</div>
+        </div>
+        <div class="r-entry">
+          <div class="r-entry-head"><div class="r-title">PEAK Base Camp Award</div><div class="r-date">2022</div></div>
+          <div class="r-desc">$750 to fund research assistance on engineering a generalizable feedback regulation platform for protein secretion in <em>E. coli</em> Nissle 1917.</div>
+        </div>
+        <div class="r-entry">
+          <div class="r-entry-head"><div class="r-title">BioDesign Challenge — Best Display Award</div><div class="r-date">June 2025</div></div>
+          <div class="r-desc">Finalist and award recipient among 60+ global teams at MoMA, New York. Team "SquidKid" created an educational toy bioreactor exploring bioluminescent symbiosis.</div>
+        </div>
+        <div class="r-entry">
+          <div class="r-entry-head"><div class="r-title">Honor's Scholarship — John Martinson Honors Program</div><div class="r-date">2021</div></div>
+          <div class="r-desc">$116,000 over four years for undergraduate study at Northeastern University.</div>
+        </div>
+        <div class="r-entry">
+          <div class="r-entry-head"><div class="r-title">Dean's List</div><div class="r-date">All semesters</div></div>
+        </div>
+      </div>
+
+      <div class="r-section">
+        <h2 class="r-section-title">International Research &amp; Study</h2>
+        <div class="r-entry">
+          <div class="r-entry-head"><div class="r-title">Novel Antibiotic Discovery</div><div class="r-date">2024</div></div>
+          <div class="r-org">Godoy-Carter Lab — Northeastern University</div>
+          <div class="r-loc">Chile (Patagonia &amp; Atacama Desert)</div>
+          <div class="r-desc">Under Dr. Veronica Godoy-Carter, isolated extremophile bacteria and examined antibiotic production, biofilm formation, and pigment expression alongside landscape photography.</div>
+        </div>
+        <div class="r-entry">
+          <div class="r-entry-head"><div class="r-title">SGInnovate Summation Program</div><div class="r-date">2024</div></div>
+          <div class="r-loc">Singapore</div>
+          <div class="r-desc">Selected by Singapore's state-backed VC fund to receive full funding for project-based work at a deep tech startup.</div>
+        </div>
+        <div class="r-entry">
+          <div class="r-entry-head"><div class="r-title">Climate Science, Engineering &amp; Policy</div><div class="r-date">2022</div></div>
+          <div class="r-org">Sustainability and Data Science Lab — Northeastern University</div>
+          <div class="r-loc">Tanzania</div>
+          <div class="r-desc">Under Dr. Auroop Ganguly, collaborated with Tanzanian researchers on climate solutions. Received $1,500 as a Northeastern Global Photography Fellow to document the experience.</div>
+        </div>
+      </div>
+
+      <div class="r-section">
+        <h2 class="r-section-title">Leadership</h2>
+        <div class="r-entry">
+          <div class="r-entry-head"><div class="r-title">Northeastern University Hillel</div></div>
+          <div class="r-loc">Boston, MA</div>
+          <div class="r-desc" style="margin-top:0.5rem;">
+            <div style="margin-bottom:0.75rem;">
+              <strong style="color:var(--text);">Executive Board Member</strong> <span style="color:var(--text3); font-size:0.8rem; margin-left:0.5rem;">Jan 2022–Dec 2023</span><br>
+              Interviewed executive director candidates, wrote Hillel's new constitution, planned campus-wide events, and met with University leadership following October 7th to address campus division.
+            </div>
+            <div>
+              <strong style="color:var(--text);">Nefesh Founder &amp; President</strong> <span style="color:var(--text3); font-size:0.8rem; margin-left:0.5rem;">Sept 2021–Dec 2023</span><br>
+              Founded Northeastern Hillel's Progressive Jewish community; appointed and oversaw a board of 6; trained 9 student leaders to ensure organizational continuity.
+            </div>
+          </div>
+        </div>
+        <div class="r-entry">
+          <div class="r-entry-head"><div class="r-title">Northeastern University College of Science</div><div class="r-date">Jan–Dec 2023</div></div>
+          <div class="r-org">Undergraduate Teaching Fellow — Organic Chemistry II</div>
+          <div class="r-loc">Boston, MA</div>
+          <div class="r-desc">Led review sessions for 130+ attendees, graded assignments with faculty, held weekly office hours.</div>
+        </div>
+        <div class="r-entry">
+          <div class="r-entry-head"><div class="r-title">URJ Six Points Sci-Tech Academy</div></div>
+          <div class="r-loc">Byfield, MA</div>
+          <div class="r-desc" style="margin-top:0.5rem;">
+            <div style="margin-bottom:0.5rem;"><strong style="color:var(--text);">Unit Head</strong> <span style="color:var(--text3); font-size:0.8rem; margin-left:0.5rem;">Summer 2023</span> — planned programming for 220+ participants; supervised 13 staff members.</div>
+            <div><strong style="color:var(--text);">STEM Instructor / Faculty</strong> <span style="color:var(--text3); font-size:0.8rem; margin-left:0.5rem;">Summers 2020–2022, 2025</span> — taught marine science and chemistry; oversaw experiments, dissections, and research projects.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="r-section">
+        <h2 class="r-section-title">Skills &amp; Techniques</h2>
+        <div class="skills-table">
+          <div class="skill-row"><div class="skill-cat">Molecular Biology</div><div class="skill-val">PCR, Primer &amp; Construct Design, Gel Electrophoresis, SDS-PAGE, In Vitro Transcription, Restriction Digestion, Gibson Assembly, Site-directed Mutagenesis</div></div>
+          <div class="skill-row"><div class="skill-cat">Cell Biology</div><div class="skill-val">Mammalian Cell Culture (Adherent, Suspension, Primary), Lentiviral Production &amp; Transduction, Viability Assays, Bacterial Transformation, PBMC Isolation, Cell Kill Assays</div></div>
+          <div class="skill-row"><div class="skill-cat">Instruments</div><div class="skill-val">Flow Cytometry, Cell Imaging, Spectrophotometry, Chemidoc Imaging, Countess</div></div>
+          <div class="skill-row"><div class="skill-cat">Software</div><div class="skill-val">Python, PyMOL, Benchling, SnapGene, NCBI BLAST, FlowJo, Adobe CC (Illustrator, Photoshop, Lightroom, InDesign), R, MEGA</div></div>
+          <div class="skill-row"><div class="skill-cat">Fabrication</div><div class="skill-val">Arduino, Laser Cutting, 3D Printing, Woodworking (Machine &amp; Hand Tools), Soldering</div></div>
+        </div>
+      </div>
+
+      <div class="r-section">
+        <h2 class="r-section-title">Speaking Engagements</h2>
+        <div class="r-desc"><ul>
+          <li>Northeastern Global Co-op Panel, November 2024</li>
+          <li>Northeastern Undergraduate Research Panel, October 2024</li>
+          <li>Northeastern Honors Program Student Guest Speaker, October 2024</li>
+          <li>Northeastern Synthetic Biology Seminar Series, September 2024</li>
+          <li>USC Marshall School of Business International Commerce Panel, April 2024</li>
+          <li>Northeastern Global Leadership Conference, March 2024</li>
+          <li>Joshi Lab Meeting, October 2023</li>
+        </ul></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="tl-tooltip" id="tlTooltip"></div>
+
+  <footer class="site-footer">
+    Ezri Abraham &nbsp;·&nbsp; ezribabraham@gmail.com &nbsp;·&nbsp; Pasadena, CA
+  </footer>
+
+  <script src="assets/js/theme.js"></script>
+  <script>
+    /* ── View toggle ── */
+    document.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('panel-' + btn.dataset.view).classList.add('active');
+      });
+    });
+
+    /* ── Timeline ── */
+    const data = [
+      {title:"Bachelor's in Biology, Minor in Art",org:"Northeastern University",topic:"Academic",start:"September 2021",end:"May 2025",loc:"Boston, MA",desc:"GPA 4.0 · Summa Cum Laude · Honors in Biology\nJohn Martinson Honors Program · TriBeta Biological Honors Society\nThesis: \"Engineering a Nanoplastic-Binding Probiotic\""},
+      {title:"Ph.D. Student in Biology",org:"California Institute of Technology",topic:"Academic",start:"September 2025",end:"",loc:"Pasadena, CA",desc:""},
+      {title:"Synthetic Biology Undergraduate Researcher",org:"The Joshi Lab @ Northeastern University",topic:"Academic",start:"September 2022",end:"August 2025",loc:"Boston, MA",desc:"Built a probiotic to remove nanoplastics from the gut with $4,000+ in independent research funding"},
+      {title:"Research and Development Intern",org:"BioCell Innovations",topic:"Biotech",start:"January 2024",end:"June 2024",loc:"Singapore",desc:"Designed and tested novel CAR-T cell binders using in silico and in vitro methods"},
+      {title:"Research Intern",org:"JURA Bio",topic:"Biotech",start:"January 2023",end:"June 2023",loc:"Boston, MA",desc:"Worked on Bio-AI and met with leaders across the biotech space"},
+      {title:"Undergraduate Teaching Fellow — Organic Chemistry II",org:"Northeastern University",topic:"Academic",start:"January 2023",end:"December 2023",loc:"Boston, MA",desc:"Led review sessions for 130+ students"},
+      {title:"Virtual Lab Meeting Training Program",org:"RCN-ECS / Wogan Lab",topic:"Academic",start:"October 2021",end:"May 2022",loc:"Remote",desc:"Learned evolutionary biology with the Wogan (Eco-Evo-Omics) Lab @ OK State"},
+      {title:"Novel Antibiotic Discovery & Landscape Photography",org:"Godoy-Carter Lab @ Northeastern",topic:"Academic",start:"July 2024",end:"August 2024",loc:"Chile",desc:"Isolated extremophile bacteria from Patagonia and the Atacama Desert; examined antibiotic production, biofilm formation, and pigment expression."},
+      {title:"Climate Science, Engineering & Policy",org:"Sustainability & Data Science Lab @ Northeastern",topic:"Academic",start:"June 2022",end:"July 2022",loc:"Tanzania",desc:"Collaborated with Tanzanian researchers on climate crisis solutions under Dr. Auroop Ganguly."},
+      {title:"Global Photography Fellow",org:"Northeastern University",topic:"Art",start:"June 2022",end:"July 2022",loc:"Tanzania",desc:"Selected to receive $1,500 in funding to document travels with Professor Ganguly."},
+      {title:"Executive Board Member & Nefesh Founder",org:"Northeastern University Hillel",topic:"Volunteering",start:"September 2021",end:"May 2025",loc:"Boston, MA",desc:"Founded Nefesh, Northeastern Hillel's Progressive Jewish community. Appointed and oversaw a board of 6, planned and led services and events, and trained 9 student leaders."},
+      {title:"Faculty",org:"URJ Six Points Sci-Tech Academy",topic:"Volunteering",start:"July 2025",end:"August 2025",loc:"Byfield, MA",desc:"Returned as a Faculty Volunteer to the Jewish science camp that inspired my love of science."},
+      {title:"SquidKid — BioDesign Challenge",org:"MoMA, New York",topic:"Art",start:"June 2025",end:"",loc:"New York, NY",desc:"Finalist and Best Display Award winner among 60+ global teams. SquidKid is an educational toy bioreactor replicating the Hawaiian bobtail squid's bioluminescent symbiosis."},
+      {title:"Woodworking",org:"",topic:"Art",start:"April 2025",end:"",loc:"Boston, MA",desc:"After graduation, spent 30+ hours/week learning woodworking with machine and hand tools."},
+      {title:"Pandora's Box",org:"",topic:"Art",start:"November 2023",end:"",loc:"Boston, MA",desc:"A mixed-media mechanical sculpture in which moving shadows representing demons from history and myth moved through a translucent glowing chamber."}
+    ];
+
+    const COLORS = { academic:'#7E6B8F', biotech:'#F96E46', art:'#29b5b6', volunteering:'#8faa70' };
+    function color(t){ return COLORS[t.toLowerCase()] || '#666'; }
+
+    function parseDate(s){
+      if(!s) return new Date();
+      const months={January:0,February:1,March:2,April:3,May:4,June:5,Jun:5,July:6,August:7,September:8,October:9,November:10,December:11};
+      const p=s.split(' ');
+      return new Date(parseInt(p[1])||2025, months[p[0]]||0);
+    }
+
+    function buildTimeline(){
+      const wrap = document.getElementById('tl-wrap');
+      const tip  = document.getElementById('tlTooltip');
+      const START = new Date(2021,7);
+      const END   = new Date(2026,6);
+      const PX    = 110;
+      const totalMonths = (END-START)/(1000*60*60*24*30);
+      const H = totalMonths*PX;
+      wrap.style.height = (H+100)+'px';
+
+      for(let y=2021;y<=2026;y++){
+        const m=(new Date(y,0)-START)/(1000*60*60*24*30);
+        const el=document.createElement('div');
+        el.className='tl-year';
+        el.textContent=y;
+        el.style.top=(m*PX-30)+'px';
+        wrap.appendChild(el);
+      }
+
+      const left=[], right=[];
+      let side=0;
+      data.sort((a,b)=>parseDate(a.start)-parseDate(b.start));
+
+      data.forEach((item,i)=>{
+        const s=parseDate(item.start);
+        const eRaw=item.end&&item.end.trim()?parseDate(item.end):null;
+        const isOpen=!eRaw;
+        const e=eRaw||(item.title.includes('Ph.D.')?new Date(2027,0):null);
+        const top=(s-START)/(1000*60*60*24*30)*PX;
+        const c=color(item.topic);
+        const thisSide=side%2===0?'left':'right';
+        side++;
+        const pool=thisSide==='left'?left:right;
+        const ht=e?top+((e-s)/(1000*60*60*24*30)*PX):top+8;
+        let off=0;
+        pool.forEach(p=>{if(!(ht<p.t-16||top>p.b+16))off+=30;});
+        pool.push({t:top,b:ht});
+
+        if(e){
+          const dur=(e-s)/(1000*60*60*24*30)*PX;
+          const bar=document.createElement('div');
+          bar.className='tl-bar';
+          bar.style.cssText=`top:${top}px;height:${Math.max(16,dur)}px;background:${c};color:${c};animation-delay:${i*0.06}s;`;
+          const hx=20+off;
+          bar.style.transform=thisSide==='left'?`translateX(-${hx}px)`:`translateX(${hx}px)`;
+          setTip(bar,item,eRaw);
+          wrap.appendChild(bar);
+        } else {
+          const dot=document.createElement('div');
+          dot.className='tl-dot';
+          dot.style.cssText=`top:${top}px;background:${c};color:${c};animation-delay:${i*0.06}s;`;
+          const hx=22+off;
+          dot.style.transform=thisSide==='left'?`translateX(-${hx+5}px)`:`translateX(${hx-5}px)`;
+          setTip(dot,item,null);
+          wrap.appendChild(dot);
+        }
+      });
+
+      function setTip(el,item,eDate){
+        const dates=eDate?`${item.start} – ${item.end}`:(item.end?`${item.start} – Present`:item.start);
+        el.addEventListener('mouseenter', e=>{
+          tip.innerHTML=`<div class="tt-color-bar" style="background:${color(item.topic)}"></div><div class="tt-title">${item.title}</div><div class="tt-date">${dates}</div>${item.org?`<div class="tt-org">${item.org}</div>`:''}${item.loc?`<div class="tt-loc">${item.loc}</div>`:''}${item.desc?`<div class="tt-desc">${item.desc}</div>`:''}`;
+          tip.classList.add('show');
+          moveTip(e);
+        });
+        el.addEventListener('mousemove', moveTip);
+        el.addEventListener('mouseleave', ()=>tip.classList.remove('show'));
+      }
+
+      function moveTip(e){
+        const W=window.innerWidth, H=window.innerHeight;
+        const tw=Math.min(360,W-32);
+        let x=e.clientX+14, y=e.clientY+14;
+        if(x+tw>W-8) x=e.clientX-tw-14;
+        if(x<8) x=8;
+        if(y+tip.offsetHeight>H-8) y=e.clientY-tip.offsetHeight-14;
+        tip.style.left=x+'px'; tip.style.top=y+'px';
+      }
+    }
+
+    buildTimeline();
+  </script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photos — Ezri Abraham</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <style>
+    .card-grid { max-width: 1100px; margin: 0 auto; padding: 0 2.5rem 5rem; }
+    .collab-banner {
+      max-width: 1100px;
+      margin: 0 auto 3rem;
+      padding: 0 2.5rem;
+    }
+    .collab-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.75rem;
+      border: 1px solid var(--border2);
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: var(--text2);
+      transition: border-color var(--t), color var(--t), background var(--t);
+      gap: 1rem;
+    }
+    .collab-link:hover {
+      border-color: var(--accent);
+      color: var(--text);
+      background: rgba(41,181,182,0.04);
+    }
+    .collab-link-text { flex: 1; }
+    .collab-link-title { font-family: var(--font-serif); font-size: 1rem; color: var(--text); margin-bottom: 0.2rem; }
+    .collab-link-sub   { font-size: 0.75rem; color: var(--text3); letter-spacing: 0.05em; }
+    .collab-link-arr   { font-size: 0.75rem; color: var(--text3); transition: transform var(--t); }
+    .collab-link:hover .collab-link-arr { transform: translateX(5px); }
+
+    @media (max-width: 768px) {
+      .card-grid, .collab-banner { padding: 0 1.25rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="site-nav">
+    <a href="../index.html" class="nav-logo">Ezri Abraham</a>
+    <ul class="nav-links">
+      <li><a href="../index.html">About</a></li>
+      <li><a href="../science.html">Science</a></li>
+      <li><a href="index.html" class="active">Photos</a></li>
+      <li><a href="../art/index.html">Art</a></li>
+      <li><a href="../music/index.html">Music</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <svg id="themeIcon" viewBox="0 0 24 24"></svg>
+    </button>
+  </nav>
+
+  <header class="page-header">
+    <span class="page-label">Ezri Abraham</span>
+    <h1>Photos</h1>
+    <p>Landscape, wildlife, portrait, and travel photography — from Tanzania to Patagonia to Singapore.</p>
+  </header>
+
+  <div class="collab-banner">
+    <a href="collaborations.html" class="collab-link">
+      <div class="collab-link-text">
+        <div class="collab-link-title">Collaborations</div>
+        <div class="collab-link-sub">The Habitat Penang Hill · Northeastern Global Photography Fellow</div>
+      </div>
+      <span class="collab-link-arr">→</span>
+    </a>
+  </div>
+
+  <div class="card-grid">
+    <div class="cat-card" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;aspect-ratio:unset;border:none;background:none;overflow:visible;border-radius:0;">
+
+      <a href="animals.html" class="cat-card cat-card-placeholder" style="aspect-ratio:3/4;">
+        <svg class="cat-geo" viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="36"/>
+          <circle cx="40" cy="40" r="24"/>
+          <circle cx="40" cy="40" r="12"/>
+        </svg>
+        <div class="cat-card-body">
+          <div class="cat-card-title">Animals</div>
+          <div class="cat-card-sub">Wildlife &amp; Nature</div>
+        </div>
+      </a>
+
+      <a href="people.html" class="cat-card cat-card-placeholder" style="aspect-ratio:3/4;">
+        <svg class="cat-geo" viewBox="0 0 80 80">
+          <polygon points="40,4 76,62 4,62"/>
+          <polygon points="40,20 64,54 16,54"/>
+        </svg>
+        <div class="cat-card-body">
+          <div class="cat-card-title">People</div>
+          <div class="cat-card-sub">Portrait &amp; Documentary</div>
+        </div>
+      </a>
+
+      <a href="plants.html" class="cat-card cat-card-placeholder" style="aspect-ratio:3/4;">
+        <svg class="cat-geo" viewBox="0 0 80 80">
+          <rect x="10" y="10" width="60" height="60" rx="4"/>
+          <rect x="22" y="22" width="36" height="36" rx="2"/>
+          <rect x="34" y="34" width="12" height="12"/>
+        </svg>
+        <div class="cat-card-body">
+          <div class="cat-card-title">Plants</div>
+          <div class="cat-card-sub">Botanical &amp; Flora</div>
+        </div>
+      </a>
+
+      <a href="places.html" class="cat-card cat-card-placeholder" style="aspect-ratio:3/4;">
+        <svg class="cat-geo" viewBox="0 0 80 80">
+          <polygon points="40,4 74,24 74,56 40,76 6,56 6,24"/>
+          <polygon points="40,18 62,30 62,50 40,62 18,50 18,30"/>
+        </svg>
+        <div class="cat-card-body">
+          <div class="cat-card-title">Places</div>
+          <div class="cat-card-sub">Landscape &amp; Travel</div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    Ezri Abraham &nbsp;·&nbsp; ezribabraham@gmail.com &nbsp;·&nbsp; Pasadena, CA
+  </footer>
+  <script src="../assets/js/theme.js"></script>
+</body>
+</html>

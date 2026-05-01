@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Art — Ezri Abraham</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <style>
+    .art-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2.5rem 5rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    /* Override cat-card for taller art cards */
+    .art-card {
+      position: relative;
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      aspect-ratio: 2/3;
+      background: var(--bg2);
+      transition: border-color var(--t), transform var(--ts);
+      cursor: pointer;
+    }
+    .art-card:hover { border-color: var(--border2); transform: translateY(-6px); }
+    .art-card-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0.6;
+      transition: opacity var(--ts), transform var(--ts);
+    }
+    .art-card:hover .art-card-img { opacity: 0.85; transform: scale(1.04); }
+
+    /* Geometric SVG placeholders */
+    .art-card-geo {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100px; height: 100px;
+      opacity: 0.06;
+      transition: opacity var(--t);
+    }
+    .art-card:hover .art-card-geo { opacity: 0.1; }
+
+    .art-card-body {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 3rem 1.75rem 1.75rem;
+      background: linear-gradient(transparent, rgba(0,0,0,0.88));
+    }
+    .art-card-title {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: #fff;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.4rem;
+    }
+    .art-card-sub {
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 0.3rem;
+    }
+    .art-card-count {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.35);
+    }
+
+    @media (max-width: 900px) { .art-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 580px) {
+      .art-grid { grid-template-columns: 1fr; padding: 0 1.25rem 4rem; }
+      .art-card { aspect-ratio: 3/2; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="site-nav">
+    <a href="../index.html" class="nav-logo">Ezri Abraham</a>
+    <ul class="nav-links">
+      <li><a href="../index.html">About</a></li>
+      <li><a href="../science.html">Science</a></li>
+      <li><a href="../photos/index.html">Photos</a></li>
+      <li><a href="index.html" class="active">Art</a></li>
+      <li><a href="../music/index.html">Music</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <svg id="themeIcon" viewBox="0 0 24 24"></svg>
+    </button>
+  </nav>
+
+  <header class="page-header">
+    <span class="page-label">Ezri Abraham</span>
+    <h1>Art</h1>
+    <p>Where science meets craft — biodesign, woodworking, and silk painting.</p>
+  </header>
+
+  <div class="art-grid">
+
+    <a href="biodesign.html" class="art-card">
+      <svg class="art-card-geo" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="0.8">
+        <polygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5"/>
+        <polygon points="50,18 82,34 82,66 50,82 18,66 18,34"/>
+        <polygon points="50,31 69,40.5 69,59.5 50,69 31,59.5 31,40.5"/>
+        <circle cx="50" cy="50" r="8"/>
+      </svg>
+      <div class="art-card-body">
+        <div class="art-card-sub">Category</div>
+        <div class="art-card-title">Biodesign</div>
+        <div class="art-card-count">BioDesign Challenge · SquidKid · Pandora's Box</div>
+      </div>
+    </a>
+
+    <a href="woodworking.html" class="art-card">
+      <svg class="art-card-geo" viewBox="0 0 100 100" fill="none" stroke="var(--gold)" stroke-width="0.8">
+        <rect x="10" y="10" width="80" height="80" rx="4"/>
+        <rect x="22" y="22" width="56" height="56" rx="3"/>
+        <rect x="34" y="34" width="32" height="32" rx="2"/>
+        <rect x="44" y="44" width="12" height="12"/>
+        <line x1="10" y1="10" x2="22" y2="22"/>
+        <line x1="90" y1="10" x2="78" y2="22"/>
+        <line x1="10" y1="90" x2="22" y2="78"/>
+        <line x1="90" y1="90" x2="78" y2="78"/>
+      </svg>
+      <div class="art-card-body">
+        <div class="art-card-sub">Category</div>
+        <div class="art-card-title">Woodworking</div>
+        <div class="art-card-count">Machine &amp; Hand Tools · Furniture · Objects</div>
+      </div>
+    </a>
+
+    <a href="silk-painting.html" class="art-card">
+      <svg class="art-card-geo" viewBox="0 0 100 100" fill="none" stroke="var(--accent2)" stroke-width="0.8">
+        <path d="M50 10 Q75 25 90 50 Q75 75 50 90 Q25 75 10 50 Q25 25 50 10Z"/>
+        <path d="M50 22 Q68 33 78 50 Q68 67 50 78 Q32 67 22 50 Q32 33 50 22Z"/>
+        <ellipse cx="50" cy="50" rx="16" ry="16"/>
+        <ellipse cx="50" cy="50" rx="8" ry="8"/>
+      </svg>
+      <div class="art-card-body">
+        <div class="art-card-sub">Category</div>
+        <div class="art-card-title">Silk Painting</div>
+        <div class="art-card-count">Dye on Silk · Wearable &amp; Fine Art</div>
+      </div>
+    </a>
+
+  </div>
+
+  <footer class="site-footer">
+    Ezri Abraham &nbsp;·&nbsp; ezribabraham@gmail.com &nbsp;·&nbsp; Pasadena, CA
+  </footer>
+  <script src="../assets/js/theme.js"></script>
+</body>
+</html>

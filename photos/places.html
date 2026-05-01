@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Places — Photos — Ezri Abraham</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <style>
+    .gallery-wrap { max-width: 1200px; margin: 0 auto; padding: 0 2.5rem 5rem; }
+    .lightbox { position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.93); display: none; align-items: center; justify-content: center; padding: 2rem; cursor: zoom-out; }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 90vw; max-height: 85vh; object-fit: contain; border-radius: 3px; cursor: default; }
+    .lb-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.2s; }
+    .lb-close:hover { border-color: rgba(255,255,255,0.6); }
+    .lb-caption { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); text-align: center; color: rgba(255,255,255,0.7); font-size: 0.85rem; pointer-events: none; }
+    @media (max-width: 768px) { .gallery-wrap { padding: 0 1.25rem 4rem; } }
+  </style>
+</head>
+<body>
+  <nav class="site-nav">
+    <a href="../index.html" class="nav-logo">Ezri Abraham</a>
+    <ul class="nav-links">
+      <li><a href="../index.html">About</a></li>
+      <li><a href="../science.html">Science</a></li>
+      <li><a href="index.html" class="active">Photos</a></li>
+      <li><a href="../art/index.html">Art</a></li>
+      <li><a href="../music/index.html">Music</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <svg id="themeIcon" viewBox="0 0 24 24"></svg>
+    </button>
+  </nav>
+
+  <a href="index.html" class="back-link">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    Photos
+  </a>
+
+  <header class="page-header">
+    <span class="page-label">Photos</span>
+    <h1>Places</h1>
+    <p>Landscape and travel photography — Tanzania, Chile, Singapore, and beyond.</p>
+  </header>
+
+  <div class="gallery-wrap">
+    <!--
+      HOW TO ADD PHOTOS — see animals.html for full instructions.
+      Landscape photos look great as class="wide" (16:9) or default 4:3.
+
+      Example:
+        <div class="gallery-item wide" data-title="Title" data-desc="Description">
+          <img src="../assets/images/photo.jpg" alt="Alt text">
+          <div class="gallery-overlay">
+            <div class="gallery-title">Title</div>
+            <div class="gallery-desc">Description</div>
+          </div>
+        </div>
+    -->
+
+    <div class="gallery-placeholder">
+      <strong>Add your places photos here.</strong><br>
+      Open <code>photos/places.html</code> and follow the instructions in the comments above the gallery grid.<br>
+      Place image files in <code>assets/images/</code> and reference them with <code>src="../assets/images/filename.jpg"</code>
+    </div>
+
+    <div class="gallery-grid" id="gallery" style="margin-top: 2rem;">
+      <!-- gallery items go here -->
+    </div>
+  </div>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+    <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+    <img id="lbImg" src="" alt="">
+    <div class="lb-caption" id="lbCaption"></div>
+  </div>
+
+  <footer class="site-footer">
+    Ezri Abraham &nbsp;·&nbsp; ezribabraham@gmail.com &nbsp;·&nbsp; Pasadena, CA
+  </footer>
+  <script src="../assets/js/theme.js"></script>
+  <script>
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const lbCap = document.getElementById('lbCaption');
+    document.getElementById('gallery').addEventListener('click', e => {
+      const item = e.target.closest('.gallery-item'); if (!item) return;
+      const img = item.querySelector('img'); if (!img) return;
+      lbImg.src = img.src; lbImg.alt = img.alt;
+      lbCap.textContent = item.dataset.title || '';
+      lb.classList.add('open'); document.body.style.overflow = 'hidden';
+    });
+    function closeLb() { lb.classList.remove('open'); document.body.style.overflow = ''; }
+    document.getElementById('lbClose').addEventListener('click', closeLb);
+    lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+  </script>
+</body>
+</html>
