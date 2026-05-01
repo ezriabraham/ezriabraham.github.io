@@ -226,7 +226,7 @@
     .link-item:hover {
       border-color: var(--accent);
       color: var(--text);
-      background: rgba(48,188,104,0.07);
+      background: rgba(46,92,245,0.06);
     }
     .link-item svg  { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.5; flex-shrink: 0; opacity: 0.65; }
     .link-item span { flex: 1; }
@@ -398,10 +398,11 @@
     (function () {
       const canvas = document.getElementById('hero-canvas');
       const ctx    = canvas.getContext('2d');
-      const COUNT  = 55;
-      const MAXD   = 160;
+      const COUNT  = 72;
+      const MAXD   = 180;
       let   pts    = [];
       let   W, H;
+      const COLORS = ['28,163,88', '46,92,245'];  /* green + blue */
 
       function resize() {
         W = canvas.width  = window.innerWidth;
@@ -409,12 +410,13 @@
       }
 
       function Pt() {
-        this.x  = Math.random() * W;
-        this.y  = Math.random() * H;
-        this.vx = (Math.random() - 0.5) * 0.35;
-        this.vy = (Math.random() - 0.5) * 0.35;
-        this.r  = Math.random() * 2 + 1;
-        this.a  = Math.random() * 0.5 + 0.08;
+        this.x     = Math.random() * W;
+        this.y     = Math.random() * H;
+        this.vx    = (Math.random() - 0.5) * 0.45;
+        this.vy    = (Math.random() - 0.5) * 0.45;
+        this.r     = Math.random() * 2.5 + 1;
+        this.a     = Math.random() * 0.55 + 0.15;
+        this.color = COLORS[Math.random() > 0.5 ? 0 : 1];
       }
       Pt.prototype.tick = function () {
         this.x += this.vx; this.y += this.vy;
@@ -424,7 +426,6 @@
         if (this.y > H + 40) this.y = -40;
       };
 
-      /* draw a hexagon */
       function hex(x, y, r) {
         ctx.beginPath();
         for (let i = 0; i < 6; i++) {
@@ -444,11 +445,13 @@
             const dy = pts[i].y - pts[j].y;
             const d  = Math.sqrt(dx * dx + dy * dy);
             if (d < MAXD) {
+              const fade = (1 - d / MAXD) * 0.18;
+              /* blend colour toward the nearer node */
               ctx.beginPath();
               ctx.moveTo(pts[i].x, pts[i].y);
               ctx.lineTo(pts[j].x, pts[j].y);
-              ctx.strokeStyle = `rgba(48,188,104,${(1 - d / MAXD) * 0.13})`;
-              ctx.lineWidth   = 0.6;
+              ctx.strokeStyle = `rgba(${pts[i].color},${fade})`;
+              ctx.lineWidth   = 0.8;
               ctx.stroke();
             }
           }
@@ -456,7 +459,7 @@
         /* particles */
         pts.forEach(p => {
           hex(p.x, p.y, p.r);
-          ctx.fillStyle = `rgba(48,188,104,${p.a})`;
+          ctx.fillStyle = `rgba(${p.color},${p.a})`;
           ctx.fill();
           p.tick();
         });
