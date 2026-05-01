@@ -151,6 +151,32 @@
       gap: 5rem;
       align-items: start;
     }
+
+    /* ── Portrait photo ── */
+    .bio-photo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid var(--border2);
+      margin-bottom: 1.75rem;
+      background: var(--bg3);
+      flex-shrink: 0;
+    }
+    .bio-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .bio-photo-ph {
+      width: 100%; height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text3);
+    }
     .bio-label {
       display: block;
       font-size: 0.68rem;
@@ -196,7 +222,7 @@
     .link-item:hover {
       border-color: var(--accent);
       color: var(--text);
-      background: rgba(41,181,182,0.05);
+      background: rgba(48,188,104,0.07);
     }
     .link-item svg  { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.5; flex-shrink: 0; opacity: 0.65; }
     .link-item span { flex: 1; }
@@ -293,17 +319,21 @@
   <!-- ═══ BIO ═══ -->
   <div class="bio-wrap">
     <div class="bio-body">
+      <!-- Replace .bio-photo-ph with an <img> when you have a portrait photo -->
+      <div class="bio-photo">
+        <div class="bio-photo-ph">Photo</div>
+      </div>
       <span class="bio-label">About</span>
       <h2 class="bio-heading">Science, Art,<br><em>&amp; Everything Between</em></h2>
-      <p>I'm a synthetic biologist and Ph.D. student at Caltech, approaching biology through the lens of engineering. My research spans nanoplastic remediation, CAR-T cell therapeutics, and antibiotic discovery from extremophiles.</p>
-      <p>Beyond the bench, I'm a landscape and wildlife photographer, woodworker, silk painter, biodesigner, and drummer — always searching for the intersection of rigorous science and expressive creativity.</p>
-      <p>I graduated Summa Cum Laude from Northeastern University with a B.S. in Biology and a Minor in Art, earning Honors in Biology — a distinction held by fewer than 3% of graduating Biology students.</p>
+      <p>[Bio paragraph 1 — add your own text here.]</p>
+      <p>[Bio paragraph 2 — add your own text here.]</p>
+      <p>[Bio paragraph 3 — add your own text here.]</p>
     </div>
 
     <div class="bio-links">
       <h3 class="connect-heading">Connect</h3>
       <nav class="link-list" aria-label="External profiles">
-        <a href="https://orcid.org/0009-0008-4264-5429" class="link-item" target="_blank" rel="noopener noreferrer">
+        <a href="https://orcid.org/0009-0005-9580-2712" class="link-item" target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 7h1.5M8 17V9.5H9.5a3.5 3.5 0 0 1 0 7H8z"/><circle cx="8.75" cy="6" r="0.75" fill="currentColor" stroke="none"/></svg>
           <span>ORCID Profile</span>
           <span class="link-arr">→</span>
@@ -413,7 +443,7 @@
               ctx.beginPath();
               ctx.moveTo(pts[i].x, pts[i].y);
               ctx.lineTo(pts[j].x, pts[j].y);
-              ctx.strokeStyle = `rgba(41,181,182,${(1 - d / MAXD) * 0.13})`;
+              ctx.strokeStyle = `rgba(48,188,104,${(1 - d / MAXD) * 0.13})`;
               ctx.lineWidth   = 0.6;
               ctx.stroke();
             }
@@ -422,7 +452,7 @@
         /* particles */
         pts.forEach(p => {
           hex(p.x, p.y, p.r);
-          ctx.fillStyle = `rgba(41,181,182,${p.a})`;
+          ctx.fillStyle = `rgba(48,188,104,${p.a})`;
           ctx.fill();
           p.tick();
         });

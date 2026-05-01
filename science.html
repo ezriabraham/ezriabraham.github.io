@@ -208,10 +208,8 @@
   <!-- ═══ TIMELINE ═══ -->
   <div class="view-panel active" id="panel-timeline">
     <div class="tl-legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#7E6B8F"></div> Academic</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#F96E46"></div> Biotech</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#29b5b6"></div> Art</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#8faa70"></div> Volunteering</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#30bc68"></div> Academic</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#5a3272"></div> Biotech</div>
     </div>
     <div class="tl-wrap" id="tl-wrap">
       <div class="tl-center"></div>
@@ -450,15 +448,10 @@
       {title:"Virtual Lab Meeting Training Program",org:"RCN-ECS / Wogan Lab",topic:"Academic",start:"October 2021",end:"May 2022",loc:"Remote",desc:"Learned evolutionary biology with the Wogan (Eco-Evo-Omics) Lab @ OK State"},
       {title:"Novel Antibiotic Discovery & Landscape Photography",org:"Godoy-Carter Lab @ Northeastern",topic:"Academic",start:"July 2024",end:"August 2024",loc:"Chile",desc:"Isolated extremophile bacteria from Patagonia and the Atacama Desert; examined antibiotic production, biofilm formation, and pigment expression."},
       {title:"Climate Science, Engineering & Policy",org:"Sustainability & Data Science Lab @ Northeastern",topic:"Academic",start:"June 2022",end:"July 2022",loc:"Tanzania",desc:"Collaborated with Tanzanian researchers on climate crisis solutions under Dr. Auroop Ganguly."},
-      {title:"Global Photography Fellow",org:"Northeastern University",topic:"Art",start:"June 2022",end:"July 2022",loc:"Tanzania",desc:"Selected to receive $1,500 in funding to document travels with Professor Ganguly."},
-      {title:"Executive Board Member & Nefesh Founder",org:"Northeastern University Hillel",topic:"Volunteering",start:"September 2021",end:"May 2025",loc:"Boston, MA",desc:"Founded Nefesh, Northeastern Hillel's Progressive Jewish community. Appointed and oversaw a board of 6, planned and led services and events, and trained 9 student leaders."},
-      {title:"Faculty",org:"URJ Six Points Sci-Tech Academy",topic:"Volunteering",start:"July 2025",end:"August 2025",loc:"Byfield, MA",desc:"Returned as a Faculty Volunteer to the Jewish science camp that inspired my love of science."},
-      {title:"SquidKid — BioDesign Challenge",org:"MoMA, New York",topic:"Art",start:"June 2025",end:"",loc:"New York, NY",desc:"Finalist and Best Display Award winner among 60+ global teams. SquidKid is an educational toy bioreactor replicating the Hawaiian bobtail squid's bioluminescent symbiosis."},
-      {title:"Woodworking",org:"",topic:"Art",start:"April 2025",end:"",loc:"Boston, MA",desc:"After graduation, spent 30+ hours/week learning woodworking with machine and hand tools."},
-      {title:"Pandora's Box",org:"",topic:"Art",start:"November 2023",end:"",loc:"Boston, MA",desc:"A mixed-media mechanical sculpture in which moving shadows representing demons from history and myth moved through a translucent glowing chamber."}
+      {title:"SGInnovate Summation Program",org:"SGInnovate",topic:"Biotech",start:"January 2024",end:"June 2024",loc:"Singapore",desc:"Selected by Singapore's state-backed VC fund for full funding to work at a deep tech startup."}
     ];
 
-    const COLORS = { academic:'#7E6B8F', biotech:'#F96E46', art:'#29b5b6', volunteering:'#8faa70' };
+    const COLORS = { academic:'#30bc68', biotech:'#5a3272' };
     function color(t){ return COLORS[t.toLowerCase()] || '#666'; }
 
     function parseDate(s){
@@ -476,7 +469,7 @@
       const PX    = 110;
       const totalMonths = (END-START)/(1000*60*60*24*30);
       const H = totalMonths*PX;
-      wrap.style.height = (H+100)+'px';
+      wrap.style.height = (H+280)+'px';
 
       for(let y=2021;y<=2026;y++){
         const m=(new Date(y,0)-START)/(1000*60*60*24*30);

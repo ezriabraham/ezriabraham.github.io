@@ -3,17 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plants — Photos — Ezri Abraham</title>
+  <title>Botanical Photography — Plants and Flora</title>
+  <meta name="description" content="Botanical and flora photography — flowers, trees, fungi, and plant life from tropical rainforests, deserts, and temperate ecosystems.">
   <link rel="stylesheet" href="../assets/css/main.css">
   <style>
     .gallery-wrap { max-width: 1200px; margin: 0 auto; padding: 0 2.5rem 5rem; }
-    .lightbox { position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.93); display: none; align-items: center; justify-content: center; padding: 2rem; cursor: zoom-out; }
+    .photo-grid { columns: 3 280px; column-gap: 0.75rem; }
+    .photo-figure { break-inside: avoid; margin-bottom: 0.75rem; position: relative; overflow: hidden; border-radius: 3px; background: var(--bg2); cursor: pointer; opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s ease; }
+    .photo-figure.visible { opacity: 1; transform: none; }
+    .photo-figure img { width: 100%; display: block; transition: transform 0.6s ease; }
+    .photo-figure:hover img { transform: scale(1.04); }
+    .photo-cap { position: absolute; inset: 0; background: linear-gradient(transparent 50%, rgba(0,0,0,0.82)); opacity: 0; transition: opacity 0.3s ease; display: flex; flex-direction: column; justify-content: flex-end; padding: 1.25rem; pointer-events: none; }
+    .photo-figure:hover .photo-cap { opacity: 1; }
+    .photo-cap-title { font-family: var(--font-serif); font-size: 0.95rem; color: #fff; margin-bottom: 0.2rem; }
+    .photo-cap-loc   { font-size: 0.72rem; color: rgba(255,255,255,0.65); }
+    .lightbox { position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.94); display: none; align-items: center; justify-content: center; padding: 2rem; cursor: zoom-out; }
     .lightbox.open { display: flex; }
-    .lightbox img { max-width: 90vw; max-height: 85vh; object-fit: contain; border-radius: 3px; cursor: default; }
-    .lb-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.2s; }
+    .lb-inner { position: relative; max-width: 90vw; max-height: 88vh; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; cursor: default; }
+    .lb-inner img { max-width: 100%; max-height: 80vh; object-fit: contain; border-radius: 3px; }
+    .lb-caption { color: rgba(255,255,255,0.65); font-size: 0.82rem; text-align: center; }
+    .lb-close { position: fixed; top: 1.5rem; right: 1.5rem; background: none; border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.2s; }
     .lb-close:hover { border-color: rgba(255,255,255,0.6); }
-    .lb-caption { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); text-align: center; color: rgba(255,255,255,0.7); font-size: 0.85rem; pointer-events: none; }
-    @media (max-width: 768px) { .gallery-wrap { padding: 0 1.25rem 4rem; } }
+    .gallery-empty { text-align: center; padding: 6rem 2rem; color: var(--text3); border: 1px dashed var(--border2); border-radius: 4px; font-size: 0.9rem; line-height: 2; }
+    @media (max-width: 768px) { .gallery-wrap { padding: 0 1.25rem 4rem; } .photo-grid { columns: 2 160px; } }
+    @media (max-width: 480px) { .photo-grid { columns: 1; } }
   </style>
 </head>
 <body>
@@ -39,56 +52,74 @@
   <header class="page-header">
     <span class="page-label">Photos</span>
     <h1>Plants</h1>
-    <p>Botanical and flora photography — the detail and geometry of plant life.</p>
+    <p>Botanical and flora photography.</p>
   </header>
 
   <div class="gallery-wrap">
-    <!--
-      HOW TO ADD PHOTOS — see animals.html for full instructions.
-      Macro/botanical shots often work well as class="tall" or default 4:3.
-
-      Example:
-        <div class="gallery-item" data-title="Title" data-desc="Description">
-          <img src="../assets/images/photo.jpg" alt="Alt text">
-          <div class="gallery-overlay">
-            <div class="gallery-title">Title</div>
-            <div class="gallery-desc">Description</div>
-          </div>
-        </div>
-    -->
-
-    <div class="gallery-placeholder">
-      <strong>Add your plant photos here.</strong><br>
-      Open <code>photos/plants.html</code> and follow the instructions in the comments above the gallery grid.<br>
-      Place image files in <code>assets/images/</code> and reference them with <code>src="../assets/images/filename.jpg"</code>
-    </div>
-
-    <div class="gallery-grid" id="gallery" style="margin-top: 2rem;">
-      <!-- gallery items go here -->
-    </div>
+    <div class="photo-grid" id="photoGrid"></div>
   </div>
 
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
     <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
-    <img id="lbImg" src="" alt="">
-    <div class="lb-caption" id="lbCaption"></div>
+    <div class="lb-inner">
+      <img id="lbImg" src="" alt="">
+      <div class="lb-caption" id="lbCaption"></div>
+    </div>
   </div>
 
   <footer class="site-footer">
     Ezri Abraham &nbsp;·&nbsp; ezribabraham@gmail.com &nbsp;·&nbsp; Pasadena, CA
   </footer>
+
   <script src="../assets/js/theme.js"></script>
   <script>
-    const lb = document.getElementById('lightbox');
-    const lbImg = document.getElementById('lbImg');
-    const lbCap = document.getElementById('lbCaption');
-    document.getElementById('gallery').addEventListener('click', e => {
-      const item = e.target.closest('.gallery-item'); if (!item) return;
-      const img = item.querySelector('img'); if (!img) return;
-      lbImg.src = img.src; lbImg.alt = img.alt;
-      lbCap.textContent = item.dataset.title || '';
-      lb.classList.add('open'); document.body.style.overflow = 'hidden';
-    });
+    /*
+    ═══════════════════════════════════════════════════════════
+    HOW TO ADD PHOTOS
+    ───────────────────────────────────────────────────────────
+    1. Drop your photo files into:  assets/images/photos/plants/
+    2. Add an entry to the PHOTOS array below.
+
+    Each entry:
+      src    — path to the image file (required)
+      alt    — describe WHAT IS IN THE PHOTO for Google image search
+               e.g. "Red orchid growing on mossy branch in Malaysian rainforest"
+      title  — short display title shown on hover
+      loc    — location / year (optional)
+
+    SEO tip: descriptive filenames help —
+      "red-orchid-penang-hill-malaysia.jpg" beats "DSC_0042.jpg"
+    ═══════════════════════════════════════════════════════════
+    */
+
+    const PHOTOS = [
+      // ← add your entries here
+    ];
+
+    const grid = document.getElementById('photoGrid');
+    if (PHOTOS.length === 0) {
+      grid.innerHTML = '<div class="gallery-empty" style="column-span:all"><strong>No photos yet.</strong><br>Open <code>photos/plants.html</code> and add entries to the <code>PHOTOS</code> array.</div>';
+    } else {
+      const imageObjects = [];
+      PHOTOS.forEach((p, i) => {
+        const fig = document.createElement('figure');
+        fig.className = 'photo-figure';
+        fig.style.transitionDelay = (i % 9 * 0.06) + 's';
+        fig.innerHTML = `<img src="${p.src}" alt="${p.alt}" loading="lazy"><div class="photo-cap">${p.title ? `<div class="photo-cap-title">${p.title}</div>` : ''}${p.loc ? `<div class="photo-cap-loc">${p.loc}</div>` : ''}</div>`;
+        fig.addEventListener('click', () => openLb(p));
+        grid.appendChild(fig);
+        imageObjects.push({ "@type": "ImageObject", "contentUrl": new URL(p.src, location.href).href, "description": p.alt, "name": p.title || p.alt, "representativeOfPage": i === 0 });
+      });
+      const ld = document.createElement('script');
+      ld.type = 'application/ld+json';
+      ld.textContent = JSON.stringify({ "@context": "https://schema.org", "@type": "ImageGallery", "name": "Botanical and Flora Photography", "description": document.querySelector('meta[name="description"]').content, "image": imageObjects });
+      document.head.appendChild(ld);
+      const io = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.photo-figure').forEach(f => io.observe(f));
+    }
+
+    const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lbImg'), lbCap = document.getElementById('lbCaption');
+    function openLb(p) { lbImg.src = p.src; lbImg.alt = p.alt; lbCap.textContent = [p.title, p.loc].filter(Boolean).join(' · '); lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
     function closeLb() { lb.classList.remove('open'); document.body.style.overflow = ''; }
     document.getElementById('lbClose').addEventListener('click', closeLb);
     lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });

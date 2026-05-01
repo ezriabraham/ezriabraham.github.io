@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Collaborations — Photos — Ezri Abraham</title>
+  <meta name="description" content="Photography produced in partnership with organizations and institutions.">
   <link rel="stylesheet" href="../assets/css/main.css">
   <style>
     .collab-wrap { max-width: 960px; margin: 0 auto; padding: 0 2.5rem 5rem; }
@@ -20,9 +21,22 @@
     .collab-entry.reverse { direction: rtl; }
     .collab-entry.reverse > * { direction: ltr; }
 
-    .collab-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
-    .collab-gallery .gallery-item { aspect-ratio: 1; border-radius: 3px; }
-    .collab-gallery .gallery-item.featured { grid-column: 1 / -1; aspect-ratio: 16/9; }
+    /* ── Instagram embed slot ── */
+    .ig-slot {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    /* Override Instagram's default white background in dark mode */
+    .instagram-media {
+      min-width: 0 !important;
+      width: 100% !important;
+      border-radius: 4px !important;
+    }
+    /*
+      Instagram embeds are always white-background iframes —
+      we wrap them so they at least sit flush in the layout.
+    */
 
     .collab-info {}
     .collab-label {
@@ -68,27 +82,6 @@
     }
     .collab-ext:hover { background: var(--accent); color: #fff; }
 
-    /* Placeholder gallery cells */
-    .collab-ph {
-      background: var(--bg3);
-      border: 1px dashed var(--border2);
-      border-radius: 3px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.72rem;
-      color: var(--text3);
-      text-align: center;
-      padding: 0.5rem;
-    }
-
-    .lightbox { position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.93); display: none; align-items: center; justify-content: center; padding: 2rem; cursor: zoom-out; }
-    .lightbox.open { display: flex; }
-    .lightbox img { max-width: 90vw; max-height: 85vh; object-fit: contain; border-radius: 3px; cursor: default; }
-    .lb-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .lb-close:hover { border-color: rgba(255,255,255,0.6); }
-    .lb-caption { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); text-align: center; color: rgba(255,255,255,0.7); font-size: 0.85rem; pointer-events: none; }
-
     @media (max-width: 820px) {
       .collab-entry { grid-template-columns: 1fr; gap: 2rem; }
       .collab-entry.reverse { direction: ltr; }
@@ -122,31 +115,36 @@
     <p>Photography produced in partnership with organizations and institutions.</p>
   </header>
 
-  <div class="collab-wrap" id="collabWrap">
+  <div class="collab-wrap">
 
     <!-- ── Collaboration 1: The Habitat ── -->
     <div class="collab-entry">
-      <div class="collab-gallery" id="habitat-gallery">
+      <div class="ig-slot">
         <!--
-          Add photos for The Habitat here. Example:
-            <div class="gallery-item featured" data-title="The Habitat">
-              <img src="../assets/images/habitat-1.jpg" alt="The Habitat Penang Hill">
-              <div class="gallery-overlay"><div class="gallery-title">The Habitat</div></div>
-            </div>
-            <div class="gallery-item" data-title="Canopy Walk">
-              <img src="../assets/images/habitat-2.jpg" alt="Canopy Walk">
-            </div>
+          ════════════════════════════════════════════
+          HOW TO ADD AN INSTAGRAM EMBED
+          ════════════════════════════════════════════
+          1. Go to the Instagram post you want to embed
+          2. Click the three dots (···) → "Embed"
+          3. Click "Copy embed code"
+          4. Paste the entire <blockquote>...</blockquote>
+             block here, replacing this comment.
+          You can add multiple embeds — they'll stack vertically.
+
+          The <script> tag at the bottom of this file
+          handles all embeds on the page automatically.
+          ════════════════════════════════════════════
         -->
-        <div class="collab-ph featured" style="aspect-ratio:16/9;">Featured photo</div>
-        <div class="collab-ph" style="aspect-ratio:1;">Photo 2</div>
-        <div class="collab-ph" style="aspect-ratio:1;">Photo 3</div>
+
+        <!-- PASTE THE HABITAT INSTAGRAM EMBED CODE HERE -->
+
       </div>
       <div class="collab-info">
         <span class="collab-label">Collaboration</span>
         <h2 class="collab-title">The Habitat<br>Penang Hill</h2>
         <div class="collab-sub">Penang, Malaysia</div>
         <p class="collab-desc">
-          The Habitat is a nature park and conservation centre on Penang Hill, Malaysia. Set within one of the world's oldest rainforests, it offers immersive encounters with the incredible biodiversity of the Sundaland region.
+          [Add your description of The Habitat collaboration here.]
         </p>
         <a href="https://www.thehabitat.my" class="collab-ext" target="_blank" rel="noopener noreferrer">
           Visit The Habitat →
@@ -156,20 +154,19 @@
 
     <!-- ── Collaboration 2: NEU Global Photography Fellow ── -->
     <div class="collab-entry reverse">
-      <div class="collab-gallery" id="neu-gallery">
+      <div class="ig-slot">
         <!--
-          Add Tanzania photos here. Same format as above.
+          PASTE THE NEU GLOBAL PHOTOGRAPHY FELLOW INSTAGRAM EMBED CODE HERE
+          (Same steps as above — go to post → ··· → Embed → Copy embed code)
         -->
-        <div class="collab-ph featured" style="aspect-ratio:16/9;">Featured photo</div>
-        <div class="collab-ph" style="aspect-ratio:1;">Photo 2</div>
-        <div class="collab-ph" style="aspect-ratio:1;">Photo 3</div>
+
       </div>
       <div class="collab-info">
         <span class="collab-label">Collaboration</span>
         <h2 class="collab-title">Northeastern Global<br>Photography Fellow</h2>
         <div class="collab-sub">Tanzania · 2022</div>
         <p class="collab-desc">
-          Selected to receive $1,500 in funding from Northeastern University to document a research expedition to Tanzania under Dr. Auroop Ganguly. The trip focused on climate science, engineering, and policy — collaborating with Tanzanian researchers on climate crisis solutions.
+          [Add your description of the Northeastern Global Photography Fellow collaboration here.]
         </p>
         <a href="https://globalexperiences.northeastern.edu" class="collab-ext" target="_blank" rel="noopener noreferrer">
           NEU Global Experiences →
@@ -178,63 +175,22 @@
     </div>
 
     <!--
-      ════════════════════════════════════
+      ════════════════════════════════════════════
       HOW TO ADD A NEW COLLABORATION
-      ════════════════════════════════════
-      Copy the block below, fill in the details, and paste it before the closing </div> of collab-wrap.
-
-      <div class="collab-entry">
-        <div class="collab-gallery">
-          <div class="gallery-item featured" data-title="Title">
-            <img src="../assets/images/photo.jpg" alt="Alt text">
-            <div class="gallery-overlay"><div class="gallery-title">Title</div></div>
-          </div>
-          <div class="gallery-item" data-title="Photo 2">
-            <img src="../assets/images/photo2.jpg" alt="Alt text">
-          </div>
-          <div class="gallery-item" data-title="Photo 3">
-            <img src="../assets/images/photo3.jpg" alt="Alt text">
-          </div>
-        </div>
-        <div class="collab-info">
-          <span class="collab-label">Collaboration</span>
-          <h2 class="collab-title">Organization Name</h2>
-          <div class="collab-sub">Location · Year</div>
-          <p class="collab-desc">Description of the collaboration.</p>
-          <a href="https://example.com" class="collab-ext" target="_blank" rel="noopener noreferrer">
-            Visit Website →
-          </a>
-        </div>
-      </div>
+      ════════════════════════════════════════════
+      Copy a .collab-entry block above, update the content,
+      and paste it here before the closing </div>.
+      Use class="collab-entry reverse" to flip the layout.
     -->
 
-  </div>
-
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
-    <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
-    <img id="lbImg" src="" alt="">
-    <div class="lb-caption" id="lbCaption"></div>
   </div>
 
   <footer class="site-footer">
     Ezri Abraham &nbsp;·&nbsp; ezribabraham@gmail.com &nbsp;·&nbsp; Pasadena, CA
   </footer>
+
   <script src="../assets/js/theme.js"></script>
-  <script>
-    const lb = document.getElementById('lightbox');
-    const lbImg = document.getElementById('lbImg');
-    const lbCap = document.getElementById('lbCaption');
-    document.getElementById('collabWrap').addEventListener('click', e => {
-      const item = e.target.closest('.gallery-item'); if (!item) return;
-      const img = item.querySelector('img'); if (!img) return;
-      lbImg.src = img.src; lbImg.alt = img.alt;
-      lbCap.textContent = item.dataset.title || '';
-      lb.classList.add('open'); document.body.style.overflow = 'hidden';
-    });
-    function closeLb() { lb.classList.remove('open'); document.body.style.overflow = ''; }
-    document.getElementById('lbClose').addEventListener('click', closeLb);
-    lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
-  </script>
+  <!-- Instagram embed script — loads all blockquote embeds on the page -->
+  <script async src="//www.instagram.com/embed.js"></script>
 </body>
 </html>

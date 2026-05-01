@@ -2,19 +2,19 @@
 
 /* ===== TOKENS ===== */
 :root {
-  --bg-rgb:    9, 9, 13;
-  --bg:        #09090d;
-  --bg2:       #111118;
-  --bg3:       #191923;
-  --text:      #e6e2da;
-  --text2:     #8b8780;
-  --text3:     #504d48;
-  --accent:    #29b5b6;
-  --accent2:   #8faa70;
-  --gold:      #c49a5e;
-  --border:    rgba(255,255,255,0.06);
-  --border2:   rgba(255,255,255,0.13);
-  --shadow:    0 4px 32px rgba(0,0,0,0.45);
+  --bg-rgb:    10, 8, 14;
+  --bg:        #0a080e;
+  --bg2:       #120f22;
+  --bg3:       #1a1640;
+  --text:      #e4e2f8;
+  --text2:     #9490c0;
+  --text3:     #56527a;
+  --accent:    #30bc68;
+  --accent2:   #5a3272;
+  --gold:      #6ed430;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.14);
+  --shadow:    0 4px 32px rgba(0,0,0,0.55);
 
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans:  'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -25,50 +25,50 @@
 
 @media (prefers-color-scheme: light) {
   :root {
-    --bg-rgb:  243, 239, 232;
-    --bg:      #f3efe8;
-    --bg2:     #ebe7df;
-    --bg3:     #e2ddd5;
-    --text:    #1b1814;
-    --text2:   #5f5c57;
-    --text3:   #9c9890;
-    --accent:  #1a9394;
-    --accent2: #4f7a35;
-    --gold:    #a07830;
+    --bg-rgb:  244, 242, 252;
+    --bg:      #f4f2fc;
+    --bg2:     #eceaf5;
+    --bg3:     #e2dff0;
+    --text:    #16123a;
+    --text2:   #4a4668;
+    --text3:   #8c88aa;
+    --accent:  #1a8e4a;
+    --accent2: #5a3278;
+    --gold:    #3a9418;
     --border:  rgba(0,0,0,0.07);
     --border2: rgba(0,0,0,0.15);
     --shadow:  0 4px 32px rgba(0,0,0,0.12);
   }
 }
 [data-theme="light"] {
-  --bg-rgb:  243, 239, 232;
-  --bg:      #f3efe8;
-  --bg2:     #ebe7df;
-  --bg3:     #e2ddd5;
-  --text:    #1b1814;
-  --text2:   #5f5c57;
-  --text3:   #9c9890;
-  --accent:  #1a9394;
-  --accent2: #4f7a35;
-  --gold:    #a07830;
+  --bg-rgb:  244, 242, 252;
+  --bg:      #f4f2fc;
+  --bg2:     #eceaf5;
+  --bg3:     #e2dff0;
+  --text:    #16123a;
+  --text2:   #4a4668;
+  --text3:   #8c88aa;
+  --accent:  #1a8e4a;
+  --accent2: #5a3278;
+  --gold:    #3a9418;
   --border:  rgba(0,0,0,0.07);
   --border2: rgba(0,0,0,0.15);
   --shadow:  0 4px 32px rgba(0,0,0,0.12);
 }
 [data-theme="dark"] {
-  --bg-rgb:  9, 9, 13;
-  --bg:      #09090d;
-  --bg2:     #111118;
-  --bg3:     #191923;
-  --text:    #e6e2da;
-  --text2:   #8b8780;
-  --text3:   #504d48;
-  --accent:  #29b5b6;
-  --accent2: #8faa70;
-  --gold:    #c49a5e;
-  --border:  rgba(255,255,255,0.06);
-  --border2: rgba(255,255,255,0.13);
-  --shadow:  0 4px 32px rgba(0,0,0,0.45);
+  --bg-rgb:  10, 8, 14;
+  --bg:      #0a080e;
+  --bg2:     #120f22;
+  --bg3:     #1a1640;
+  --text:    #e4e2f8;
+  --text2:   #9490c0;
+  --text3:   #56527a;
+  --accent:  #30bc68;
+  --accent2: #5a3272;
+  --gold:    #6ed430;
+  --border:  rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.14);
+  --shadow:  0 4px 32px rgba(0,0,0,0.55);
 }
 
 /* ===== RESET ===== */
