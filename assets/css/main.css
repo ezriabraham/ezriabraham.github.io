@@ -1,4 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500&family=Barlow+Condensed:wght@400;500;600&display=swap');
+/* ===== FONTS ===== */
+
+/* Coconat — hero / large display titles */
+@font-face { font-family: 'Coconat'; src: url('../fonts/Coconat-Regular.woff2') format('woff2'), url('../fonts/Coconat-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Coconat'; src: url('../fonts/Coconat-Bold.woff2') format('woff2'), url('../fonts/Coconat-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
+
+/* Albra Book — section headings, page titles */
+@font-face { font-family: 'Albra'; src: url('../fonts/AlbraBook-Light.otf') format('opentype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Albra'; src: url('../fonts/AlbraBook-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Albra'; src: url('../fonts/AlbraBook-Medium.otf') format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'AlbraDisplay'; src: url('../fonts/AlbraDisplay-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'AlbraDisplay'; src: url('../fonts/AlbraDisplay-Italic.otf') format('opentype'); font-weight: 400; font-style: italic; font-display: swap; }
+
+/* GT Walsheim — body text, UI */
+@font-face { font-family: 'GT Walsheim'; src: url('../fonts/GTWalsheim-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+
+/* Messapia — labels, nav, eyebrows, tags */
+@font-face { font-family: 'Messapia'; src: url('../fonts/Messapia-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Messapia'; src: url('../fonts/Messapia-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
 
 /* ===== TOKENS ===== */
 :root {
@@ -16,9 +34,10 @@
   --border2:   rgba(255,255,255,0.14);
   --shadow:    0 4px 32px rgba(0,0,0,0.55);
 
-  --font-serif:    'Cormorant Garamond', Georgia, serif;
-  --font-sans:     'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-condensed:'Barlow Condensed', sans-serif;
+  --font-display:  'Coconat', sans-serif;
+  --font-serif:    'Albra', 'AlbraDisplay', Georgia, serif;
+  --font-sans:     'GT Walsheim', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-condensed:'Messapia', sans-serif;
   --nav-h: 64px;
   --t:  0.3s ease;
   --ts: 0.6s ease;
