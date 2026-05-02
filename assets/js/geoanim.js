@@ -332,7 +332,9 @@
     var footerEl = document.querySelector('.site-footer');
     var pageH   = document.body.scrollHeight;
     var stopAt  = footerEl ? (pageH - footerEl.offsetHeight - 320) : (pageH - 320);
-    var startAt = 340;
+    /* on hero pages, start below the full-height hero section */
+    var heroEl  = document.querySelector('.hero');
+    var startAt = heroEl ? (heroEl.offsetTop + heroEl.offsetHeight + 80) : 340;
     var spacing = 420;
     var idx = 0;
     for (var top = startAt; top <= stopAt; top += spacing) {
