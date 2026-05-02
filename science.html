@@ -20,8 +20,10 @@
       background: none;
       border: none;
       padding: 0.55rem 1.5rem;
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--text2);
       transition: background var(--t), color var(--t);
@@ -209,7 +211,7 @@
   <div class="view-panel active" id="panel-timeline">
     <div class="tl-legend">
       <div class="legend-item"><div class="legend-dot" style="background:#1ca358"></div> Academic</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#2e5cf5"></div> Biotech</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#1a3d8f"></div> Biotech</div>
     </div>
     <div class="tl-wrap" id="tl-wrap">
       <div class="tl-center"></div>
@@ -426,6 +428,7 @@
   </footer>
 
   <script src="assets/js/theme.js"></script>
+  <script src="assets/js/geoanim.js"></script>
   <script>
     /* ── View toggle ── */
     document.querySelectorAll('.view-btn').forEach(btn => {
@@ -451,7 +454,7 @@
       {title:"SGInnovate Summation Program",org:"SGInnovate",topic:"Biotech",start:"January 2024",end:"June 2024",loc:"Singapore",desc:"Selected by Singapore's state-backed VC fund for full funding to work at a deep tech startup."}
     ];
 
-    const COLORS = { academic:'#1ca358', biotech:'#2e5cf5' };
+    const COLORS = { academic:'#1ca358', biotech:'#1a3d8f' };
     function color(t){ return COLORS[t.toLowerCase()] || '#666'; }
 
     function parseDate(s){

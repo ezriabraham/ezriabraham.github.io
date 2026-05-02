@@ -1,43 +1,47 @@
+/* ===== GOOGLE FONTS ===== */
+@import url('https://fonts.googleapis.com/css2?family=Martian+Mono:wght@300;400;600&display=swap');
+
 /* ===== FONTS ===== */
 
-/* Coconat — hero / large display titles */
-@font-face { font-family: 'Coconat'; src: url('../fonts/Coconat-Regular.woff2') format('woff2'), url('../fonts/Coconat-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Coconat'; src: url('../fonts/Coconat-Bold.woff2') format('woff2'), url('../fonts/Coconat-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
+/* Lecturis — main display (NYBG Gothic equivalent) */
+@font-face { font-family: 'Lecturis'; src: url('../fonts/fhlecturistest-light.otf') format('opentype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Lecturis'; src: url('../fonts/fhlecturistest-regular.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Lecturis'; src: url('../fonts/fhlecturistest-bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
 
-/* Albra Book — section headings, page titles */
+/* AlbraDisplay — editorial headings (GT Super equivalent) */
+@font-face { font-family: 'AlbraDisplay'; src: url('../fonts/AlbraDisplay-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'AlbraDisplay'; src: url('../fonts/AlbraDisplay-Italic.otf') format('opentype'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'AlbraDisplay'; src: url('../fonts/AlbraDisplay-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'AlbraDisplay'; src: url('../fonts/AlbraDisplay-Bold-Italic.otf') format('opentype'); font-weight: 700; font-style: italic; font-display: swap; }
+
+/* AlbraBook — supporting serif text */
 @font-face { font-family: 'Albra'; src: url('../fonts/AlbraBook-Light.otf') format('opentype'); font-weight: 300; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Albra'; src: url('../fonts/AlbraBook-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Albra'; src: url('../fonts/AlbraBook-Medium.otf') format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
-@font-face { font-family: 'AlbraDisplay'; src: url('../fonts/AlbraDisplay-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
-@font-face { font-family: 'AlbraDisplay'; src: url('../fonts/AlbraDisplay-Italic.otf') format('opentype'); font-weight: 400; font-style: italic; font-display: swap; }
 
-/* GT Walsheim — body text, UI */
+/* GT Walsheim — body text */
 @font-face { font-family: 'GT Walsheim'; src: url('../fonts/GTWalsheim-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
-
-/* Messapia — labels, nav, eyebrows, tags */
-@font-face { font-family: 'Messapia'; src: url('../fonts/Messapia-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Messapia'; src: url('../fonts/Messapia-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
 
 /* ===== TOKENS ===== */
 :root {
-  --bg-rgb:    243, 245, 252;
-  --bg:        #f3f5fc;
-  --bg2:       #eaecf8;
-  --bg3:       #dde1f4;
-  --text:      #0f1428;
-  --text2:     #424870;
-  --text3:     #8890b8;
+  --bg-rgb:    240, 244, 252;
+  --bg:        #f0f4fc;
+  --bg2:       #e5eaf6;
+  --bg3:       #d8deee;
+  --text:      #0c1226;
+  --text2:     #2d4575;
+  --text3:     #6575a0;
   --accent:    #1ca358;
-  --accent2:   #2e5cf5;
-  --gold:      #5ac418;
-  --border:    rgba(46,92,245,0.12);
-  --border2:   rgba(46,92,245,0.24);
-  --shadow:    0 4px 32px rgba(20,30,80,0.12);
+  --accent2:   #1a3d8f;
+  --gold:      #4ab815;
+  --border:    rgba(26,61,143,0.10);
+  --border2:   rgba(26,61,143,0.22);
+  --shadow:    0 4px 32px rgba(12,18,38,0.12);
 
-  --font-display:  'Coconat', sans-serif;
-  --font-serif:    'Albra', 'AlbraDisplay', Georgia, serif;
+  --font-display:  'Lecturis', 'Coconat', sans-serif;
+  --font-serif:    'AlbraDisplay', 'Albra', Georgia, serif;
   --font-sans:     'GT Walsheim', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-condensed:'Messapia', sans-serif;
+  --font-mono:     'Martian Mono', 'Messapia', monospace;
   --nav-h: 64px;
   --t:  0.3s ease;
   --ts: 0.6s ease;
@@ -78,10 +82,10 @@ ul { list-style: none; }
   transition: background var(--t), border-color var(--t);
 }
 .nav-logo {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   color: var(--text);
   transition: color var(--t);
   white-space: nowrap;
@@ -96,8 +100,8 @@ ul { list-style: none; }
 }
 .nav-links a {
   color: var(--text2);
-  font-family: var(--font-condensed);
-  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -141,18 +145,18 @@ ul { list-style: none; }
 }
 .page-label {
   display: block;
-  font-family: var(--font-condensed);
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.28em;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 1rem;
 }
 .page-header h1 {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 400;
+  font-weight: 700;
   letter-spacing: 0.04em;
   line-height: 1.15;
   margin-bottom: 1rem;
@@ -282,10 +286,10 @@ section { padding: 4rem 0; }
   align-items: center;
   gap: 0.5rem;
   color: var(--text2);
-  font-family: var(--font-condensed);
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 1.5rem 2.5rem 0;
   transition: color var(--t);
@@ -322,8 +326,8 @@ section { padding: 4rem 0; }
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(46,92,245,0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(46,92,245,0.045) 1px, transparent 1px);
+    linear-gradient(rgba(26,61,143,0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,61,143,0.045) 1px, transparent 1px);
   background-size: 48px 48px;
   pointer-events: none;
 }
@@ -333,7 +337,7 @@ section { padding: 4rem 0; }
   inset: 0;
   background:
     radial-gradient(ellipse at 20% 60%, rgba(28,163,88,0.09) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 40%, rgba(46,92,245,0.09) 0%, transparent 55%);
+    radial-gradient(ellipse at 80% 40%, rgba(26,61,143,0.09) 0%, transparent 55%);
   pointer-events: none;
 }
 .page-header > * { position: relative; z-index: 1; }
@@ -341,14 +345,14 @@ section { padding: 4rem 0; }
 /* ===== CARDS — more colour on hover ===== */
 .cat-card:hover {
   border-color: var(--accent2);
-  box-shadow: 0 8px 40px rgba(46,92,245,0.14);
+  box-shadow: 0 8px 40px rgba(26,61,143,0.14);
 }
 .explore-card:hover {
   border-color: var(--accent2);
-  box-shadow: 0 6px 28px rgba(46,92,245,0.12);
+  box-shadow: 0 6px 28px rgba(26,61,143,0.12);
   background: linear-gradient(135deg,
     rgba(28,163,88,0.04) 0%,
-    rgba(46,92,245,0.04) 100%);
+    rgba(26,61,143,0.04) 100%);
 }
 .explore-card svg { transition: stroke var(--t), transform var(--ts); }
 .explore-card:hover svg { stroke: var(--accent2); transform: scale(1.12); }
