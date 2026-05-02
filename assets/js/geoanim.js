@@ -246,16 +246,12 @@
   document.head.appendChild(S);
 
   /* ═══════════════════════════════════════════════════
-     3. MARGIN CREATURES — absolute on page, scroll past them
+     3. MARGIN CREATURES — spread along page, repeat on longer pages
      ═══════════════════════════════════════════════════ */
   document.body.style.position = 'relative';
 
-  /* Pelican — right margin, upper page */
-  var pelicanWrap = document.createElement('div');
-  pelicanWrap.className = 'mgn-creature';
-  pelicanWrap.setAttribute('aria-hidden', 'true');
-  pelicanWrap.style.cssText = 'right:8px;top:380px;animation:pelicanGlide 8s ease-in-out infinite;';
-  pelicanWrap.innerHTML =
+  var creatureSVGs = [
+    /* 0: pelican */
     '<svg width="58" height="34" viewBox="0 0 58 34" fill="none">' +
     '<ellipse cx="30" cy="20" rx="16" ry="8" stroke="rgba(26,61,143,0.68)" stroke-width="1.1" fill="rgba(26,61,143,0.16)"/>' +
     '<ellipse cx="47" cy="15" rx="6" ry="5" stroke="rgba(26,61,143,0.65)" stroke-width="1" fill="rgba(26,61,143,0.14)"/>' +
@@ -265,15 +261,8 @@
     '<path d="M14 20 L2 14 L0 24Z" stroke="rgba(26,61,143,0.5)" stroke-width="0.9" fill="rgba(26,61,143,0.12)"/>' +
     '<path d="M22 17 Q12 4 2 2 Q14 11 30 17Z" stroke="rgba(26,61,143,0.6)" stroke-width="1" fill="rgba(26,61,143,0.14)" style="transform-origin:22px 17px;animation:pelicanWing 2.5s ease-in-out infinite;"/>' +
     '<path d="M22 21 Q12 30 4 32 Q16 25 30 21Z" stroke="rgba(26,61,143,0.48)" stroke-width="0.9" fill="rgba(26,61,143,0.1)" style="transform-origin:22px 21px;animation:pelicanWing 2.5s ease-in-out infinite;animation-delay:0.1s;"/>' +
-    '</svg>';
-  document.body.appendChild(pelicanWrap);
-
-  /* Tree Frog — left margin, mid page */
-  var frogWrap = document.createElement('div');
-  frogWrap.className = 'mgn-creature';
-  frogWrap.setAttribute('aria-hidden', 'true');
-  frogWrap.style.cssText = 'left:8px;top:750px;animation:frogHop 14s ease-in-out infinite;';
-  frogWrap.innerHTML =
+    '</svg>',
+    /* 1: frog */
     '<svg width="50" height="54" viewBox="0 0 50 54" fill="none">' +
     '<ellipse cx="25" cy="34" rx="13" ry="11" stroke="rgba(28,163,88,0.7)" stroke-width="1.2" fill="rgba(28,163,88,0.18)"/>' +
     '<ellipse cx="25" cy="20" rx="10" ry="8" stroke="rgba(28,163,88,0.7)" stroke-width="1.1" fill="rgba(28,163,88,0.2)"/>' +
@@ -287,15 +276,8 @@
     '<path d="M37 42 Q45 47 49 52" stroke="rgba(28,163,88,0.52)" stroke-width="1.1" fill="none"/>' +
     '<circle cx="1" cy="52" r="2" fill="rgba(28,163,88,0.38)"/>' +
     '<circle cx="49" cy="52" r="2" fill="rgba(28,163,88,0.38)"/>' +
-    '</svg>';
-  document.body.appendChild(frogWrap);
-
-  /* Snake — right margin, lower page */
-  var snakeWrap = document.createElement('div');
-  snakeWrap.className = 'mgn-creature';
-  snakeWrap.setAttribute('aria-hidden', 'true');
-  snakeWrap.style.cssText = 'right:8px;top:1150px;animation:snakeSlither 5s ease-in-out infinite;';
-  snakeWrap.innerHTML =
+    '</svg>',
+    /* 2: snake */
     '<svg width="24" height="80" viewBox="0 0 24 80" fill="none">' +
     '<path d="M12 2 Q18 12 12 22 Q6 32 12 42 Q18 52 12 62 Q6 72 10 78" stroke="rgba(26,61,143,0.65)" stroke-width="5" stroke-linecap="round" fill="none"/>' +
     '<path d="M12 2 Q18 12 12 22 Q6 32 12 42 Q18 52 12 62 Q6 72 10 78" stroke="rgba(148,196,238,0.3)" stroke-width="2.5" stroke-linecap="round" fill="none"/>' +
@@ -305,8 +287,39 @@
     '<circle cx="9.9" cy="3.6" r="0.6" fill="rgba(220,235,255,0.9)"/>' +
     '<circle cx="14.9" cy="3.6" r="0.6" fill="rgba(220,235,255,0.9)"/>' +
     '<path d="M12 8 L11 11 M12 8 L13 11" stroke="rgba(210,50,50,0.7)" stroke-width="0.8" fill="none"/>' +
-    '</svg>';
-  document.body.appendChild(snakeWrap);
+    '</svg>'
+  ];
+  var creatureAnims = [
+    'pelicanGlide 8s ease-in-out infinite',
+    'frogHop 14s ease-in-out infinite',
+    'snakeSlither 5s ease-in-out infinite'
+  ];
+
+  function placeCreatures() {
+    var footerEl = document.querySelector('.site-footer');
+    var pageH   = document.body.scrollHeight;
+    var stopAt  = footerEl ? (pageH - footerEl.offsetHeight - 320) : (pageH - 320);
+    var startAt = 340;
+    var spacing = 420;
+    var idx = 0;
+    for (var top = startAt; top <= stopAt; top += spacing) {
+      var side = (idx % 2 === 0) ? 'right' : 'left';
+      var type = idx % 3;
+      var el = document.createElement('div');
+      el.className = 'mgn-creature';
+      el.setAttribute('aria-hidden', 'true');
+      el.style.cssText = side + ':8px;top:' + top + 'px;animation:' + creatureAnims[type] + ';animation-delay:-' + (idx * 1.7) + 's;';
+      el.innerHTML = creatureSVGs[type];
+      document.body.appendChild(el);
+      idx++;
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', placeCreatures);
+  } else {
+    placeCreatures();
+  }
 
   /* ═══════════════════════════════════════════════════
      4. UNDERWATER FOOTER (all pages)
