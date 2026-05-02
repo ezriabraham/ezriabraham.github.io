@@ -213,6 +213,7 @@
       <div class="legend-item"><div class="legend-dot" style="background:#1ca358"></div> Academic</div>
       <div class="legend-item"><div class="legend-dot" style="background:#1a3d8f"></div> Biotech</div>
     </div>
+    <p style="text-align:center;font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text3);margin-bottom:1.25rem;">Hover over bars to explore · Scroll to travel through time</p>
     <div class="tl-wrap" id="tl-wrap">
       <div class="tl-center"></div>
     </div>
@@ -468,13 +469,13 @@
       const wrap = document.getElementById('tl-wrap');
       const tip  = document.getElementById('tlTooltip');
       const START = new Date(2021,7);
-      const END   = new Date(2026,6);
-      const PX    = 110;
+      const END   = new Date(2026,11);
+      const PX    = 55;
       const totalMonths = (END-START)/(1000*60*60*24*30);
       const H = totalMonths*PX;
-      wrap.style.height = (H+280)+'px';
+      wrap.style.height = (H+160)+'px';
 
-      for(let y=2021;y<=2026;y++){
+      for(let y=2021;y<=2027;y++){
         const m=(new Date(y,0)-START)/(1000*60*60*24*30);
         const el=document.createElement('div');
         el.className='tl-year';
@@ -491,7 +492,7 @@
         const s=parseDate(item.start);
         const eRaw=item.end&&item.end.trim()?parseDate(item.end):null;
         const isOpen=!eRaw;
-        const e=eRaw||(item.title.includes('Ph.D.')?new Date(2027,0):null);
+        const e=eRaw||(item.title.includes('Ph.D.')?END:null);
         const top=(s-START)/(1000*60*60*24*30)*PX;
         const c=color(item.topic);
         const thisSide=side%2===0?'left':'right';
