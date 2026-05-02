@@ -91,25 +91,20 @@
     '.hdr-bird-2 svg{animation-duration:0.82s;}' +
     '@keyframes wFlap{0%,100%{transform:scaleY(1);}50%{transform:scaleY(0.60);}}' +
 
-    /* ocean footer: solid fill, wave overlays the top fade */
-    '.sea-zone{position:relative;overflow:hidden;min-height:280px;' +
-    'background:rgba(148,196,238,0.62);}' +
-    /* fade from page bg into ocean over the top 55px */
-    '.sea-zone::before{content:"";position:absolute;top:0;left:0;right:0;height:55px;' +
-    'background:linear-gradient(to bottom,var(--bg) 0%,transparent 100%);' +
-    'z-index:5;pointer-events:none;}' +
-    '.sea-wave{position:absolute;top:0;left:0;width:300%;height:60px;pointer-events:none;z-index:4;' +
+    /* ocean footer: wave SVG provides both the wavy top edge AND all the fill below */
+    '.sea-zone{position:relative;overflow:hidden;min-height:280px;background:transparent;}' +
+    '.sea-wave{position:absolute;top:0;left:0;width:300%;height:100%;min-height:280px;pointer-events:none;z-index:1;' +
     'animation:waveSurf 7s linear infinite;}' +
     '@keyframes waveSurf{from{transform:translateX(0);}to{transform:translateX(-33.333%);}}' +
 
     /* jellyfish */
-    '.geo-jelly{position:absolute;pointer-events:none;opacity:0.55;' +
+    '.geo-jelly{position:absolute;pointer-events:none;opacity:0.55;z-index:2;' +
     'animation:jellyBob 8s ease-in-out infinite;}' +
     '.geo-jelly-2{animation-duration:11s;animation-delay:-4.5s;}' +
     '@keyframes jellyBob{0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(-20px) rotate(4deg);}}' +
 
     /* fish: outer div swims X, inner div bobs Y */
-    '.fish-x{position:absolute;pointer-events:none;}' +
+    '.fish-x{position:absolute;pointer-events:none;z-index:2;}' +
     '.fish-x-1{bottom:80px;animation:fishX1 28s linear infinite;}' +
     '.fish-x-2{bottom:110px;animation:fishX2 38s linear infinite;opacity:0.72;}' +
     '@keyframes fishX1{' +
@@ -130,7 +125,7 @@
     '@keyframes fishY2{0%,100%{transform:translateY(-10px);}50%{transform:translateY(14px);}}' +
 
     /* coral */
-    '.sea-coral{position:absolute;pointer-events:none;}' +
+    '.sea-coral{position:absolute;pointer-events:none;z-index:2;}' +
 
     /* floating sea links */
     '.sea-link{position:absolute;z-index:6;' +
@@ -184,20 +179,20 @@
   footer.classList.add('sea-zone');
   footer.style.position = 'relative';
 
-  /* Wave: 300% wide, period=1/3 → translateX(-33.333%) is seamless */
-  var wBlue = 'rgba(148,196,238,0.7)';
-  var wMid  = 'rgba(168,210,242,0.45)';
+  /* Wave: 300% wide SVG covers full sea-zone height — wave path IS the top boundary */
+  var wBase = 'rgba(148,196,238,0.62)';
+  var wRipple = 'rgba(168,210,242,0.28)';
   var waveSVG =
-    '<svg class="sea-wave" viewBox="0 0 1800 60" preserveAspectRatio="none" fill="none" aria-hidden="true">' +
+    '<svg class="sea-wave" viewBox="0 0 1800 280" preserveAspectRatio="none" fill="none" aria-hidden="true">' +
     '<path d="M0 30 C100 10 200 50 300 30 C400 10 500 50 600 30 ' +
               'C700 10 800 50 900 30 C1000 10 1100 50 1200 30 ' +
               'C1300 10 1400 50 1500 30 C1600 10 1700 50 1800 30 ' +
-              'L1800 60 L0 60 Z" fill="' + wBlue + '"/>' +
-    '<path d="M0 36 C80 20 160 52 240 36 C320 20 400 52 480 36 ' +
-              'C560 20 640 52 720 36 C800 20 880 52 960 36 ' +
-              'C1040 20 1120 52 1200 36 C1280 20 1360 52 1440 36 ' +
-              'C1520 20 1600 52 1680 36 C1760 20 1800 36 1800 36 ' +
-              'L1800 60 L0 60 Z" fill="' + wMid + '"/>' +
+              'L1800 280 L0 280 Z" fill="' + wBase + '"/>' +
+    '<path d="M0 38 C80 22 160 54 240 38 C320 22 400 54 480 38 ' +
+              'C560 22 640 54 720 38 C800 22 880 54 960 38 ' +
+              'C1040 22 1120 54 1200 38 C1280 22 1360 54 1440 38 ' +
+              'C1520 22 1600 54 1680 38 C1760 22 1800 38 1800 38 ' +
+              'L1800 280 L0 280 Z" fill="' + wRipple + '"/>' +
     '</svg>';
 
   /* Jellyfish */
@@ -237,9 +232,10 @@
 
   var fishSVG2 =
     '<svg width="40" height="20" viewBox="0 0 54 26" fill="none">' +
-    '<polygon points="10,13 30,4 46,13 30,22" stroke="rgba(28,163,88,0.78)" stroke-width="1.1" fill="rgba(28,163,88,0.2)"/>' +
-    '<polygon points="10,13 0,5 2,13 0,21" stroke="rgba(28,163,88,0.62)" stroke-width="0.9" fill="rgba(28,163,88,0.16)"/>' +
-    '<circle cx="38" cy="13" r="2.5" fill="rgba(28,163,88,0.62)"/>' +
+    '<polygon points="10,13 30,4 46,13 30,22" stroke="rgba(26,61,143,0.78)" stroke-width="1.1" fill="rgba(148,196,238,0.5)"/>' +
+    '<polygon points="10,13 0,5 2,13 0,21" stroke="rgba(26,61,143,0.62)" stroke-width="0.9" fill="rgba(26,61,143,0.2)"/>' +
+    '<circle cx="38" cy="13" r="2.5" fill="rgba(26,61,143,0.6)"/>' +
+    '<circle cx="38.8" cy="12.3" r="0.9" fill="rgba(240,248,255,0.95)"/>' +
     '</svg>';
 
   var fish1 = '<div class="fish-x fish-x-1" aria-hidden="true"><div class="fish-y">' + fishSVG1 + '</div></div>';
