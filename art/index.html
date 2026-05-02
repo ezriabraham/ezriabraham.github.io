@@ -6,84 +6,74 @@
   <title>Art — Ezri Abraham</title>
   <link rel="stylesheet" href="../assets/css/main.css">
   <style>
-    .art-feed { max-width: 900px; margin: 0 auto; padding: 0 2.5rem 5rem; }
+    .art-feed { max-width: 1080px; margin: 0 auto; padding: 0 2rem 5rem; }
 
-    .art-grid { columns: 2 260px; column-gap: 1.1rem; }
-
-    .art-piece {
-      break-inside: avoid;
-      margin-bottom: 1.1rem;
-      position: relative;
-      border-radius: 4px;
-      overflow: hidden;
-      cursor: pointer;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      opacity: 0;
-      transform: translateY(32px) scale(0.98);
-      transition: opacity 0.55s ease, transform 0.55s ease, border-color var(--t), box-shadow var(--t);
-      will-change: transform;
+    .art-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 3rem 2rem;
     }
-    .art-piece.visible { opacity: 1; transform: translateY(0) scale(1); }
-    .art-piece:hover { border-color: var(--border2); box-shadow: 0 8px 32px rgba(26,61,143,0.09); }
 
-    .art-piece-img-wrap { overflow: hidden; background: var(--bg3); position: relative; }
-    .art-piece-img-wrap img { width: 100%; display: block; transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94); }
-    .art-piece:hover .art-piece-img-wrap img { transform: scale(1.06); }
+    /* each tile: just media + label, no box */
+    .art-tile {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .art-tile.visible { opacity: 1; transform: none; }
+
+    .art-tile-media {
+      width: 100%; overflow: hidden; border-radius: 3px;
+      background: var(--bg2); position: relative; cursor: pointer;
+    }
+    .art-tile-media img {
+      width: 100%; display: block;
+      transition: transform 0.65s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .art-tile-media:hover img { transform: scale(1.04); }
 
     /* multi-image badge */
     .img-count {
       position: absolute; top: 0.5rem; right: 0.5rem;
       font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em;
       background: rgba(0,0,0,0.55); color: rgba(255,255,255,0.85);
-      padding: 0.18rem 0.45rem; border-radius: 10px;
-      pointer-events: none;
+      padding: 0.18rem 0.45rem; border-radius: 10px; pointer-events: none;
     }
 
-    .art-piece-geo {
-      width: 100%; aspect-ratio: 4/3;
+    /* YouTube thumbnail tile */
+    .art-yt-wrap {
+      position: relative; aspect-ratio: 16/9;
+      overflow: hidden; border-radius: 3px; display: block;
+    }
+    .art-yt-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .art-yt-play {
+      position: absolute; inset: 0;
       display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.22); transition: background 0.2s;
     }
-    .art-piece-geo svg { width: 64px; height: 64px; opacity: 0.12; }
+    .art-yt-wrap:hover .art-yt-play { background: rgba(0,0,0,0.05); }
+    .art-yt-play svg { filter: drop-shadow(0 2px 10px rgba(0,0,0,0.6)); }
 
-    .art-piece-info { padding: 0.9rem 1.1rem 1rem; }
-    .art-piece-title {
+    .art-tile-label { padding: 0.7rem 0 0; }
+    .art-tile-title {
       font-family: var(--font-serif);
-      font-size: 0.98rem;
-      font-weight: 400;
-      color: var(--text);
-      margin-bottom: 0.25rem;
-      line-height: 1.3;
+      font-size: 1rem; font-weight: 400;
+      color: var(--text); margin-bottom: 0.2rem; line-height: 1.3;
     }
-    .art-piece-meta {
-      font-size: 0.68rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text3);
+    .art-tile-meta {
+      font-size: 0.65rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text3); margin-bottom: 0.4rem;
     }
-    .art-piece-desc {
-      font-size: 0.8rem;
-      color: var(--text2);
-      margin-top: 0.45rem;
-      line-height: 1.6;
-    }
-    .art-piece-links {
-      display: flex; flex-wrap: wrap; gap: 0.4rem;
-      margin-top: 0.6rem;
-    }
-    .art-piece-link {
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--accent);
-      border: 1px solid var(--border2);
-      border-radius: 2px;
-      padding: 0.2rem 0.5rem;
-      text-decoration: none;
+    .art-tile-desc { font-size: 0.8rem; color: var(--text2); line-height: 1.65; margin-bottom: 0.45rem; }
+    .art-tile-links { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .art-tile-link {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--accent); border: 1px solid var(--border2);
+      border-radius: 2px; padding: 0.2rem 0.5rem; text-decoration: none;
       transition: border-color var(--t), background var(--t), color var(--t);
     }
-    .art-piece-link:hover { border-color: var(--accent); background: rgba(26,61,143,0.06); }
+    .art-tile-link:hover { border-color: var(--accent); background: rgba(26,61,143,0.06); }
 
     /* Lightbox */
     .lightbox { position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,0.94);display:none;align-items:center;justify-content:center;padding:2rem;cursor:zoom-out; }
@@ -99,14 +89,9 @@
     .lb-nav button:disabled { opacity:0.2;cursor:default; }
     .lb-counter { font-size:0.7rem;color:rgba(255,255,255,0.4);letter-spacing:0.1em; }
 
-    .art-empty { text-align:center;padding:5rem 2rem;color:var(--text3);border:1px dashed var(--border2);border-radius:4px;font-size:0.9rem;line-height:2; }
-
-    .art-piece-video-wrap { aspect-ratio: 16/9; overflow: hidden; }
-    .art-piece-video-wrap iframe { width:100%;height:100%;display:block;border:none; }
-
-    @media (max-width: 600px) {
+    @media (max-width: 640px) {
       .art-feed { padding: 0 1.25rem 4rem; }
-      .art-grid { columns: 1; }
+      .art-grid { grid-template-columns: 1fr; gap: 2.5rem; }
     }
   </style>
 </head>
@@ -210,10 +195,11 @@
       },
     ];
 
-    const GEO = [
-      '<svg viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="1"><polygon points="50,5 95,27 95,73 50,95 5,73 5,27"/><polygon points="50,22 78,37 78,63 50,78 22,63 22,37"/><circle cx="50" cy="50" r="12"/></svg>',
-      '<svg viewBox="0 0 100 100" fill="none" stroke="var(--accent2)" stroke-width="1"><rect x="12" y="12" width="76" height="76" rx="3"/><rect x="26" y="26" width="48" height="48" rx="2"/><rect x="40" y="40" width="20" height="20"/></svg>',
-    ];
+    const PLAY_ICON =
+      '<svg width="52" height="52" viewBox="0 0 52 52" fill="none">' +
+      '<circle cx="26" cy="26" r="26" fill="rgba(0,0,0,0.55)"/>' +
+      '<polygon points="21,17 39,26 21,35" fill="rgba(255,255,255,0.92)"/>' +
+      '</svg>';
 
     /* ── build flat feed ── */
     const feed = document.getElementById('artFeed');
@@ -222,73 +208,62 @@
     feed.appendChild(grid);
 
     const sorted = [...PIECES].sort((a, b) => b.year - a.year);
-    let geoIdx = 0;
 
     sorted.forEach((p, i) => {
       const imgs = p.images || (p.src ? [p.src] : []);
-      const card = document.createElement('div');
-      card.className = 'art-piece';
-      card.style.transitionDelay = (i % 4 * 0.08) + 's';
+      const tile = document.createElement('div');
+      tile.className = 'art-tile';
+      tile.style.transitionDelay = (i % 4 * 0.08) + 's';
 
       let mediaHtml;
       if (p.video) {
-        mediaHtml = '<div class="art-piece-img-wrap art-piece-video-wrap">' +
-          '<iframe src="https://www.youtube.com/embed/' + p.video + '" title="' + p.title + '"' +
-          ' frameborder="0" allowfullscreen' +
-          ' allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">' +
-          '</iframe></div>';
+        const ytHref = 'https://www.youtube.com/watch?v=' + p.video;
+        const thumb  = 'https://img.youtube.com/vi/' + p.video + '/hqdefault.jpg';
+        mediaHtml =
+          '<a class="art-yt-wrap" href="' + ytHref + '" target="_blank" rel="noopener" aria-label="Watch ' + p.title + ' on YouTube">' +
+          '<img src="' + thumb + '" alt="' + p.title + ' video thumbnail" loading="lazy">' +
+          '<div class="art-yt-play">' + PLAY_ICON + '</div>' +
+          '</a>';
       } else if (p.src) {
-        mediaHtml = '<div class="art-piece-img-wrap">' +
+        mediaHtml =
+          '<div class="art-tile-media" role="button" tabindex="0" aria-label="View ' + p.title + '">' +
           '<img src="' + p.src + '" alt="' + (p.alt || p.title) + '" loading="lazy">' +
           (imgs.length > 1 ? '<span class="img-count">1 / ' + imgs.length + '</span>' : '') +
           '</div>';
       } else {
-        mediaHtml = '<div class="art-piece-img-wrap"><div class="art-piece-geo">' + GEO[geoIdx++ % GEO.length] + '</div></div>';
+        mediaHtml = '';
       }
 
       const linksHtml = (p.links && p.links.length)
-        ? '<div class="art-piece-links">' + p.links.map(l =>
-            '<a class="art-piece-link" href="' + l.href + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">' + l.label + '</a>'
+        ? '<div class="art-tile-links">' + p.links.map(l =>
+            '<a class="art-tile-link" href="' + l.href + '" target="_blank" rel="noopener">' + l.label + '</a>'
           ).join('') + '</div>'
         : '';
 
-      card.innerHTML = mediaHtml +
-        '<div class="art-piece-info">' +
-        '<div class="art-piece-title">' + p.title + ', ' + p.year + '</div>' +
-        '<div class="art-piece-meta">' + p.medium + '</div>' +
-        (p.desc ? '<div class="art-piece-desc">' + p.desc + '</div>' : '') +
+      tile.innerHTML = mediaHtml +
+        '<div class="art-tile-label">' +
+        '<div class="art-tile-title">' + p.title + ', ' + p.year + '</div>' +
+        '<div class="art-tile-meta">' + p.medium + '</div>' +
+        (p.desc ? '<div class="art-tile-desc">' + p.desc + '</div>' : '') +
         linksHtml +
         '</div>';
 
       if (!p.video && imgs.length > 0) {
-        card.setAttribute('role', 'button');
-        card.setAttribute('tabindex', '0');
-        card.setAttribute('aria-label', p.title);
-        card.addEventListener('click', () => openLb(p, imgs, 0));
-        card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLb(p, imgs, 0); } });
+        const mediaEl = tile.querySelector('.art-tile-media');
+        if (mediaEl) {
+          mediaEl.addEventListener('click',   () => openLb(p, imgs, 0));
+          mediaEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLb(p, imgs, 0); } });
+        }
       }
 
-      grid.appendChild(card);
+      grid.appendChild(tile);
     });
 
     /* scroll-reveal */
     const io = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
-    document.querySelectorAll('.art-piece').forEach(el => io.observe(el));
-
-    /* hover tilt (skip video cards to avoid interfering with iframe) */
-    document.querySelectorAll('.art-piece').forEach(card => {
-      if (card.querySelector('iframe')) return;
-      card.addEventListener('mousemove', e => {
-        const r = card.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width  - 0.5;
-        const y = (e.clientY - r.top)  / r.height - 0.5;
-        card.style.transform = 'translateY(0) scale(1) rotateX(' + (-y * 7) + 'deg) rotateY(' + (x * 7) + 'deg)';
-        card.style.transition = 'opacity 0.55s ease, border-color var(--t), box-shadow var(--t)';
-      });
-      card.addEventListener('mouseleave', () => { card.style.transform = ''; card.style.transition = ''; });
-    });
+    }, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
+    document.querySelectorAll('.art-tile').forEach(el => io.observe(el));
 
     /* ── lightbox with multi-image nav ── */
     const lb      = document.getElementById('lightbox');
