@@ -107,6 +107,7 @@
     '.fish-x{position:absolute;pointer-events:none;z-index:2;}' +
     '.fish-x-1{bottom:80px;animation:fishX1 28s linear infinite;}' +
     '.fish-x-2{bottom:110px;animation:fishX2 38s linear infinite;opacity:0.72;}' +
+    '.fish-x-3{bottom:55px;animation:fishX3 33s linear infinite;animation-delay:-12s;opacity:0.68;}' +
     '@keyframes fishX1{' +
     '0%{transform:translateX(-80px) scaleX(1);}' +
     '49%{transform:translateX(calc(100vw + 80px)) scaleX(1);}' +
@@ -119,10 +120,18 @@
     '50%{transform:translateX(-80px) scaleX(1);}' +
     '99%{transform:translateX(calc(100vw + 80px)) scaleX(1);}' +
     '100%{transform:translateX(calc(100vw + 80px)) scaleX(-1);}}' +
+    '@keyframes fishX3{' +
+    '0%{transform:translateX(-80px) scaleX(1);}' +
+    '49%{transform:translateX(calc(100vw + 80px)) scaleX(1);}' +
+    '50%{transform:translateX(calc(100vw + 80px)) scaleX(-1);}' +
+    '99%{transform:translateX(-80px) scaleX(-1);}' +
+    '100%{transform:translateX(-80px) scaleX(1);}}' +
     '.fish-y{animation:fishY 5s ease-in-out infinite;}' +
     '.fish-y-2{animation:fishY2 7s ease-in-out infinite;}' +
+    '.fish-y-3{animation:fishY3 6s ease-in-out infinite;animation-delay:-3s;}' +
     '@keyframes fishY{0%,100%{transform:translateY(0);}50%{transform:translateY(-22px);}}' +
     '@keyframes fishY2{0%,100%{transform:translateY(-10px);}50%{transform:translateY(14px);}}' +
+    '@keyframes fishY3{0%,100%{transform:translateY(-5px);}50%{transform:translateY(18px);}}' +
 
     /* coral */
     '.sea-coral{position:absolute;pointer-events:none;z-index:2;}' +
@@ -181,7 +190,6 @@
 
   /* Wave: 300% wide SVG covers full sea-zone height — wave path IS the top boundary */
   var wBase = 'rgba(148,196,238,0.62)';
-  var wRipple = 'rgba(168,210,242,0.28)';
   var waveSVG =
     '<svg class="sea-wave" viewBox="0 0 1800 280" preserveAspectRatio="none" fill="none" aria-hidden="true">' +
     '<path d="M0 30 C100 10 200 50 300 30 C400 10 500 50 600 30 ' +
@@ -192,7 +200,7 @@
               'C560 22 640 54 720 38 C800 22 880 54 960 38 ' +
               'C1040 22 1120 54 1200 38 C1280 22 1360 54 1440 38 ' +
               'C1520 22 1600 54 1680 38 C1760 22 1800 38 1800 38 ' +
-              'L1800 280 L0 280 Z" fill="' + wRipple + '"/>' +
+              'L1800 280 L0 280 Z" fill="' + wBase + '"/>' +
     '</svg>';
 
   /* Jellyfish */
@@ -232,14 +240,26 @@
 
   var fishSVG2 =
     '<svg width="40" height="20" viewBox="0 0 54 26" fill="none">' +
-    '<polygon points="10,13 30,4 46,13 30,22" stroke="rgba(26,61,143,0.78)" stroke-width="1.1" fill="rgba(148,196,238,0.5)"/>' +
-    '<polygon points="10,13 0,5 2,13 0,21" stroke="rgba(26,61,143,0.62)" stroke-width="0.9" fill="rgba(26,61,143,0.2)"/>' +
-    '<circle cx="38" cy="13" r="2.5" fill="rgba(26,61,143,0.6)"/>' +
-    '<circle cx="38.8" cy="12.3" r="0.9" fill="rgba(240,248,255,0.95)"/>' +
+    '<polygon points="10,13 30,4 46,13 30,22" stroke="rgba(28,163,88,0.78)" stroke-width="1.1" fill="rgba(28,163,88,0.22)"/>' +
+    '<polygon points="10,13 0,5 2,13 0,21" stroke="rgba(28,163,88,0.62)" stroke-width="0.9" fill="rgba(28,163,88,0.18)"/>' +
+    '<polygon points="22,8 28,4 30,10" stroke="rgba(28,163,88,0.48)" stroke-width="0.7" fill="rgba(28,163,88,0.12)"/>' +
+    '<circle cx="38" cy="13" r="2.5" fill="rgba(28,163,88,0.62)"/>' +
+    '<circle cx="38.8" cy="12.3" r="0.9" fill="rgba(240,255,245,0.95)"/>' +
+    '</svg>';
+
+  /* salmon fish */
+  var fishSVG3 =
+    '<svg width="46" height="22" viewBox="0 0 54 26" fill="none">' +
+    '<polygon points="10,13 30,4 46,13 30,22" stroke="rgba(210,100,80,0.72)" stroke-width="1.1" fill="rgba(240,140,110,0.28)"/>' +
+    '<polygon points="10,13 0,5 2,13 0,21" stroke="rgba(210,100,80,0.58)" stroke-width="0.9" fill="rgba(210,100,80,0.18)"/>' +
+    '<polygon points="22,8 28,4 30,10" stroke="rgba(210,100,80,0.44)" stroke-width="0.7" fill="rgba(210,100,80,0.12)"/>' +
+    '<circle cx="38" cy="13" r="2.5" fill="rgba(210,100,80,0.6)"/>' +
+    '<circle cx="38.8" cy="12.3" r="0.9" fill="rgba(255,240,235,0.95)"/>' +
     '</svg>';
 
   var fish1 = '<div class="fish-x fish-x-1" aria-hidden="true"><div class="fish-y">' + fishSVG1 + '</div></div>';
   var fish2 = '<div class="fish-x fish-x-2" aria-hidden="true"><div class="fish-y fish-y-2">' + fishSVG2 + '</div></div>';
+  var fish3 = '<div class="fish-x fish-x-3" aria-hidden="true"><div class="fish-y fish-y-3">' + fishSVG3 + '</div></div>';
 
   /* Coral anchored at bottom:0 */
   var coral1 =
@@ -278,7 +298,7 @@
 
   var innerText = footer.innerHTML;
   footer.innerHTML =
-    waveSVG + jelly1 + jelly2 + fish1 + fish2 + coral1 + coral2 +
+    waveSVG + jelly1 + jelly2 + fish1 + fish2 + fish3 + coral1 + coral2 +
     linkORCID + linkLinkedIn + linkEmail +
     '<div style="position:relative;z-index:6;padding:2rem 2.5rem;">' + innerText + '</div>';
 
