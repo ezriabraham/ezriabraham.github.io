@@ -254,7 +254,7 @@
   var pelicanWrap = document.createElement('div');
   pelicanWrap.className = 'mgn-creature';
   pelicanWrap.setAttribute('aria-hidden', 'true');
-  pelicanWrap.style.cssText = 'right:8px;top:480px;animation:pelicanGlide 8s ease-in-out infinite;';
+  pelicanWrap.style.cssText = 'right:8px;top:380px;animation:pelicanGlide 8s ease-in-out infinite;';
   pelicanWrap.innerHTML =
     '<svg width="58" height="34" viewBox="0 0 58 34" fill="none">' +
     '<ellipse cx="30" cy="20" rx="16" ry="8" stroke="rgba(26,61,143,0.68)" stroke-width="1.1" fill="rgba(26,61,143,0.16)"/>' +
@@ -272,7 +272,7 @@
   var frogWrap = document.createElement('div');
   frogWrap.className = 'mgn-creature';
   frogWrap.setAttribute('aria-hidden', 'true');
-  frogWrap.style.cssText = 'left:8px;top:950px;animation:frogHop 14s ease-in-out infinite;';
+  frogWrap.style.cssText = 'left:8px;top:750px;animation:frogHop 14s ease-in-out infinite;';
   frogWrap.innerHTML =
     '<svg width="50" height="54" viewBox="0 0 50 54" fill="none">' +
     '<ellipse cx="25" cy="34" rx="13" ry="11" stroke="rgba(28,163,88,0.7)" stroke-width="1.2" fill="rgba(28,163,88,0.18)"/>' +
@@ -294,7 +294,7 @@
   var snakeWrap = document.createElement('div');
   snakeWrap.className = 'mgn-creature';
   snakeWrap.setAttribute('aria-hidden', 'true');
-  snakeWrap.style.cssText = 'right:8px;top:1700px;animation:snakeSlither 5s ease-in-out infinite;';
+  snakeWrap.style.cssText = 'right:8px;top:1150px;animation:snakeSlither 5s ease-in-out infinite;';
   snakeWrap.innerHTML =
     '<svg width="24" height="80" viewBox="0 0 24 80" fill="none">' +
     '<path d="M12 2 Q18 12 12 22 Q6 32 12 42 Q18 52 12 62 Q6 72 10 78" stroke="rgba(26,61,143,0.65)" stroke-width="5" stroke-linecap="round" fill="none"/>' +
