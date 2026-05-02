@@ -132,25 +132,33 @@
      ═══════════════════════════════════════════════════ */
   var S = document.createElement('style');
   S.textContent =
-    /* birds in page-header */
-    '.hdr-bird{position:absolute;pointer-events:none;z-index:2;opacity:0.28;}' +
-    '.hdr-bird-1{top:18%;left:8%;animation:bFloat1 7s ease-in-out infinite;}' +
-    '.hdr-bird-2{top:22%;right:10%;animation:bFloat2 9s ease-in-out infinite;}' +
-    '@keyframes bFloat1{' +
-    '0%{transform:translate(0,0) rotate(-3deg);}' +
-    '25%{transform:translate(16px,-22px) rotate(4deg);}' +
-    '55%{transform:translate(-10px,-14px) rotate(-2deg);}' +
-    '78%{transform:translate(20px,-30px) rotate(5deg);}' +
-    '100%{transform:translate(0,0) rotate(-3deg);}}' +
-    '@keyframes bFloat2{' +
-    '0%{transform:translate(0,0) rotate(2deg);}' +
-    '30%{transform:translate(-18px,-18px) rotate(-4deg);}' +
-    '60%{transform:translate(12px,-28px) rotate(3deg);}' +
-    '85%{transform:translate(-6px,-10px) rotate(-1deg);}' +
-    '100%{transform:translate(0,0) rotate(2deg);}}' +
-    '.hdr-bird svg{animation:wFlap 0.65s ease-in-out infinite;}' +
-    '.hdr-bird-2 svg{animation-duration:0.82s;}' +
-    '@keyframes wFlap{0%,100%{transform:scaleY(1);}50%{transform:scaleY(0.60);}}' +
+    /* margin creatures — absolute on page, visible only when margins exist */
+    '.mgn-creature{position:absolute;pointer-events:none;opacity:0.42;z-index:1;}' +
+    '@media(max-width:960px){.mgn-creature{display:none;}}' +
+
+    '@keyframes frogHop{' +
+    '0%,30%,100%{transform:translateY(0) scaleY(1);}' +
+    '8%{transform:translateY(-38px) scaleY(0.82) rotate(-10deg);}' +
+    '16%{transform:translateY(0) scaleY(1.1);}' +
+    '55%{transform:translateY(-22px) scaleY(0.88) rotate(7deg);}' +
+    '63%{transform:translateY(0) scaleY(1.06);}' +
+    '70%,95%{transform:translateY(0) scaleY(1);}}' +
+
+    '@keyframes snakeSlither{' +
+    '0%,100%{transform:translateX(0) rotate(0deg);}' +
+    '20%{transform:translateX(9px) rotate(4deg);}' +
+    '40%{transform:translateX(-6px) rotate(-3deg);}' +
+    '60%{transform:translateX(11px) rotate(5deg);}' +
+    '80%{transform:translateX(-9px) rotate(-4deg);}}' +
+
+    '@keyframes pelicanGlide{' +
+    '0%,100%{transform:translateY(0) rotate(-1.5deg);}' +
+    '50%{transform:translateY(-20px) rotate(1.5deg);}}' +
+    '@keyframes pelicanWing{' +
+    '0%,100%{transform:scaleY(1);}' +
+    '45%{transform:scaleY(0.28);}' +
+    '50%{transform:scaleY(0.28);}' +
+    '65%{transform:scaleY(1);}}' +
 
     /* ocean footer: wave SVG provides both the wavy top edge AND all the fill below */
     '.sea-zone{position:relative;overflow:hidden;min-height:280px;background:transparent;}' +
@@ -238,30 +246,67 @@
   document.head.appendChild(S);
 
   /* ═══════════════════════════════════════════════════
-     3. BIRDS IN PAGE-HEADER (non-hero pages only)
+     3. MARGIN CREATURES — absolute on page, scroll past them
      ═══════════════════════════════════════════════════ */
-  if (!isHero) {
-    var header = document.querySelector('.page-header');
-    if (header) {
-      function makeBird(color1, fill1, fill2) {
-        return '<svg width="62" height="30" viewBox="0 0 62 30" fill="none">' +
-          '<polygon points="20,15 2,6 14,17" stroke="' + color1 + '" stroke-width="1" fill="' + fill1 + '"/>' +
-          '<polygon points="42,15 60,6 48,17" stroke="' + color1 + '" stroke-width="1" fill="' + fill1 + '"/>' +
-          '<polygon points="31,9 40,15 31,21 22,15" stroke="' + color1 + '" stroke-width="1.2" fill="' + fill2 + '"/>' +
-          '<polygon points="22,15 12,20 20,22" stroke="' + color1 + '" stroke-width="0.7" fill="' + fill1 + '"/>' +
-          '</svg>';
-      }
-      var b1 = document.createElement('div');
-      b1.className = 'hdr-bird hdr-bird-1'; b1.setAttribute('aria-hidden', 'true');
-      b1.innerHTML = makeBird('rgba(26,61,143,0.88)', 'rgba(26,61,143,0.22)', 'rgba(28,163,88,0.3)');
-      header.appendChild(b1);
+  document.body.style.position = 'relative';
 
-      var b2 = document.createElement('div');
-      b2.className = 'hdr-bird hdr-bird-2'; b2.setAttribute('aria-hidden', 'true');
-      b2.innerHTML = makeBird('rgba(28,163,88,0.88)', 'rgba(28,163,88,0.22)', 'rgba(26,61,143,0.25)');
-      header.appendChild(b2);
-    }
-  }
+  /* Pelican — right margin, upper page */
+  var pelicanWrap = document.createElement('div');
+  pelicanWrap.className = 'mgn-creature';
+  pelicanWrap.setAttribute('aria-hidden', 'true');
+  pelicanWrap.style.cssText = 'right:8px;top:480px;animation:pelicanGlide 8s ease-in-out infinite;';
+  pelicanWrap.innerHTML =
+    '<svg width="58" height="34" viewBox="0 0 58 34" fill="none">' +
+    '<ellipse cx="30" cy="20" rx="16" ry="8" stroke="rgba(26,61,143,0.68)" stroke-width="1.1" fill="rgba(26,61,143,0.16)"/>' +
+    '<ellipse cx="47" cy="15" rx="6" ry="5" stroke="rgba(26,61,143,0.65)" stroke-width="1" fill="rgba(26,61,143,0.14)"/>' +
+    '<path d="M51 14 L58 12 L51 16Z" stroke="rgba(26,61,143,0.58)" stroke-width="0.9" fill="rgba(26,61,143,0.1)"/>' +
+    '<circle cx="49" cy="13.5" r="1.8" fill="rgba(26,61,143,0.7)"/>' +
+    '<circle cx="49.6" cy="13" r="0.7" fill="rgba(220,235,255,0.9)"/>' +
+    '<path d="M14 20 L2 14 L0 24Z" stroke="rgba(26,61,143,0.5)" stroke-width="0.9" fill="rgba(26,61,143,0.12)"/>' +
+    '<path d="M22 17 Q12 4 2 2 Q14 11 30 17Z" stroke="rgba(26,61,143,0.6)" stroke-width="1" fill="rgba(26,61,143,0.14)" style="transform-origin:22px 17px;animation:pelicanWing 2.5s ease-in-out infinite;"/>' +
+    '<path d="M22 21 Q12 30 4 32 Q16 25 30 21Z" stroke="rgba(26,61,143,0.48)" stroke-width="0.9" fill="rgba(26,61,143,0.1)" style="transform-origin:22px 21px;animation:pelicanWing 2.5s ease-in-out infinite;animation-delay:0.1s;"/>' +
+    '</svg>';
+  document.body.appendChild(pelicanWrap);
+
+  /* Tree Frog — left margin, mid page */
+  var frogWrap = document.createElement('div');
+  frogWrap.className = 'mgn-creature';
+  frogWrap.setAttribute('aria-hidden', 'true');
+  frogWrap.style.cssText = 'left:8px;top:950px;animation:frogHop 14s ease-in-out infinite;';
+  frogWrap.innerHTML =
+    '<svg width="50" height="54" viewBox="0 0 50 54" fill="none">' +
+    '<ellipse cx="25" cy="34" rx="13" ry="11" stroke="rgba(28,163,88,0.7)" stroke-width="1.2" fill="rgba(28,163,88,0.18)"/>' +
+    '<ellipse cx="25" cy="20" rx="10" ry="8" stroke="rgba(28,163,88,0.7)" stroke-width="1.1" fill="rgba(28,163,88,0.2)"/>' +
+    '<circle cx="18" cy="15" r="3.8" stroke="rgba(28,163,88,0.65)" stroke-width="1" fill="rgba(28,163,88,0.14)"/>' +
+    '<circle cx="32" cy="15" r="3.8" stroke="rgba(28,163,88,0.65)" stroke-width="1" fill="rgba(28,163,88,0.14)"/>' +
+    '<circle cx="18.8" cy="14.3" r="1.6" fill="rgba(26,61,143,0.7)"/>' +
+    '<circle cx="32.8" cy="14.3" r="1.6" fill="rgba(26,61,143,0.7)"/>' +
+    '<path d="M13 30 Q6 33 2 35" stroke="rgba(28,163,88,0.58)" stroke-width="1.2" fill="none"/>' +
+    '<path d="M37 30 Q44 33 48 35" stroke="rgba(28,163,88,0.58)" stroke-width="1.2" fill="none"/>' +
+    '<path d="M13 42 Q5 47 1 52" stroke="rgba(28,163,88,0.52)" stroke-width="1.1" fill="none"/>' +
+    '<path d="M37 42 Q45 47 49 52" stroke="rgba(28,163,88,0.52)" stroke-width="1.1" fill="none"/>' +
+    '<circle cx="1" cy="52" r="2" fill="rgba(28,163,88,0.38)"/>' +
+    '<circle cx="49" cy="52" r="2" fill="rgba(28,163,88,0.38)"/>' +
+    '</svg>';
+  document.body.appendChild(frogWrap);
+
+  /* Snake — right margin, lower page */
+  var snakeWrap = document.createElement('div');
+  snakeWrap.className = 'mgn-creature';
+  snakeWrap.setAttribute('aria-hidden', 'true');
+  snakeWrap.style.cssText = 'right:8px;top:1700px;animation:snakeSlither 5s ease-in-out infinite;';
+  snakeWrap.innerHTML =
+    '<svg width="24" height="80" viewBox="0 0 24 80" fill="none">' +
+    '<path d="M12 2 Q18 12 12 22 Q6 32 12 42 Q18 52 12 62 Q6 72 10 78" stroke="rgba(26,61,143,0.65)" stroke-width="5" stroke-linecap="round" fill="none"/>' +
+    '<path d="M12 2 Q18 12 12 22 Q6 32 12 42 Q18 52 12 62 Q6 72 10 78" stroke="rgba(148,196,238,0.3)" stroke-width="2.5" stroke-linecap="round" fill="none"/>' +
+    '<ellipse cx="12" cy="5" rx="6" ry="4" stroke="rgba(26,61,143,0.7)" stroke-width="1.1" fill="rgba(26,61,143,0.2)"/>' +
+    '<circle cx="9.5" cy="4" r="1.5" fill="rgba(26,61,143,0.8)"/>' +
+    '<circle cx="14.5" cy="4" r="1.5" fill="rgba(26,61,143,0.8)"/>' +
+    '<circle cx="9.9" cy="3.6" r="0.6" fill="rgba(220,235,255,0.9)"/>' +
+    '<circle cx="14.9" cy="3.6" r="0.6" fill="rgba(220,235,255,0.9)"/>' +
+    '<path d="M12 8 L11 11 M12 8 L13 11" stroke="rgba(210,50,50,0.7)" stroke-width="0.8" fill="none"/>' +
+    '</svg>';
+  document.body.appendChild(snakeWrap);
 
   /* ═══════════════════════════════════════════════════
      4. UNDERWATER FOOTER (all pages)
