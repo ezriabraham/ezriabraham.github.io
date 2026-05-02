@@ -317,28 +317,19 @@ section { padding: 4rem 0; }
 /* ===== THEME TOGGLE — hidden (light mode only) ===== */
 .theme-toggle { display: none; }
 
-/* ===== PAGE HEADER — geometric background ===== */
+/* ===== PAGE HEADER — colour wash ===== */
 .page-header {
   position: relative;
   overflow: hidden;
-}
-.page-header::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(26,61,143,0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(26,61,143,0.045) 1px, transparent 1px);
-  background-size: 48px 48px;
-  pointer-events: none;
 }
 .page-header::after {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 20% 60%, rgba(28,163,88,0.09) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 40%, rgba(26,61,143,0.09) 0%, transparent 55%);
+    radial-gradient(ellipse at 18% 65%, rgba(28,163,88,0.22) 0%, transparent 52%),
+    radial-gradient(ellipse at 82% 38%, rgba(26,61,143,0.20) 0%, transparent 52%),
+    radial-gradient(ellipse at 50% 10%, rgba(26,61,143,0.10) 0%, transparent 60%);
   pointer-events: none;
 }
 .page-header > * { position: relative; z-index: 1; }

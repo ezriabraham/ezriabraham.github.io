@@ -3,16 +3,18 @@
   'use strict';
 
   var noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var CG = '28,163,88';   /* forest green */
-  var CB = '26,61,143';   /* deep navy    */
-  var CW = '180,210,255'; /* underwater pale blue */
+  var isHero   = !!document.querySelector('.hero'); /* home page has hero canvas already */
 
   /* ═══════════════════════════════════════════════════
-     1. BACKGROUND PARTICLE CANVAS
+     1. BACKGROUND PARTICLE CANVAS (all pages)
      ═══════════════════════════════════════════════════ */
   var bg = document.createElement('canvas');
-  bg.setAttribute('aria-hidden','true');
-  Object.assign(bg.style,{position:'fixed',top:'0',left:'0',width:'100%',height:'100%',zIndex:'-1',pointerEvents:'none'});
+  bg.setAttribute('aria-hidden', 'true');
+  Object.assign(bg.style, {
+    position: 'fixed', top: '0', left: '0',
+    width: '100%', height: '100%',
+    zIndex: '-1', pointerEvents: 'none',
+  });
   document.body.prepend(bg);
   var bx = bg.getContext('2d');
   var W, H;
@@ -22,290 +24,270 @@
   window.addEventListener('resize', resize);
 
   function Pt() {
-    this.x = Math.random()*W; this.y = Math.random()*H;
-    this.vx = (Math.random()-0.5)*(noMotion?0:0.14);
-    this.vy = (Math.random()-0.5)*(noMotion?0:0.14);
-    this.r = Math.random()*3+2;
-    this.c = Math.random()>0.5 ? CB : CG;
-    this.hex = Math.random()>0.38;
-    this.ph = Math.random()*Math.PI*2; this.ps = 0.004+Math.random()*0.007;
+    this.x  = Math.random() * W; this.y = Math.random() * H;
+    this.vx = (Math.random() - 0.5) * (noMotion ? 0 : 0.14);
+    this.vy = (Math.random() - 0.5) * (noMotion ? 0 : 0.14);
+    this.r  = Math.random() * 3 + 2;
+    this.c  = Math.random() > 0.5 ? '26,61,143' : '28,163,88';
+    this.hex = Math.random() > 0.38;
+    this.ph = Math.random() * Math.PI * 2;
+    this.ps = 0.004 + Math.random() * 0.007;
   }
-  Pt.prototype.tick = function(){
-    this.x+=this.vx; this.y+=this.vy; this.ph+=this.ps;
-    if(this.x<-80) this.x=W+80; if(this.x>W+80) this.x=-80;
-    if(this.y<-80) this.y=H+80; if(this.y>H+80) this.y=-80;
+  Pt.prototype.tick = function () {
+    this.x += this.vx; this.y += this.vy; this.ph += this.ps;
+    if (this.x < -80) this.x = W + 80; if (this.x > W + 80) this.x = -80;
+    if (this.y < -80) this.y = H + 80; if (this.y > H + 80) this.y = -80;
   };
-  function hexPath(x,y,r){
+  function hexPath(x, y, r) {
     bx.beginPath();
-    for(var i=0;i<6;i++){var a=i*Math.PI/3-Math.PI/6; i?bx.lineTo(x+r*Math.cos(a),y+r*Math.sin(a)):bx.moveTo(x+r*Math.cos(a),y+r*Math.sin(a));}
+    for (var i = 0; i < 6; i++) {
+      var a = i * Math.PI / 3 - Math.PI / 6;
+      i ? bx.lineTo(x + r * Math.cos(a), y + r * Math.sin(a))
+        : bx.moveTo(x + r * Math.cos(a), y + r * Math.sin(a));
+    }
     bx.closePath();
   }
-  var MAXD=200, pts=Array.from({length:40},function(){return new Pt();});
-  function bgFrame(){
-    bx.clearRect(0,0,W,H);
-    pts.forEach(function(p){p.tick();});
-    for(var i=0;i<pts.length;i++){for(var j=i+1;j<pts.length;j++){
-      var d=Math.hypot(pts[i].x-pts[j].x,pts[i].y-pts[j].y);
-      if(d<MAXD){bx.strokeStyle='rgba('+pts[i].c+','+(1-d/MAXD)*0.045+')';bx.lineWidth=0.4;
-        bx.beginPath();bx.moveTo(pts[i].x,pts[i].y);bx.lineTo(pts[j].x,pts[j].y);bx.stroke();}
-    }}
-    pts.forEach(function(p){
-      var a=0.05+0.022*Math.sin(p.ph);
-      bx.strokeStyle='rgba('+p.c+','+a+')';bx.fillStyle='rgba('+p.c+','+(a*0.2)+')';bx.lineWidth=0.6;
-      if(p.hex){hexPath(p.x,p.y,p.r*2.8);}else{bx.beginPath();bx.arc(p.x,p.y,p.r,0,Math.PI*2);}
-      bx.fill();bx.stroke();
+  var MAXD = 200;
+  var pts  = Array.from({ length: 40 }, function () { return new Pt(); });
+
+  function bgFrame() {
+    bx.clearRect(0, 0, W, H);
+    pts.forEach(function (p) { p.tick(); });
+    for (var i = 0; i < pts.length; i++) {
+      for (var j = i + 1; j < pts.length; j++) {
+        var d = Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y);
+        if (d < MAXD) {
+          bx.strokeStyle = 'rgba(' + pts[i].c + ',' + ((1 - d / MAXD) * 0.04) + ')';
+          bx.lineWidth = 0.4;
+          bx.beginPath(); bx.moveTo(pts[i].x, pts[i].y); bx.lineTo(pts[j].x, pts[j].y); bx.stroke();
+        }
+      }
+    }
+    pts.forEach(function (p) {
+      var a = 0.05 + 0.022 * Math.sin(p.ph);
+      bx.strokeStyle = 'rgba(' + p.c + ',' + a + ')';
+      bx.fillStyle   = 'rgba(' + p.c + ',' + (a * 0.2) + ')';
+      bx.lineWidth = 0.6;
+      if (p.hex) { hexPath(p.x, p.y, p.r * 2.8); }
+      else       { bx.beginPath(); bx.arc(p.x, p.y, p.r, 0, Math.PI * 2); }
+      bx.fill(); bx.stroke();
     });
     requestAnimationFrame(bgFrame);
   }
   requestAnimationFrame(bgFrame);
 
-  if(noMotion) return;
+  if (noMotion) return;
 
   /* ═══════════════════════════════════════════════════
-     2. INJECT CSS FOR ALL ORNAMENTS
+     2. CSS (injected once)
      ═══════════════════════════════════════════════════ */
   var S = document.createElement('style');
-  S.textContent = [
-    /* left helix */
-    '.geo-l{position:fixed;left:0;top:50%;transform:translateY(-50%);pointer-events:none;z-index:1;opacity:0.38;',
-    'animation:geoFloatL 7s ease-in-out infinite;}',
-    '@keyframes geoFloatL{0%,100%{transform:translateY(-50%) translateX(0);}50%{transform:translateY(-50%) translateX(8px);}}',
+  S.textContent =
+    /* ── Corner hex rosettes: breathe (scale + slight rotate) ── */
+    '.geo-tr{position:fixed;right:-24px;top:-24px;pointer-events:none;z-index:1;opacity:0.32;' +
+    'animation:geoBreathe 5s ease-in-out infinite;}' +
+    '@keyframes geoBreathe{0%,100%{transform:scale(1) rotate(0deg);}50%{transform:scale(1.18) rotate(14deg);}}' +
 
-    /* right branch */
-    '.geo-r{position:fixed;right:0;top:50%;transform:translateY(-50%);pointer-events:none;z-index:1;opacity:0.38;',
-    'animation:geoFloatR 9s ease-in-out infinite;}',
-    '@keyframes geoFloatR{0%,100%{transform:translateY(-50%) translateX(0);}50%{transform:translateY(-50%) translateX(-8px);}}',
+    '.geo-bl{position:fixed;left:-24px;bottom:-24px;pointer-events:none;z-index:1;opacity:0.32;' +
+    'animation:geoBreathe2 6.5s ease-in-out infinite;}' +
+    '@keyframes geoBreathe2{0%,100%{transform:scale(1) rotate(0deg);}50%{transform:scale(1.22) rotate(-16deg);}}' +
 
-    /* top-right: breathing/pulsing hex cluster */
-    '.geo-tr{position:fixed;right:-20px;top:-20px;pointer-events:none;z-index:1;opacity:0.28;',
-    'animation:geoPulse 5s ease-in-out infinite;}',
-    '@keyframes geoPulse{0%,100%{transform:scale(1) rotate(0deg);}50%{transform:scale(1.15) rotate(12deg);}}',
+    /* ── Geometric birds: float irregularly + wing flap ── */
+    '.geo-bird{position:fixed;pointer-events:none;z-index:1;opacity:0.32;}' +
+    '.geo-bird-1{top:14vh;left:12vw;animation:bFloat1 7s ease-in-out infinite;}' +
+    '.geo-bird-2{top:20vh;right:16vw;animation:bFloat2 9s ease-in-out infinite;}' +
+    '@keyframes bFloat1{' +
+    '0%{transform:translate(0,0) rotate(-3deg);}' +
+    '25%{transform:translate(18px,-28px) rotate(4deg);}' +
+    '55%{transform:translate(-12px,-18px) rotate(-2deg);}' +
+    '78%{transform:translate(22px,-38px) rotate(5deg);}' +
+    '100%{transform:translate(0,0) rotate(-3deg);}}' +
+    '@keyframes bFloat2{' +
+    '0%{transform:translate(0,0) rotate(2deg);}' +
+    '30%{transform:translate(-20px,-22px) rotate(-4deg);}' +
+    '60%{transform:translate(14px,-36px) rotate(3deg);}' +
+    '85%{transform:translate(-8px,-14px) rotate(-1deg);}' +
+    '100%{transform:translate(0,0) rotate(2deg);}}' +
+    /* wing flap on the SVG element inside the bird div */
+    '.geo-bird svg{animation:wFlap 0.65s ease-in-out infinite;}' +
+    '.geo-bird-2 svg{animation:wFlap 0.82s ease-in-out infinite;}' +
+    '@keyframes wFlap{0%,100%{transform:scaleY(1);}50%{transform:scaleY(0.62);}}' +
 
-    /* bottom-left: breathing hex */
-    '.geo-bl{position:fixed;left:-20px;bottom:-20px;pointer-events:none;z-index:1;opacity:0.28;',
-    'animation:geoPulse2 6.5s ease-in-out infinite;}',
-    '@keyframes geoPulse2{0%,100%{transform:scale(1) rotate(0deg);}50%{transform:scale(1.18) rotate(-14deg);}}',
+    /* ── Underwater footer ── */
+    '.sea-zone{position:relative;overflow:hidden;background:rgba(148,196,238,0.58);}' +
+    '.sea-wave{position:absolute;top:0;left:0;width:300%;height:50px;pointer-events:none;' +
+    'animation:waveSurf 7s linear infinite;}' +
+    /* 300% wide SVG, seamless tile every 1/3 → one period per screen width */
+    '@keyframes waveSurf{from{transform:translateX(0);}to{transform:translateX(-33.333%);}}' +
+    '.geo-jelly{position:absolute;pointer-events:none;opacity:0.5;animation:jellyBob 8s ease-in-out infinite;}' +
+    '.geo-jelly-2{animation-duration:11s;animation-delay:-4s;}' +
+    '@keyframes jellyBob{0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(-20px) rotate(4deg);}}' +
+    '.geo-fish{position:absolute;pointer-events:none;opacity:0.42;animation:fishSwim 15s linear infinite;}' +
+    '.geo-fish-2{animation-duration:21s;animation-delay:-8s;}' +
+    '@keyframes fishSwim{' +
+    '0%{transform:translateX(-80px) scaleX(1);}' +
+    '49%{transform:translateX(calc(100vw + 80px)) scaleX(1);}' +
+    '50%{transform:translateX(calc(100vw + 80px)) scaleX(-1);}' +
+    '99%{transform:translateX(-80px) scaleX(-1);}' +
+    '100%{transform:translateX(-80px) scaleX(1);}}' +
 
-    /* geometric bird (top-left area, drifting across) */
-    '.geo-bird{position:fixed;pointer-events:none;z-index:1;opacity:0.3;',
-    'animation:birdFly 28s linear infinite;}',
-    '@keyframes birdFly{',
-    '0%{transform:translateX(-120px) translateY(0) scaleX(1);}',
-    '48%{transform:translateX(calc(100vw + 120px)) translateY(-40px) scaleX(1);}',
-    '50%{transform:translateX(calc(100vw + 120px)) translateY(-40px) scaleX(-1);}',
-    '98%{transform:translateX(-120px) translateY(0) scaleX(-1);}',
-    '100%{transform:translateX(-120px) translateY(0) scaleX(1);}}',
+    '@media(max-width:640px){.geo-tr,.geo-bl,.geo-bird{display:none;}}';
 
-    /* underwater footer */
-    '.sea-zone{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(180,210,255,0) 0%,rgba(180,215,255,0.55) 18%,rgba(140,190,245,0.75) 100%);}',
-    '.sea-wave{position:absolute;top:0;left:0;width:200%;height:40px;animation:waveSurf 4s linear infinite;}',
-    '@keyframes waveSurf{from{transform:translateX(0);}to{transform:translateX(-50%);}}',
-
-    /* jellyfish */
-    '.geo-jelly{position:absolute;pointer-events:none;opacity:0.45;animation:jellyDrift 8s ease-in-out infinite;}',
-    '@keyframes jellyDrift{0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(-18px) rotate(4deg);}}',
-
-    /* sea fish */
-    '.geo-fish{position:absolute;pointer-events:none;opacity:0.38;animation:fishSwim 14s linear infinite;}',
-    '@keyframes fishSwim{0%{transform:translateX(-80px) scaleX(1);}49%{transform:translateX(calc(100% + 80px)) scaleX(1);}',
-    '50%{transform:translateX(calc(100% + 80px)) scaleX(-1);}99%{transform:translateX(-80px) scaleX(-1);}100%{transform:translateX(-80px) scaleX(1);}}',
-
-    /* hide side ornaments on narrow screens */
-    '@media(max-width:860px){.geo-l,.geo-r{display:none;}}',
-    '@media(max-width:540px){.geo-tr,.geo-bl{display:none;}}',
-  ].join('');
   document.head.appendChild(S);
 
   /* ═══════════════════════════════════════════════════
-     3. LEFT ORNAMENT — DNA double helix (bigger, bolder)
+     3. CORNER + BIRD ORNAMENTS — skip on hero/home page
      ═══════════════════════════════════════════════════ */
-  var N=18, lp1='', lp2='', lrungs=[];
-  for(var i=0;i<=N;i++){
-    var t=(i/N)*Math.PI*4.2, hy=10+(i/N)*340;
-    var lx1=22+17*Math.sin(t), lx2=22+17*Math.sin(t+Math.PI);
-    lp1+=(i===0?'M ':' L ')+lx1.toFixed(1)+' '+hy.toFixed(1);
-    lp2+=(i===0?'M ':' L ')+lx2.toFixed(1)+' '+hy.toFixed(1);
-    if(i%3===1) lrungs.push('<line x1="'+lx1.toFixed(1)+'" y1="'+hy.toFixed(1)+'" x2="'+lx2.toFixed(1)+'" y2="'+hy.toFixed(1)+'" stroke="rgba(26,61,143,0.7)" stroke-width="1.2"/>');
+  if (!isHero) {
+
+    /* Top-right: breathing multi-ring hex rosette */
+    var trDiv = document.createElement('div');
+    trDiv.className = 'geo-tr'; trDiv.setAttribute('aria-hidden', 'true');
+    trDiv.innerHTML =
+      '<svg width="210" height="210" viewBox="0 0 210 210" fill="none">' +
+      '<polygon points="105,5 178,44 178,126 105,165 32,126 32,44" stroke="rgba(26,61,143,0.72)" stroke-width="1.3" fill="rgba(26,61,143,0.05)"/>' +
+      '<polygon points="105,22 161,55 161,121 105,154 49,121 49,55" stroke="rgba(28,163,88,0.62)" stroke-width="1" fill="rgba(28,163,88,0.04)"/>' +
+      '<polygon points="105,39 144,66 144,116 105,143 66,116 66,66" stroke="rgba(26,61,143,0.50)" stroke-width="0.9"/>' +
+      '<polygon points="105,56 127,69 127,113 105,126 83,113 83,69" stroke="rgba(28,163,88,0.40)" stroke-width="0.8"/>' +
+      '<circle cx="105" cy="98" r="6" fill="rgba(28,163,88,0.45)" stroke="none"/>' +
+      '<circle cx="105" cy="98" r="12" stroke="rgba(26,61,143,0.28)" stroke-width="0.9" fill="none"/>' +
+      '</svg>';
+    document.body.appendChild(trDiv);
+
+    /* Bottom-left: breathing green hex rosette */
+    var blDiv = document.createElement('div');
+    blDiv.className = 'geo-bl'; blDiv.setAttribute('aria-hidden', 'true');
+    blDiv.innerHTML =
+      '<svg width="190" height="190" viewBox="0 0 190 190" fill="none">' +
+      '<polygon points="95,5 162,43 162,119 95,157 28,119 28,43" stroke="rgba(28,163,88,0.72)" stroke-width="1.3" fill="rgba(28,163,88,0.05)"/>' +
+      '<polygon points="95,22 148,53 148,115 95,146 42,115 42,53" stroke="rgba(26,61,143,0.60)" stroke-width="1" fill="rgba(26,61,143,0.04)"/>' +
+      '<polygon points="95,39 131,61 131,111 95,133 59,111 59,61" stroke="rgba(28,163,88,0.48)" stroke-width="0.9"/>' +
+      '<polygon points="95,56 114,67 114,105 95,116 76,105 76,67" stroke="rgba(26,61,143,0.36)" stroke-width="0.8"/>' +
+      '<circle cx="95" cy="95" r="6" fill="rgba(26,61,143,0.45)" stroke="none"/>' +
+      '</svg>';
+    document.body.appendChild(blDiv);
+
+    /* Bird 1 — navy */
+    var b1 = document.createElement('div');
+    b1.className = 'geo-bird geo-bird-1'; b1.setAttribute('aria-hidden', 'true');
+    b1.innerHTML =
+      '<svg width="62" height="30" viewBox="0 0 62 30" fill="none">' +
+      '<polygon points="20,15 2,6 14,17" stroke="rgba(26,61,143,0.88)" stroke-width="1" fill="rgba(26,61,143,0.22)"/>' +
+      '<polygon points="42,15 60,6 48,17" stroke="rgba(26,61,143,0.88)" stroke-width="1" fill="rgba(26,61,143,0.22)"/>' +
+      '<polygon points="31,9 40,15 31,21 22,15" stroke="rgba(26,61,143,0.95)" stroke-width="1.2" fill="rgba(28,163,88,0.28)"/>' +
+      '<polygon points="22,15 12,20 20,22" stroke="rgba(26,61,143,0.6)" stroke-width="0.7" fill="rgba(26,61,143,0.14)"/>' +
+      '</svg>';
+    document.body.appendChild(b1);
+
+    /* Bird 2 — green, slightly smaller */
+    var b2 = document.createElement('div');
+    b2.className = 'geo-bird geo-bird-2'; b2.setAttribute('aria-hidden', 'true');
+    b2.innerHTML =
+      '<svg width="48" height="24" viewBox="0 0 62 30" fill="none">' +
+      '<polygon points="20,15 2,6 14,17" stroke="rgba(28,163,88,0.88)" stroke-width="1" fill="rgba(28,163,88,0.22)"/>' +
+      '<polygon points="42,15 60,6 48,17" stroke="rgba(28,163,88,0.88)" stroke-width="1" fill="rgba(28,163,88,0.22)"/>' +
+      '<polygon points="31,9 40,15 31,21 22,15" stroke="rgba(28,163,88,0.95)" stroke-width="1.2" fill="rgba(26,61,143,0.22)"/>' +
+      '<polygon points="22,15 12,20 20,22" stroke="rgba(28,163,88,0.6)" stroke-width="0.7" fill="rgba(28,163,88,0.14)"/>' +
+      '</svg>';
+    document.body.appendChild(b2);
   }
-  var lDiv=document.createElement('div'); lDiv.className='geo-l'; lDiv.setAttribute('aria-hidden','true');
-  lDiv.innerHTML='<svg width="48" height="360" viewBox="0 0 48 360" fill="none">'+
-    '<path d="'+lp1+'" stroke="rgba(28,163,88,0.9)" stroke-width="1.6" fill="none"/>'+
-    '<path d="'+lp2+'" stroke="rgba(26,61,143,0.9)" stroke-width="1.6" fill="none"/>'+
-    lrungs.join('')+'</svg>';
-  document.body.appendChild(lDiv);
 
   /* ═══════════════════════════════════════════════════
-     4. RIGHT ORNAMENT — branching mycelium network
+     4. UNDERWATER FOOTER (all pages)
      ═══════════════════════════════════════════════════ */
-  var rDiv=document.createElement('div'); rDiv.className='geo-r'; rDiv.setAttribute('aria-hidden','true');
-  rDiv.innerHTML='<svg width="72" height="360" viewBox="0 0 72 360" fill="none">'+
-    /* main trunk */
-    '<path d="M36 355 L36 240 L36 180" stroke="rgba(28,163,88,0.8)" stroke-width="1.8" stroke-linecap="round" fill="none"/>'+
-    /* primary branches */
-    '<path d="M36 300 L20 272 L10 248" stroke="rgba(28,163,88,0.72)" stroke-width="1.4" stroke-linecap="round" fill="none"/>'+
-    '<path d="M36 285 L54 258 L64 234" stroke="rgba(28,163,88,0.72)" stroke-width="1.4" stroke-linecap="round" fill="none"/>'+
-    '<path d="M36 245 L22 220 L14 196" stroke="rgba(28,163,88,0.62)" stroke-width="1.1" stroke-linecap="round" fill="none"/>'+
-    '<path d="M36 232 L50 210 L60 186" stroke="rgba(28,163,88,0.62)" stroke-width="1.1" stroke-linecap="round" fill="none"/>'+
-    /* secondary branches */
-    '<path d="M22 220 L12 200 L7 178" stroke="rgba(28,163,88,0.48)" stroke-width="0.8" stroke-linecap="round" fill="none"/>'+
-    '<path d="M50 210 L58 192 L64 168" stroke="rgba(28,163,88,0.48)" stroke-width="0.8" stroke-linecap="round" fill="none"/>'+
-    '<path d="M14 196 L7 180 L4 162" stroke="rgba(28,163,88,0.35)" stroke-width="0.6" stroke-linecap="round" fill="none"/>'+
-    /* leaf nodes (small hex) */
-    '<polygon points="36,168 42,172 42,180 36,184 30,180 30,172" stroke="rgba(26,61,143,0.65)" stroke-width="0.9" fill="rgba(26,61,143,0.1)"/>'+
-    '<circle cx="36" cy="180" r="3.5" fill="rgba(28,163,88,0.6)"/>'+
-    '<circle cx="20" cy="272" r="2.8" fill="rgba(26,61,143,0.6)"/>'+
-    '<circle cx="54" cy="258" r="2.8" fill="rgba(26,61,143,0.6)"/>'+
-    '<circle cx="22" cy="220" r="2.4" fill="rgba(28,163,88,0.55)"/>'+
-    '<circle cx="50" cy="210" r="2.4" fill="rgba(26,61,143,0.52)"/>'+
-    '<circle cx="10" cy="248" r="2" fill="rgba(28,163,88,0.45)"/>'+
-    '<circle cx="64" cy="234" r="2" fill="rgba(26,61,143,0.45)"/>'+
-    '</svg>';
-  document.body.appendChild(rDiv);
-
-  /* ═══════════════════════════════════════════════════
-     5. TOP-RIGHT — pulsing/breathing hex rosette
-     ═══════════════════════════════════════════════════ */
-  var trDiv=document.createElement('div'); trDiv.className='geo-tr'; trDiv.setAttribute('aria-hidden','true');
-  trDiv.innerHTML='<svg width="200" height="200" viewBox="0 0 200 200" fill="none">'+
-    '<polygon points="100,5 169,43 169,119 100,157 31,119 31,43" stroke="rgba(26,61,143,0.7)" stroke-width="1.2" fill="rgba(26,61,143,0.04)"/>'+
-    '<polygon points="100,22 154,53 154,115 100,146 46,115 46,53" stroke="rgba(28,163,88,0.6)" stroke-width="0.9" fill="rgba(28,163,88,0.03)"/>'+
-    '<polygon points="100,39 139,63 139,111 100,135 61,111 61,63" stroke="rgba(26,61,143,0.5)" stroke-width="0.8"/>'+
-    '<polygon points="100,56 124,70 124,98 100,112 76,98 76,70" stroke="rgba(28,163,88,0.45)" stroke-width="0.7"/>'+
-    '<circle cx="100" cy="84" r="5" fill="rgba(28,163,88,0.4)" stroke="none"/>'+
-    '<circle cx="100" cy="84" r="10" stroke="rgba(26,61,143,0.3)" stroke-width="0.8" fill="none"/>'+
-    '</svg>';
-  document.body.appendChild(trDiv);
-
-  /* ═══════════════════════════════════════════════════
-     6. BOTTOM-LEFT — breathing green hex rosette
-     ═══════════════════════════════════════════════════ */
-  var blDiv=document.createElement('div'); blDiv.className='geo-bl'; blDiv.setAttribute('aria-hidden','true');
-  blDiv.innerHTML='<svg width="180" height="180" viewBox="0 0 180 180" fill="none">'+
-    '<polygon points="90,5 153,41 153,113 90,149 27,113 27,41" stroke="rgba(28,163,88,0.7)" stroke-width="1.2" fill="rgba(28,163,88,0.04)"/>'+
-    '<polygon points="90,22 141,51 141,109 90,138 39,109 39,51" stroke="rgba(26,61,143,0.58)" stroke-width="0.9" fill="rgba(26,61,143,0.03)"/>'+
-    '<polygon points="90,39 129,61 129,109 90,131 51,109 51,61" stroke="rgba(28,163,88,0.46)" stroke-width="0.8"/>'+
-    '<polygon points="90,56 117,71 117,109 90,124 63,109 63,71" stroke="rgba(26,61,143,0.36)" stroke-width="0.7"/>'+
-    '<circle cx="90" cy="90" r="5" fill="rgba(26,61,143,0.4)" stroke="none"/>'+
-    '</svg>';
-  document.body.appendChild(blDiv);
-
-  /* ═══════════════════════════════════════════════════
-     7. GEOMETRIC BIRD — drifts across screen (top area)
-     ═══════════════════════════════════════════════════ */
-  var birdDiv=document.createElement('div');
-  birdDiv.className='geo-bird'; birdDiv.setAttribute('aria-hidden','true');
-  birdDiv.style.cssText='top:12vh;left:0;';
-  /* Geometric bird: body=diamond, wings=two triangles, tail=small triangle */
-  birdDiv.innerHTML='<svg width="64" height="32" viewBox="0 0 64 32" fill="none">'+
-    /* left wing */
-    '<polygon points="32,16 4,6 18,18" stroke="rgba(26,61,143,0.9)" stroke-width="1" fill="rgba(26,61,143,0.2)"/>'+
-    /* right wing */
-    '<polygon points="32,16 60,6 46,18" stroke="rgba(26,61,143,0.9)" stroke-width="1" fill="rgba(26,61,143,0.2)"/>'+
-    /* body diamond */
-    '<polygon points="32,10 40,16 32,22 24,16" stroke="rgba(26,61,143,0.95)" stroke-width="1.2" fill="rgba(28,163,88,0.25)"/>'+
-    /* tail */
-    '<polygon points="24,16 14,20 22,22" stroke="rgba(26,61,143,0.7)" stroke-width="0.8" fill="rgba(26,61,143,0.15)"/>'+
-    '</svg>';
-  document.body.appendChild(birdDiv);
-
-  /* second bird, different timing & height */
-  var bird2=document.createElement('div');
-  bird2.className='geo-bird'; bird2.setAttribute('aria-hidden','true');
-  bird2.style.cssText='top:22vh;left:0;animation-duration:38s;animation-delay:-16s;opacity:0.2;';
-  bird2.innerHTML='<svg width="44" height="22" viewBox="0 0 64 32" fill="none">'+
-    '<polygon points="32,16 4,6 18,18" stroke="rgba(28,163,88,0.9)" stroke-width="1" fill="rgba(28,163,88,0.2)"/>'+
-    '<polygon points="32,16 60,6 46,18" stroke="rgba(28,163,88,0.9)" stroke-width="1" fill="rgba(28,163,88,0.2)"/>'+
-    '<polygon points="32,10 40,16 32,22 24,16" stroke="rgba(28,163,88,0.95)" stroke-width="1.2" fill="rgba(26,61,143,0.2)"/>'+
-    '<polygon points="24,16 14,20 22,22" stroke="rgba(28,163,88,0.7)" stroke-width="0.8" fill="rgba(28,163,88,0.15)"/>'+
-    '</svg>';
-  document.body.appendChild(bird2);
-
-  /* ═══════════════════════════════════════════════════
-     8. UNDERWATER FOOTER
-     ═══════════════════════════════════════════════════ */
-  var footer=document.querySelector('.site-footer');
-  if(!footer) return;
+  var footer = document.querySelector('.site-footer');
+  if (!footer) return;
 
   footer.classList.add('sea-zone');
+  footer.style.position = 'relative';
 
-  /* wave SVG at the top of the footer */
-  var waveSVG='<svg class="sea-wave" viewBox="0 0 1200 40" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
-    '<path d="M0 20 C60 8 120 32 180 20 C240 8 300 32 360 20 C420 8 480 32 540 20 C600 8 660 32 720 20 C780 8 840 32 900 20 C960 8 1020 32 1080 20 C1140 8 1200 32 1200 20 L1200 40 L0 40 Z" fill="rgba(140,190,245,0.35)"/>'+
-    '<path d="M0 24 C50 14 110 34 170 24 C230 14 290 34 350 24 C410 14 470 34 530 24 C590 14 650 34 710 24 C770 14 830 34 890 24 C950 14 1010 34 1070 24 C1130 14 1190 34 1200 24 L1200 40 L0 40 Z" fill="rgba(160,205,255,0.2)"/>'+
+  /* Seamless wave: period = exactly 1/3 of SVG width
+     SVG is 300% wide → one period per viewport width → translate -33.33% is seamless */
+  var waveBlue = 'rgba(148,196,238,0.55)';
+  var waveLight = 'rgba(170,212,248,0.38)';
+  var waveSVG =
+    '<svg class="sea-wave" viewBox="0 0 1800 50" preserveAspectRatio="none" fill="none" aria-hidden="true">' +
+    /* each period is 600 units: starts and ends at y=25 */
+    '<path d="M0 25 C100 8 200 42 300 25 C400 8 500 42 600 25 ' +
+              'C700 8 800 42 900 25 C1000 8 1100 42 1200 25 ' +
+              'C1300 8 1400 42 1500 25 C1600 8 1700 42 1800 25 ' +
+              'L1800 50 L0 50 Z" fill="' + waveBlue + '"/>' +
+    '<path d="M0 30 C80 16 160 44 240 30 C320 16 400 44 480 30 ' +
+              'C560 16 640 44 720 30 C800 16 880 44 960 30 ' +
+              'C1040 16 1120 44 1200 30 C1280 16 1360 44 1440 30 ' +
+              'C1520 16 1600 44 1680 30 C1760 16 1800 30 1800 30 ' +
+              'L1800 50 L0 50 Z" fill="' + waveLight + '"/>' +
     '</svg>';
 
-  /* jellyfish 1 */
-  var jelly1='<div class="geo-jelly" style="left:15%;bottom:30px;animation-delay:0s;">'+
-    '<svg width="36" height="48" viewBox="0 0 36 48" fill="none">'+
-    '<ellipse cx="18" cy="16" rx="14" ry="12" stroke="rgba(26,61,143,0.7)" stroke-width="1.2" fill="rgba(140,190,255,0.3)"/>'+
-    '<path d="M10 26 Q8 36 6 44" stroke="rgba(26,61,143,0.45)" stroke-width="0.8" fill="none"/>'+
-    '<path d="M14 27 Q13 37 11 46" stroke="rgba(26,61,143,0.4)" stroke-width="0.7" fill="none"/>'+
-    '<path d="M18 28 Q18 38 18 47" stroke="rgba(28,163,88,0.45)" stroke-width="0.8" fill="none"/>'+
-    '<path d="M22 27 Q23 37 25 46" stroke="rgba(26,61,143,0.4)" stroke-width="0.7" fill="none"/>'+
-    '<path d="M26 26 Q28 36 30 44" stroke="rgba(26,61,143,0.45)" stroke-width="0.8" fill="none"/>'+
-    '<ellipse cx="18" cy="14" rx="7" ry="5" stroke="rgba(180,210,255,0.5)" stroke-width="0.7" fill="none"/>'+
+  var jelly1 =
+    '<div class="geo-jelly" style="left:18%;bottom:28px;">' +
+    '<svg width="38" height="52" viewBox="0 0 38 52" fill="none">' +
+    '<ellipse cx="19" cy="17" rx="15" ry="13" stroke="rgba(26,61,143,0.7)" stroke-width="1.2" fill="rgba(148,196,238,0.35)"/>' +
+    '<ellipse cx="19" cy="14" rx="8" ry="6" stroke="rgba(200,225,255,0.55)" stroke-width="0.7" fill="none"/>' +
+    '<path d="M11 28 Q9 38 7 48" stroke="rgba(26,61,143,0.42)" stroke-width="0.8" fill="none"/>' +
+    '<path d="M15 29 Q14 39 12 50" stroke="rgba(26,61,143,0.35)" stroke-width="0.7" fill="none"/>' +
+    '<path d="M19 30 Q19 40 19 50" stroke="rgba(28,163,88,0.42)" stroke-width="0.8" fill="none"/>' +
+    '<path d="M23 29 Q24 39 26 50" stroke="rgba(26,61,143,0.35)" stroke-width="0.7" fill="none"/>' +
+    '<path d="M27 28 Q29 38 31 48" stroke="rgba(26,61,143,0.42)" stroke-width="0.8" fill="none"/>' +
     '</svg></div>';
 
-  /* jellyfish 2 — larger, slightly different timing */
-  var jelly2='<div class="geo-jelly" style="left:62%;bottom:20px;animation-delay:-3.5s;animation-duration:11s;opacity:0.35;">'+
-    '<svg width="48" height="60" viewBox="0 0 48 60" fill="none">'+
-    '<ellipse cx="24" cy="20" rx="18" ry="15" stroke="rgba(28,163,88,0.7)" stroke-width="1.2" fill="rgba(28,163,88,0.12)"/>'+
-    '<path d="M13 33 Q10 46 8 56" stroke="rgba(28,163,88,0.4)" stroke-width="0.9" fill="none"/>'+
-    '<path d="M18 34 Q17 47 15 58" stroke="rgba(28,163,88,0.35)" stroke-width="0.8" fill="none"/>'+
-    '<path d="M24 35 Q24 48 24 58" stroke="rgba(26,61,143,0.45)" stroke-width="0.9" fill="none"/>'+
-    '<path d="M30 34 Q31 47 33 58" stroke="rgba(28,163,88,0.35)" stroke-width="0.8" fill="none"/>'+
-    '<path d="M35 33 Q38 46 40 56" stroke="rgba(28,163,88,0.4)" stroke-width="0.9" fill="none"/>'+
-    '<ellipse cx="24" cy="17" rx="9" ry="7" stroke="rgba(140,210,140,0.55)" stroke-width="0.8" fill="none"/>'+
+  var jelly2 =
+    '<div class="geo-jelly geo-jelly-2" style="left:58%;bottom:18px;">' +
+    '<svg width="50" height="65" viewBox="0 0 50 65" fill="none">' +
+    '<ellipse cx="25" cy="21" rx="20" ry="17" stroke="rgba(28,163,88,0.68)" stroke-width="1.3" fill="rgba(148,196,238,0.28)"/>' +
+    '<ellipse cx="25" cy="17" rx="10" ry="8" stroke="rgba(180,230,180,0.5)" stroke-width="0.8" fill="none"/>' +
+    '<path d="M13 36 Q10 48 8 60" stroke="rgba(28,163,88,0.38)" stroke-width="0.9" fill="none"/>' +
+    '<path d="M18 37 Q17 49 15 62" stroke="rgba(26,61,143,0.32)" stroke-width="0.8" fill="none"/>' +
+    '<path d="M25 38 Q25 50 25 63" stroke="rgba(26,61,143,0.42)" stroke-width="0.9" fill="none"/>' +
+    '<path d="M32 37 Q33 49 35 62" stroke="rgba(26,61,143,0.32)" stroke-width="0.8" fill="none"/>' +
+    '<path d="M37 36 Q40 48 42 60" stroke="rgba(28,163,88,0.38)" stroke-width="0.9" fill="none"/>' +
     '</svg></div>';
 
-  /* geometric fish */
-  var fish1='<div class="geo-fish" style="bottom:45px;left:0;animation-duration:16s;animation-delay:-4s;">'+
-    '<svg width="52" height="26" viewBox="0 0 52 26" fill="none">'+
-    /* body */
-    '<polygon points="8,13 28,4 44,13 28,22" stroke="rgba(26,61,143,0.85)" stroke-width="1.1" fill="rgba(140,190,255,0.35)"/>'+
-    /* tail */
-    '<polygon points="8,13 0,5 2,13 0,21" stroke="rgba(26,61,143,0.7)" stroke-width="0.9" fill="rgba(26,61,143,0.2)"/>'+
-    /* fins */
-    '<polygon points="20,8 26,4 28,10" stroke="rgba(26,61,143,0.55)" stroke-width="0.7" fill="rgba(26,61,143,0.12)"/>'+
-    /* eye */
-    '<circle cx="36" cy="13" r="2.5" fill="rgba(26,61,143,0.6)" stroke="none"/>'+
-    '<circle cx="36.8" cy="12.4" r="0.9" fill="rgba(240,248,255,0.9)" stroke="none"/>'+
-    /* scale lines */
-    '<path d="M20 10 Q24 13 20 16" stroke="rgba(26,61,143,0.3)" stroke-width="0.6" fill="none"/>'+
+  var fish1 =
+    '<div class="geo-fish" style="bottom:50px;left:0;">' +
+    '<svg width="54" height="26" viewBox="0 0 54 26" fill="none">' +
+    '<polygon points="10,13 30,4 46,13 30,22" stroke="rgba(26,61,143,0.82)" stroke-width="1.1" fill="rgba(148,196,238,0.45)"/>' +
+    '<polygon points="10,13 0,5 2,13 0,21" stroke="rgba(26,61,143,0.65)" stroke-width="0.9" fill="rgba(26,61,143,0.22)"/>' +
+    '<polygon points="22,8 28,4 30,10" stroke="rgba(26,61,143,0.5)" stroke-width="0.7" fill="rgba(26,61,143,0.14)"/>' +
+    '<circle cx="38" cy="13" r="2.5" fill="rgba(26,61,143,0.62)"/>' +
+    '<circle cx="38.8" cy="12.3" r="0.9" fill="rgba(240,248,255,0.95)"/>' +
     '</svg></div>';
 
-  var fish2='<div class="geo-fish" style="bottom:65px;left:0;animation-duration:22s;animation-delay:-10s;opacity:0.3;">'+
-    '<svg width="38" height="20" viewBox="0 0 52 26" fill="none">'+
-    '<polygon points="8,13 28,4 44,13 28,22" stroke="rgba(28,163,88,0.85)" stroke-width="1.1" fill="rgba(28,163,88,0.2)"/>'+
-    '<polygon points="8,13 0,5 2,13 0,21" stroke="rgba(28,163,88,0.7)" stroke-width="0.9" fill="rgba(28,163,88,0.18)"/>'+
-    '<circle cx="36" cy="13" r="2.5" fill="rgba(28,163,88,0.65)" stroke="none"/>'+
+  var fish2 =
+    '<div class="geo-fish geo-fish-2" style="bottom:68px;left:0;opacity:0.3;">' +
+    '<svg width="40" height="20" viewBox="0 0 54 26" fill="none">' +
+    '<polygon points="10,13 30,4 46,13 30,22" stroke="rgba(28,163,88,0.82)" stroke-width="1.1" fill="rgba(28,163,88,0.2)"/>' +
+    '<polygon points="10,13 0,5 2,13 0,21" stroke="rgba(28,163,88,0.65)" stroke-width="0.9" fill="rgba(28,163,88,0.18)"/>' +
+    '<circle cx="38" cy="13" r="2.5" fill="rgba(28,163,88,0.65)"/>' +
     '</svg></div>';
 
-  /* coral structure */
-  var coral='<div style="position:absolute;right:8%;bottom:0;pointer-events:none;opacity:0.4;">'+
-    '<svg width="60" height="80" viewBox="0 0 60 80" fill="none">'+
-    '<path d="M30 80 L30 50 L30 30" stroke="rgba(26,61,143,0.7)" stroke-width="1.8" stroke-linecap="round" fill="none"/>'+
-    '<path d="M30 65 L18 50 L12 36" stroke="rgba(26,61,143,0.6)" stroke-width="1.3" stroke-linecap="round" fill="none"/>'+
-    '<path d="M30 58 L44 44 L50 30" stroke="rgba(26,61,143,0.6)" stroke-width="1.3" stroke-linecap="round" fill="none"/>'+
-    '<path d="M18 50 L10 38 L6 24" stroke="rgba(26,61,143,0.45)" stroke-width="0.9" stroke-linecap="round" fill="none"/>'+
-    '<circle cx="30" cy="30" r="3.5" fill="rgba(28,163,88,0.65)"/>'+
-    '<circle cx="12" cy="36" r="3" fill="rgba(26,61,143,0.6)"/>'+
-    '<circle cx="50" cy="30" r="3" fill="rgba(26,61,143,0.6)"/>'+
-    '<circle cx="6" cy="24" r="2.5" fill="rgba(28,163,88,0.5)"/>'+
+  var coral1 =
+    '<div style="position:absolute;right:9%;bottom:0;pointer-events:none;opacity:0.46;">' +
+    '<svg width="58" height="78" viewBox="0 0 58 78" fill="none">' +
+    '<path d="M29 78 L29 48 L29 28" stroke="rgba(26,61,143,0.72)" stroke-width="1.8" stroke-linecap="round" fill="none"/>' +
+    '<path d="M29 62 L17 47 L10 32" stroke="rgba(26,61,143,0.6)" stroke-width="1.3" stroke-linecap="round" fill="none"/>' +
+    '<path d="M29 55 L43 42 L50 28" stroke="rgba(26,61,143,0.6)" stroke-width="1.3" stroke-linecap="round" fill="none"/>' +
+    '<path d="M17 47 L9 35 L5 22" stroke="rgba(26,61,143,0.44)" stroke-width="0.9" stroke-linecap="round" fill="none"/>' +
+    '<circle cx="29" cy="28" r="3.5" fill="rgba(28,163,88,0.68)"/>' +
+    '<circle cx="10" cy="32" r="3" fill="rgba(26,61,143,0.62)"/>' +
+    '<circle cx="50" cy="28" r="3" fill="rgba(26,61,143,0.62)"/>' +
+    '<circle cx="5" cy="22" r="2.5" fill="rgba(28,163,88,0.5)"/>' +
     '</svg></div>';
 
-  var coral2='<div style="position:absolute;left:5%;bottom:0;pointer-events:none;opacity:0.35;">'+
-    '<svg width="48" height="64" viewBox="0 0 48 64" fill="none">'+
-    '<path d="M24 64 L24 40 L24 20" stroke="rgba(28,163,88,0.7)" stroke-width="1.6" stroke-linecap="round" fill="none"/>'+
-    '<path d="M24 52 L14 38 L8 24" stroke="rgba(28,163,88,0.58)" stroke-width="1.1" stroke-linecap="round" fill="none"/>'+
-    '<path d="M24 44 L36 32 L42 18" stroke="rgba(28,163,88,0.58)" stroke-width="1.1" stroke-linecap="round" fill="none"/>'+
-    '<circle cx="24" cy="20" r="3" fill="rgba(26,61,143,0.6)"/>'+
-    '<circle cx="8" cy="24" r="2.5" fill="rgba(28,163,88,0.55)"/>'+
-    '<circle cx="42" cy="18" r="2.5" fill="rgba(26,61,143,0.55)"/>'+
+  var coral2 =
+    '<div style="position:absolute;left:6%;bottom:0;pointer-events:none;opacity:0.40;">' +
+    '<svg width="46" height="62" viewBox="0 0 46 62" fill="none">' +
+    '<path d="M23 62 L23 38 L23 18" stroke="rgba(28,163,88,0.72)" stroke-width="1.6" stroke-linecap="round" fill="none"/>' +
+    '<path d="M23 50 L13 36 L7 22" stroke="rgba(28,163,88,0.58)" stroke-width="1.1" stroke-linecap="round" fill="none"/>' +
+    '<path d="M23 43 L35 31 L41 16" stroke="rgba(28,163,88,0.58)" stroke-width="1.1" stroke-linecap="round" fill="none"/>' +
+    '<circle cx="23" cy="18" r="3" fill="rgba(26,61,143,0.62)"/>' +
+    '<circle cx="7" cy="22" r="2.5" fill="rgba(28,163,88,0.58)"/>' +
+    '<circle cx="41" cy="16" r="2.5" fill="rgba(26,61,143,0.58)"/>' +
     '</svg></div>';
 
-  footer.style.position='relative';
-  footer.innerHTML=waveSVG+jelly1+jelly2+fish1+fish2+coral+coral2+
-    '<div style="position:relative;z-index:2;padding:2.5rem;">'+footer.innerHTML+'</div>';
+  var innerText = footer.innerHTML;
+  footer.innerHTML =
+    waveSVG + jelly1 + jelly2 + fish1 + fish2 + coral1 + coral2 +
+    '<div style="position:relative;z-index:2;padding:2.5rem;">' + innerText + '</div>';
 
 })();
