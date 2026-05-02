@@ -35,28 +35,27 @@
 
     /* Title plate */
     .map-title {
-      position: fixed; top: 1.6rem; left: 50%; transform: translateX(-50%);
+      position: fixed; top: 1rem; left: 50%; transform: translateX(-50%);
       z-index: 900;
-      font-family: 'Cinzel', 'Georgia', serif;
       text-align: center;
-      color: #e8cc78;
-      text-shadow: 0 1px 10px rgba(0,0,0,0.95), 0 0 24px rgba(180,130,30,0.3);
       white-space: nowrap;
       pointer-events: none;
     }
-    .map-title h1 {
-      font-size: clamp(1.4rem, 3vw, 2.2rem);
-      font-weight: 700;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      margin-bottom: 0.28rem;
+    .map-title img {
+      height: clamp(52px, 7vw, 90px);
+      width: auto;
+      display: block;
+      margin: 0 auto 0.2rem;
+      filter: drop-shadow(0 2px 12px rgba(0,0,0,0.9));
     }
     .map-title .sub {
+      font-family: 'Cinzel', 'Georgia', serif;
       font-size: 0.78rem;
       letter-spacing: 0.3em;
       text-transform: uppercase;
       color: rgba(232,204,120,0.85);
       font-weight: 400;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.9);
     }
 
     /* Corner ornament lines */
@@ -215,7 +214,7 @@
   </div>
 
   <div class="map-title">
-    <h1>Past Travel</h1>
+    <img src="assets/img/past-travel-title.png" alt="Past Travel">
     <div class="sub">37 locations · 5 continents</div>
   </div>
 
