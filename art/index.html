@@ -71,6 +71,15 @@
       text-transform: uppercase; color: var(--text3); margin-bottom: 0.4rem;
     }
     .art-tile-desc { font-size: 0.8rem; color: var(--text2); line-height: 1.65; margin-bottom: 0.45rem; }
+    .art-tile-news-label {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 0.35rem;
+      margin-top: 0.55rem;
+    }
     .art-tile-links { display: flex; flex-wrap: wrap; gap: 0.35rem; }
     .art-tile-link {
       font-family: var(--font-mono); font-size: 0.62rem;
@@ -170,10 +179,11 @@
         year: 2025,
         desc: 'A bioluminescent bioreactor toy simulating the symbiosis between the Hawaiian bobtail squid and Allivibrio fischerii. I led the biology and consulted on design. Finalist at Biodesign Challenge 2025, presented at MoMA; received "Outstanding Display" among 60+ international teams.',
         alt: 'SquidKid bioluminescent bioreactor toy presentation at MoMA',
-        links: [
+        newsLinks: [
           { label: 'Northeastern', href: 'https://news.northeastern.edu/2025/11/06/organic-tamagotchi-design-bioluminescent-bacteria/' },
           { label: 'Gizmodo', href: 'https://gizmodo.com/what-if-tamagotchis-were-really-alive-these-researchers-just-made-it-happen-2000683800' },
           { label: 'Newsweek', href: 'https://www.newsweek.com/living-tamagotchi-actually-dies-if-kids-neglect-it-11023121' },
+          { label: 'Phys.org', href: 'PHYS_URL_HERE' },
         ],
       },
       {
@@ -253,13 +263,19 @@
             return '<a class="art-tile-link" href="' + l.href + '" target="_blank" rel="noopener">' + l.label + '</a>';
           }).join('') + '</div>'
         : '';
+      const newsHtml = (p.newsLinks && p.newsLinks.length)
+        ? '<div class="art-tile-news-label">News Coverage</div>' +
+          '<div class="art-tile-links">' + p.newsLinks.map(function(l) {
+            return '<a class="art-tile-link" href="' + l.href + '" target="_blank" rel="noopener">' + l.label + '</a>';
+          }).join('') + '</div>'
+        : '';
 
       tile.innerHTML = mediaHtml +
         '<div class="art-tile-label">' +
         '<div class="art-tile-title">' + p.title + ', ' + p.year + '</div>' +
         '<div class="art-tile-meta">' + p.medium + '</div>' +
         (p.desc ? '<div class="art-tile-desc">' + p.desc + '</div>' : '') +
-        linksHtml +
+        linksHtml + newsHtml +
         '</div>';
 
       /* attach lightbox to image cells */
