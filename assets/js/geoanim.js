@@ -133,8 +133,31 @@
     '@keyframes fishY2{0%,100%{transform:translateY(-10px);}50%{transform:translateY(14px);}}' +
     '@keyframes fishY3{0%,100%{transform:translateY(-5px);}50%{transform:translateY(18px);}}' +
 
-    /* coral */
-    '.sea-coral{position:absolute;pointer-events:none;z-index:2;}' +
+    /* sharks */
+    '.sea-shark{position:absolute;pointer-events:none;z-index:2;}' +
+    '.sea-shark-1{bottom:90px;animation:sharkX1 45s linear infinite;}' +
+    '.sea-shark-2{bottom:140px;animation:sharkX2 58s linear infinite;animation-delay:-22s;opacity:0.78;}' +
+    '@keyframes sharkX1{' +
+    '0%{transform:translateX(-120px) scaleX(1);}' +
+    '49%{transform:translateX(calc(100vw + 120px)) scaleX(1);}' +
+    '50%{transform:translateX(calc(100vw + 120px)) scaleX(-1);}' +
+    '99%{transform:translateX(-120px) scaleX(-1);}' +
+    '100%{transform:translateX(-120px) scaleX(1);}}' +
+    '@keyframes sharkX2{' +
+    '0%{transform:translateX(calc(100vw + 120px)) scaleX(-1);}' +
+    '49%{transform:translateX(-120px) scaleX(-1);}' +
+    '50%{transform:translateX(-120px) scaleX(1);}' +
+    '99%{transform:translateX(calc(100vw + 120px)) scaleX(1);}' +
+    '100%{transform:translateX(calc(100vw + 120px)) scaleX(-1);}}' +
+    '.shark-y{animation:sharkY 9s ease-in-out infinite;}' +
+    '.shark-y-2{animation:sharkY 12s ease-in-out infinite;animation-delay:-5s;}' +
+    '@keyframes sharkY{0%,100%{transform:translateY(0);}50%{transform:translateY(-18px);}}' +
+
+    /* octopi */
+    '.sea-octo{position:absolute;pointer-events:none;z-index:2;' +
+    'animation:octoFloat 10s ease-in-out infinite;}' +
+    '.sea-octo-2{animation-duration:13s;animation-delay:-6s;}' +
+    '@keyframes octoFloat{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-16px) rotate(3deg);}}' +
 
     /* floating sea links */
     '.sea-link{position:absolute;z-index:6;' +
@@ -261,29 +284,61 @@
   var fish2 = '<div class="fish-x fish-x-2" aria-hidden="true"><div class="fish-y fish-y-2">' + fishSVG2 + '</div></div>';
   var fish3 = '<div class="fish-x fish-x-3" aria-hidden="true"><div class="fish-y fish-y-3">' + fishSVG3 + '</div></div>';
 
-  /* Coral anchored at bottom:0 */
-  var coral1 =
-    '<div class="sea-coral" style="right:8%;bottom:0;opacity:0.44;" aria-hidden="true">' +
-    '<svg width="58" height="78" viewBox="0 0 58 78" fill="none">' +
-    '<path d="M29 78 L29 48 L29 28" stroke="rgba(26,61,143,0.68)" stroke-width="1.8" stroke-linecap="round" fill="none"/>' +
-    '<path d="M29 62 L17 47 L10 32" stroke="rgba(26,61,143,0.56)" stroke-width="1.3" stroke-linecap="round" fill="none"/>' +
-    '<path d="M29 55 L43 42 L50 28" stroke="rgba(26,61,143,0.56)" stroke-width="1.3" stroke-linecap="round" fill="none"/>' +
-    '<path d="M17 47 L9 35 L5 22" stroke="rgba(26,61,143,0.40)" stroke-width="0.9" stroke-linecap="round" fill="none"/>' +
-    '<circle cx="29" cy="28" r="3.5" fill="rgba(28,163,88,0.65)"/>' +
-    '<circle cx="10" cy="32" r="3" fill="rgba(26,61,143,0.58)"/>' +
-    '<circle cx="50" cy="28" r="3" fill="rgba(26,61,143,0.58)"/>' +
-    '</svg></div>';
+  /* Sharks */
+  var sharkSVG =
+    '<svg width="110" height="50" viewBox="0 0 110 50" fill="none">' +
+    /* body */
+    '<path d="M8 30 Q30 18 70 26 Q90 28 102 30 Q90 34 70 34 Q30 38 8 30Z"' +
+    ' stroke="rgba(26,61,143,0.65)" stroke-width="1.1" fill="rgba(26,61,143,0.22)"/>' +
+    /* dorsal fin */
+    '<path d="M48 26 L55 8 L65 26Z"' +
+    ' stroke="rgba(26,61,143,0.6)" stroke-width="1" fill="rgba(26,61,143,0.18)"/>' +
+    /* tail */
+    '<path d="M8 30 L0 18 L0 42Z"' +
+    ' stroke="rgba(26,61,143,0.55)" stroke-width="1" fill="rgba(26,61,143,0.16)"/>' +
+    /* pectoral fin */
+    '<path d="M60 30 L72 42 L80 30Z"' +
+    ' stroke="rgba(26,61,143,0.45)" stroke-width="0.9" fill="rgba(26,61,143,0.12)"/>' +
+    /* eye */
+    '<circle cx="90" cy="29" r="2.2" fill="rgba(26,61,143,0.7)"/>' +
+    '<circle cx="90.8" cy="28.3" r="0.8" fill="rgba(220,235,255,0.9)"/>' +
+    /* gills */
+    '<path d="M76 25 Q75 30 76 35" stroke="rgba(26,61,143,0.35)" stroke-width="0.8" fill="none"/>' +
+    '<path d="M80 24 Q79 30 80 36" stroke="rgba(26,61,143,0.3)" stroke-width="0.8" fill="none"/>' +
+    '</svg>';
 
-  var coral2 =
-    '<div class="sea-coral" style="left:5%;bottom:0;opacity:0.40;" aria-hidden="true">' +
-    '<svg width="46" height="62" viewBox="0 0 46 62" fill="none">' +
-    '<path d="M23 62 L23 38 L23 18" stroke="rgba(28,163,88,0.68)" stroke-width="1.6" stroke-linecap="round" fill="none"/>' +
-    '<path d="M23 50 L13 36 L7 22" stroke="rgba(28,163,88,0.54)" stroke-width="1.1" stroke-linecap="round" fill="none"/>' +
-    '<path d="M23 43 L35 31 L41 16" stroke="rgba(28,163,88,0.54)" stroke-width="1.1" stroke-linecap="round" fill="none"/>' +
-    '<circle cx="23" cy="18" r="3" fill="rgba(26,61,143,0.58)"/>' +
-    '<circle cx="7" cy="22" r="2.5" fill="rgba(28,163,88,0.55)"/>' +
-    '<circle cx="41" cy="16" r="2.5" fill="rgba(26,61,143,0.55)"/>' +
-    '</svg></div>';
+  var shark1 = '<div class="sea-shark sea-shark-1" aria-hidden="true"><div class="shark-y">' + sharkSVG + '</div></div>';
+  var shark2 = '<div class="sea-shark sea-shark-2" aria-hidden="true"><div class="shark-y shark-y-2">' + sharkSVG + '</div></div>';
+
+  /* Octopi */
+  function makeOcto(sc, sc2) {
+    return '<svg width="52" height="64" viewBox="0 0 52 64" fill="none">' +
+      /* mantle */
+      '<ellipse cx="26" cy="20" rx="17" ry="15"' +
+      ' stroke="' + sc + '" stroke-width="1.2" fill="rgba(26,61,143,0.14)"/>' +
+      '<ellipse cx="26" cy="16" rx="9" ry="7"' +
+      ' stroke="rgba(200,220,255,0.4)" stroke-width="0.7" fill="none"/>' +
+      /* eyes */
+      '<circle cx="20" cy="18" r="3" stroke="' + sc + '" stroke-width="1" fill="rgba(26,61,143,0.1)"/>' +
+      '<circle cx="32" cy="18" r="3" stroke="' + sc + '" stroke-width="1" fill="rgba(26,61,143,0.1)"/>' +
+      '<circle cx="20.8" cy="17.3" r="1.1" fill="' + sc2 + '"/>' +
+      '<circle cx="32.8" cy="17.3" r="1.1" fill="' + sc2 + '"/>' +
+      /* 8 arms */
+      '<path d="M12 30 Q7 40 10 52 Q11 58 8 63" stroke="' + sc + '" stroke-width="1.1" fill="none"/>' +
+      '<path d="M16 33 Q12 43 14 53 Q15 59 12 64" stroke="' + sc + '" stroke-width="1.1" fill="none"/>' +
+      '<path d="M20 35 Q18 45 20 55 Q21 61 19 64" stroke="' + sc + '" stroke-width="1.1" fill="none"/>' +
+      '<path d="M26 36 Q26 46 26 56 Q26 62 24 64" stroke="' + sc + '" stroke-width="1.1" fill="none"/>' +
+      '<path d="M32 35 Q34 45 32 55 Q31 61 33 64" stroke="' + sc + '" stroke-width="1.1" fill="none"/>' +
+      '<path d="M36 33 Q40 43 38 53 Q37 59 40 64" stroke="' + sc + '" stroke-width="1.1" fill="none"/>' +
+      '<path d="M40 30 Q45 40 42 52 Q41 58 44 63" stroke="' + sc + '" stroke-width="1.1" fill="none"/>' +
+      '<path d="M43 27 Q50 36 47 48 Q46 55 50 60" stroke="' + sc + '" stroke-width="1" fill="none"/>' +
+      '</svg>';
+  }
+
+  var octo1 = '<div class="sea-octo" style="left:15%;bottom:35px;opacity:0.6;" aria-hidden="true">' +
+    makeOcto('rgba(26,61,143,0.62)', 'rgba(26,61,143,0.75)') + '</div>';
+  var octo2 = '<div class="sea-octo sea-octo-2" style="right:18%;bottom:25px;opacity:0.52;" aria-hidden="true">' +
+    makeOcto('rgba(28,163,88,0.58)', 'rgba(28,163,88,0.8)') + '</div>';
 
   /* Floating links in ocean */
   var linkORCID =
@@ -298,8 +353,10 @@
 
   var innerText = footer.innerHTML;
   footer.innerHTML =
-    waveSVG + jelly1 + jelly2 + fish1 + fish2 + fish3 + coral1 + coral2 +
+    waveSVG + jelly1 + jelly2 + fish1 + fish2 + fish3 + shark1 + shark2 + octo1 + octo2 +
     linkORCID + linkLinkedIn + linkEmail +
-    '<div style="position:relative;z-index:6;padding:2rem 2.5rem;">' + innerText + '</div>';
+    '<div style="position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);' +
+    'z-index:6;font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.14em;' +
+    'color:rgba(26,61,143,0.55);white-space:nowrap;">' + innerText + '</div>';
 
 })();
