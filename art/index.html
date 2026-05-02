@@ -50,9 +50,18 @@
     .art-piece.visible { opacity: 1; transform: translateY(0) scale(1); }
     .art-piece:hover { border-color: var(--border2); box-shadow: 0 8px 32px rgba(26,61,143,0.09); }
 
-    .art-piece-img-wrap { overflow: hidden; background: var(--bg3); }
+    .art-piece-img-wrap { overflow: hidden; background: var(--bg3); position: relative; }
     .art-piece-img-wrap img { width: 100%; display: block; transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94); }
     .art-piece:hover .art-piece-img-wrap img { transform: scale(1.06); }
+
+    /* multi-image badge */
+    .img-count {
+      position: absolute; top: 0.5rem; right: 0.5rem;
+      font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em;
+      background: rgba(0,0,0,0.55); color: rgba(255,255,255,0.85);
+      padding: 0.18rem 0.45rem; border-radius: 10px;
+      pointer-events: none;
+    }
 
     .art-piece-geo {
       width: 100%; aspect-ratio: 4/3;
@@ -81,15 +90,37 @@
       margin-top: 0.45rem;
       line-height: 1.6;
     }
+    .art-piece-links {
+      display: flex; flex-wrap: wrap; gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
+    .art-piece-link {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--border2);
+      border-radius: 2px;
+      padding: 0.2rem 0.5rem;
+      text-decoration: none;
+      transition: border-color var(--t), background var(--t), color var(--t);
+    }
+    .art-piece-link:hover { border-color: var(--accent); background: rgba(26,61,143,0.06); }
 
     /* Lightbox */
     .lightbox { position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,0.94);display:none;align-items:center;justify-content:center;padding:2rem;cursor:zoom-out; }
     .lightbox.open { display:flex; }
     .lb-inner { position:relative;max-width:90vw;max-height:88vh;display:flex;flex-direction:column;align-items:center;gap:0.75rem;cursor:default; }
-    .lb-inner img { max-width:100%;max-height:80vh;object-fit:contain;border-radius:3px; }
+    .lb-inner img { max-width:100%;max-height:78vh;object-fit:contain;border-radius:3px; }
     .lb-caption { color:rgba(255,255,255,0.65);font-size:0.82rem;text-align:center; }
-    .lb-close { position:fixed;top:1.5rem;right:1.5rem;background:none;border:1px solid rgba(255,255,255,0.2);color:#fff;width:40px;height:40px;border-radius:50%;font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color 0.2s; }
+    .lb-close { position:fixed;top:1.5rem;right:1.5rem;background:none;border:1px solid rgba(255,255,255,0.2);color:#fff;width:40px;height:40px;border-radius:50%;font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color 0.2s;z-index:1; }
     .lb-close:hover { border-color:rgba(255,255,255,0.6); }
+    .lb-nav { display:flex;gap:0.75rem;margin-top:0.25rem; }
+    .lb-nav button { background:none;border:1px solid rgba(255,255,255,0.18);color:rgba(255,255,255,0.65);padding:0.3rem 0.9rem;border-radius:2px;cursor:pointer;font-size:0.8rem;transition:border-color 0.2s,color 0.2s; }
+    .lb-nav button:hover { border-color:rgba(255,255,255,0.5);color:#fff; }
+    .lb-nav button:disabled { opacity:0.2;cursor:default; }
+    .lb-counter { font-size:0.7rem;color:rgba(255,255,255,0.4);letter-spacing:0.1em; }
 
     .art-empty { text-align:center;padding:5rem 2rem;color:var(--text3);border:1px dashed var(--border2);border-radius:4px;font-size:0.9rem;line-height:2; }
 
@@ -127,6 +158,11 @@
     <div class="lb-inner">
       <img id="lbImg" src="" alt="">
       <div class="lb-caption" id="lbCaption"></div>
+      <div class="lb-nav" id="lbNav" style="display:none;">
+        <button id="lbPrev">← Prev</button>
+        <span class="lb-counter" id="lbCounter"></span>
+        <button id="lbNext">Next →</button>
+      </div>
     </div>
   </div>
 
@@ -137,137 +173,197 @@
   <script src="../assets/js/theme.js"></script>
   <script src="../assets/js/geoanim.js"></script>
   <script>
-    /*
-    ═══════════════════════════════════════════════════════════
-    HOW TO ADD ARTWORK
-    ───────────────────────────────────────────────────────────
-    Add entries to the PIECES array below.
-    Pieces are sorted newest-first and grouped by year.
-
-    Each entry:
-      src    — path to image (relative to this file), or omit for a placeholder
-      title  — title of the piece
-      medium — e.g. "Wood", "Silk dye", "Biodesign"
-      year   — four-digit year (number)
-      desc   — optional short description (shown below the title)
-      alt    — image alt text (defaults to title if omitted)
-
-    Example:
-      { src: 'images/cabinet.jpg', title: 'Walnut Cabinet', medium: 'Wood', year: 2024 }
-    ═══════════════════════════════════════════════════════════
-    */
-
     const PIECES = [
-      // ── add your pieces here ──
-      // { src: 'images/example.jpg', title: 'Piece Title', medium: 'Medium', year: 2024, desc: 'Optional description.' },
+      // ── 2026 ──
+      {
+        src: 'Art Text_Images/spider_silk.jpg',
+        images: ['Art Text_Images/spider_silk.jpg', 'Art Text_Images/spider_image.jpg'],
+        title: "Spider's Web on Silk",
+        medium: 'Silk & Plant-Based Resist and Ink',
+        year: 2026,
+        desc: 'After losing my group in a jungle in Zanzibar, I photographed this imperfect spiderweb and later honored its imperfection by tracing each line in resist on silk, following the path of the spider who made it. At an angle, shiny white resist at the vertices creates the illusion of raindrops.',
+        alt: "Silk painting of a spider's web traced in resist and ink",
+      },
+      {
+        src: 'Art Text_Images/tunisian_tiles.jpg',
+        title: 'Tiles on Silk',
+        medium: 'Silk & Plant-Based Resist and Ink',
+        year: 2026,
+        desc: 'Inspired by Tunisian tiles, each tile was drawn separately and composed before being traced in resist on silk. A lily motif is constant in all four tiles — this piece was a gift for someone who loves lilies.',
+        alt: 'Silk painting of Tunisian tile patterns with lily motif',
+      },
+      // ── 2025 ──
+      {
+        src: 'Art Text_Images/squidkid_presentation.jpg',
+        title: 'SquidKid',
+        medium: 'Mixed Media + Biology',
+        year: 2025,
+        desc: 'A bioluminescent bioreactor toy simulating the symbiosis between the Hawaiian bobtail squid and Allivibrio fischerii. I led the biology and consulted on design. Finalist at Biodesign Challenge 2025, presented at MoMA; received "Outstanding Display" among 60+ international teams.',
+        alt: 'SquidKid bioluminescent bioreactor toy presentation at MoMA',
+        links: [
+          { label: 'Northeastern', href: 'https://news.northeastern.edu/2025/11/06/organic-tamagotchi-design-bioluminescent-bacteria/' },
+          { label: 'Gizmodo', href: 'https://gizmodo.com/what-if-tamagotchis-were-really-alive-these-researchers-just-made-it-happen-2000683800' },
+          { label: 'Newsweek', href: 'https://www.newsweek.com/living-tamagotchi-actually-dies-if-kids-neglect-it-11023121' },
+          { label: 'Watch ↗', href: 'https://www.youtube.com/watch?v=0VgPBadKbfo' },
+        ],
+      },
+      {
+        src: 'Art Text_Images/tree_of_life_challah_board.jpg',
+        title: 'Eitz Chayim ("Tree of Life") Challah Plate',
+        medium: 'Wood + Wood Veneer Inlay (Laser Cutting + Woodshop)',
+        year: 2025,
+        desc: "Inspired by the tree of life in Jewish tradition, created as a gift for my parents' anniversary. Challah is a braided bread eaten each week on Shabbat, the Jewish day of rest.",
+        alt: 'Wooden challah plate with tree of life wood veneer inlay',
+      },
+      {
+        src: 'Art Text_Images/Joshi_lab_sign.jpg',
+        title: 'Joshi Lab Logo + Sign',
+        medium: 'Laser-Cut and -Etched Acrylic',
+        year: 2025,
+        desc: 'A gift for the Joshi Lab to thank them for their mentorship, inspired by the biology and chemistry that occurs in the lab.',
+        alt: 'Laser-cut and etched acrylic sign for the Joshi Lab',
+      },
+      {
+        title: 'The Mini Mini Mummy',
+        medium: 'Mixed Media + Arduino',
+        year: 2025,
+        desc: 'A high-tech mini golf hole on a 2×2 ft board, built for class. Multiple sensors, moving parts, and sound effects.',
+        links: [{ label: 'Watch ↗', href: 'https://youtu.be/l4mI4XTYS5k' }],
+      },
     ];
 
-    /* ── geo SVG placeholder shapes, cycling per piece ── */
     const GEO = [
       '<svg viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="1"><polygon points="50,5 95,27 95,73 50,95 5,73 5,27"/><polygon points="50,22 78,37 78,63 50,78 22,63 22,37"/><circle cx="50" cy="50" r="12"/></svg>',
       '<svg viewBox="0 0 100 100" fill="none" stroke="var(--accent2)" stroke-width="1"><rect x="12" y="12" width="76" height="76" rx="3"/><rect x="26" y="26" width="48" height="48" rx="2"/><rect x="40" y="40" width="20" height="20"/></svg>',
-      '<svg viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="1"><path d="M50 8 Q80 20 92 50 Q80 80 50 92 Q20 80 8 50 Q20 20 50 8Z"/><ellipse cx="50" cy="50" rx="20" ry="20"/><ellipse cx="50" cy="50" rx="8" ry="8"/></svg>',
-      '<svg viewBox="0 0 100 100" fill="none" stroke="var(--accent2)" stroke-width="1"><polygon points="50,10 90,80 10,80"/><polygon points="50,28 74,68 26,68"/></svg>',
     ];
 
     /* ── build feed ── */
     const feed = document.getElementById('artFeed');
+    const byYear = {};
+    PIECES.forEach(p => { (byYear[p.year] = byYear[p.year] || []).push(p); });
+    const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
 
-    if (PIECES.length === 0) {
-      feed.innerHTML = '<div class="art-empty"><strong>No pieces yet.</strong><br>Open <code>art/index.html</code> and add entries to the <code>PIECES</code> array.</div>';
-    } else {
-      /* group by year, sort newest first */
-      const byYear = {};
-      PIECES.forEach(p => { (byYear[p.year] = byYear[p.year] || []).push(p); });
-      const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
+    let geoIdx = 0;
+    years.forEach(year => {
+      const section = document.createElement('div');
+      section.className = 'art-year-section';
 
-      let globalIdx = 0;
-      years.forEach(year => {
-        const section = document.createElement('div');
-        section.className = 'art-year-section';
+      const hdr = document.createElement('div');
+      hdr.className = 'art-year-header';
+      hdr.innerHTML = '<span class="art-year-num">' + year + '</span><div class="art-year-line"></div>';
+      section.appendChild(hdr);
 
-        const hdr = document.createElement('div');
-        hdr.className = 'art-year-header';
-        hdr.innerHTML = '<span class="art-year-num">' + year + '</span><div class="art-year-line"></div>';
-        section.appendChild(hdr);
+      const grid = document.createElement('div');
+      grid.className = 'art-year-grid';
 
-        const grid = document.createElement('div');
-        grid.className = 'art-year-grid';
+      byYear[year].forEach((p, i) => {
+        const imgs = p.images || (p.src ? [p.src] : []);
+        const card = document.createElement('div');
+        card.className = 'art-piece';
+        card.style.transitionDelay = (i % 4 * 0.08) + 's';
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('aria-label', p.title);
 
-        byYear[year].forEach((p, i) => {
-          const idx = globalIdx++;
-          const card = document.createElement('div');
-          card.className = 'art-piece';
-          card.style.transitionDelay = (i % 4 * 0.08) + 's';
-          card.setAttribute('role', 'button');
-          card.setAttribute('tabindex', '0');
-          card.setAttribute('aria-label', p.title);
-
-          let imgHtml;
-          if (p.src) {
-            imgHtml = '<div class="art-piece-img-wrap"><img src="' + p.src + '" alt="' + (p.alt || p.title) + '" loading="lazy"></div>';
-          } else {
-            imgHtml = '<div class="art-piece-img-wrap"><div class="art-piece-geo">' + GEO[idx % GEO.length] + '</div></div>';
-          }
-
-          card.innerHTML = imgHtml +
-            '<div class="art-piece-info">' +
-            '<div class="art-piece-title">' + p.title + '</div>' +
-            '<div class="art-piece-meta">' + p.medium + '</div>' +
-            (p.desc ? '<div class="art-piece-desc">' + p.desc + '</div>' : '') +
+        let imgHtml;
+        if (p.src) {
+          imgHtml = '<div class="art-piece-img-wrap">' +
+            '<img src="' + p.src + '" alt="' + (p.alt || p.title) + '" loading="lazy">' +
+            (imgs.length > 1 ? '<span class="img-count">1 / ' + imgs.length + '</span>' : '') +
             '</div>';
+        } else {
+          imgHtml = '<div class="art-piece-img-wrap"><div class="art-piece-geo">' + GEO[geoIdx++ % GEO.length] + '</div></div>';
+        }
 
-          card.addEventListener('click', () => openLb(p));
-          card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLb(p); } });
-          grid.appendChild(card);
-        });
+        const linksHtml = (p.links && p.links.length)
+          ? '<div class="art-piece-links">' + p.links.map(l =>
+              '<a class="art-piece-link" href="' + l.href + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">' + l.label + '</a>'
+            ).join('') + '</div>'
+          : '';
 
-        section.appendChild(grid);
-        feed.appendChild(section);
+        card.innerHTML = imgHtml +
+          '<div class="art-piece-info">' +
+          '<div class="art-piece-title">' + p.title + '</div>' +
+          '<div class="art-piece-meta">' + p.medium + '</div>' +
+          (p.desc ? '<div class="art-piece-desc">' + p.desc + '</div>' : '') +
+          linksHtml +
+          '</div>';
+
+        if (imgs.length > 0) {
+          card.addEventListener('click', () => openLb(p, imgs, 0));
+          card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLb(p, imgs, 0); } });
+        }
+
+        grid.appendChild(card);
       });
 
-      /* scroll-reveal via IntersectionObserver */
-      const io = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
-        });
-      }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+      section.appendChild(grid);
+      feed.appendChild(section);
+    });
 
-      document.querySelectorAll('.art-piece, .art-year-header').forEach(el => io.observe(el));
+    /* scroll-reveal */
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.art-piece, .art-year-header').forEach(el => io.observe(el));
 
-      /* hover tilt effect */
-      document.querySelectorAll('.art-piece').forEach(card => {
-        card.addEventListener('mousemove', e => {
-          const r = card.getBoundingClientRect();
-          const x = (e.clientX - r.left) / r.width  - 0.5;
-          const y = (e.clientY - r.top)  / r.height - 0.5;
-          card.style.transform = 'translateY(0) scale(1) rotateX(' + (-y * 7) + 'deg) rotateY(' + (x * 7) + 'deg)';
-          card.style.transition = 'opacity 0.55s ease, border-color var(--t), box-shadow var(--t)';
-        });
-        card.addEventListener('mouseleave', () => {
-          card.style.transform = '';
-          card.style.transition = '';
-        });
+    /* hover tilt */
+    document.querySelectorAll('.art-piece').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width  - 0.5;
+        const y = (e.clientY - r.top)  / r.height - 0.5;
+        card.style.transform = 'translateY(0) scale(1) rotateX(' + (-y * 7) + 'deg) rotateY(' + (x * 7) + 'deg)';
+        card.style.transition = 'opacity 0.55s ease, border-color var(--t), box-shadow var(--t)';
       });
+      card.addEventListener('mouseleave', () => { card.style.transform = ''; card.style.transition = ''; });
+    });
+
+    /* ── lightbox with multi-image nav ── */
+    const lb      = document.getElementById('lightbox');
+    const lbImg   = document.getElementById('lbImg');
+    const lbCap   = document.getElementById('lbCaption');
+    const lbNav   = document.getElementById('lbNav');
+    const lbPrev  = document.getElementById('lbPrev');
+    const lbNext  = document.getElementById('lbNext');
+    const lbCount = document.getElementById('lbCounter');
+
+    let lbImages = [], lbIdx = 0, lbPiece = null;
+
+    function showLbImage(idx) {
+      lbIdx = idx;
+      lbImg.src = lbImages[idx];
+      lbImg.alt = lbPiece ? (lbPiece.alt || lbPiece.title) : '';
+      if (lbImages.length > 1) {
+        lbNav.style.display = 'flex';
+        lbCount.textContent = (idx + 1) + ' / ' + lbImages.length;
+        lbPrev.disabled = idx === 0;
+        lbNext.disabled = idx === lbImages.length - 1;
+      } else {
+        lbNav.style.display = 'none';
+      }
     }
 
-    /* ── lightbox ── */
-    const lb = document.getElementById('lightbox');
-    const lbImg = document.getElementById('lbImg');
-    const lbCap = document.getElementById('lbCaption');
-
-    function openLb(p) {
-      if (!p.src) return;
-      lbImg.src = p.src;
-      lbImg.alt = p.alt || p.title;
+    function openLb(p, imgs, startIdx) {
+      lbPiece  = p;
+      lbImages = imgs;
+      showLbImage(startIdx);
       lbCap.textContent = [p.title, p.medium, p.year].filter(Boolean).join(' · ');
       lb.classList.add('open');
       document.body.style.overflow = 'hidden';
     }
     function closeLb() { lb.classList.remove('open'); document.body.style.overflow = ''; }
+
     document.getElementById('lbClose').addEventListener('click', closeLb);
     lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+    lbPrev.addEventListener('click', e => { e.stopPropagation(); if (lbIdx > 0) showLbImage(lbIdx - 1); });
+    lbNext.addEventListener('click', e => { e.stopPropagation(); if (lbIdx < lbImages.length - 1) showLbImage(lbIdx + 1); });
+    document.addEventListener('keydown', e => {
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLb();
+      if (e.key === 'ArrowLeft'  && lbIdx > 0) showLbImage(lbIdx - 1);
+      if (e.key === 'ArrowRight' && lbIdx < lbImages.length - 1) showLbImage(lbIdx + 1);
+    });
   </script>
 </body>
 </html>

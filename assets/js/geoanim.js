@@ -332,7 +332,9 @@
     var footerEl = document.querySelector('.site-footer');
     var pageH   = document.body.scrollHeight;
     var stopAt  = footerEl ? (pageH - footerEl.offsetHeight - 320) : (pageH - 320);
-    var startAt = 340;
+    /* on hero pages, start below the full-height hero section */
+    var heroEl  = document.querySelector('.hero');
+    var startAt = heroEl ? (heroEl.offsetTop + heroEl.offsetHeight + 80) : 340;
     var spacing = 420;
     var idx = 0;
     for (var top = startAt; top <= stopAt; top += spacing) {
@@ -512,8 +514,10 @@
      5. TREASURE CHEST — hidden map easter egg
      ═══════════════════════════════════════════════════ */
   (function () {
-    var depth = location.pathname.replace(/^\//, '').split('/').length - 1;
-    var mapHref = (depth > 0 ? '../' : '') + 'map.html';
+    var parts = location.pathname.split('/');
+    var parentDir = parts[parts.length - 2];
+    var inSubdir = ['photos', 'art', 'music'].indexOf(parentDir) !== -1;
+    var mapHref = (inSubdir ? '../' : '') + 'map.html';
 
     if (location.pathname.indexOf('map.html') !== -1) return;
 
