@@ -228,8 +228,9 @@
     '.sea-octo-2{animation-duration:13s;animation-delay:-6s;}' +
     '@keyframes octoFloat{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-16px) rotate(3deg);}}' +
 
-    /* ocean treasure chest */
-    '.sea-chest-wrap{position:absolute;bottom:58px;left:50%;transform:translateX(-50%);z-index:5;cursor:pointer;width:68px;text-align:center;}' +
+    /* ocean treasure chest — bottom-right, underwater (z-index 2 = same layer as fish) */
+    '.sea-chest-wrap{position:absolute;bottom:42px;right:3.5%;z-index:2;cursor:pointer;width:68px;text-align:center;opacity:0.72;}' +
+    '.sea-chest-wrap:hover{opacity:1;}' +
     '.sea-chest-svg{display:block;margin:0 auto;transition:filter 0.2s;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4));}' +
     '.sea-chest-wrap:hover .sea-chest-svg{filter:drop-shadow(0 0 10px rgba(200,155,40,0.7));}' +
     '.chest-lid-g{transform-origin:34px 30px;transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1);}' +
