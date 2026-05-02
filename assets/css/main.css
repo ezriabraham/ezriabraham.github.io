@@ -318,7 +318,7 @@ section { padding: 4rem 0; }
 /* ===== PAGE HEADER — colour wash + fade to white ===== */
 .page-header {
   position: relative;
-  overflow: visible;          /* allow fade to bleed below the element */
+  overflow: hidden;
 }
 .page-header::before {
   content: '';
@@ -331,16 +331,16 @@ section { padding: 4rem 0; }
   pointer-events: none;
   z-index: 0;
 }
-/* bottom fade — extends 80px below the header to dissolve into page bg */
+/* fade within the header — bottom 80px dissolve to page bg */
 .page-header::after {
   content: '';
   position: absolute;
   left: 0; right: 0;
-  bottom: -80px;
+  bottom: 0;
   height: 80px;
-  background: linear-gradient(to bottom, var(--bg), transparent);
+  background: linear-gradient(to bottom, transparent, var(--bg));
   pointer-events: none;
-  z-index: 0;
+  z-index: 2;
 }
 .page-header > * { position: relative; z-index: 1; }
 
