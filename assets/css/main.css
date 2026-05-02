@@ -3,8 +3,8 @@
 
 /* ===== FONTS ===== */
 
-/* Futura Passata — main display, always uppercase */
-@font-face { font-family: 'FuturaPassata'; src: url('../fonts/FuturaPassata-Display.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+/* Stellage Display — main display */
+@font-face { font-family: 'Stellage'; src: url('../fonts/Stellage-Display.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
 
 /* AlbraDisplay — editorial headings (GT Super equivalent) */
 @font-face { font-family: 'AlbraDisplay'; src: url('../fonts/AlbraDisplay-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
@@ -36,7 +36,7 @@
   --border2:   rgba(26,61,143,0.22);
   --shadow:    0 4px 32px rgba(12,18,38,0.12);
 
-  --font-display:  'FuturaPassata', 'Coconat', sans-serif;
+  --font-display:  'Stellage', 'Coconat', sans-serif;
   --font-serif:    'AlbraDisplay', 'Albra', Georgia, serif;
   --font-sans:     'GT Walsheim', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono:     'Martian Mono', 'Messapia', monospace;
@@ -81,10 +81,9 @@ ul { list-style: none; }
 }
 .nav-logo {
   font-family: var(--font-display);
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 400;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  letter-spacing: 0.04em;
   color: var(--text);
   transition: color var(--t);
   white-space: nowrap;
@@ -156,8 +155,7 @@ ul { list-style: none; }
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 400;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
   line-height: 1.15;
   margin-bottom: 1rem;
 }
@@ -301,12 +299,12 @@ section { padding: 4rem 0; }
 .site-footer {
   padding: 0;
   text-align: center;
-  border-top: 1px solid var(--border);
+  border-top: none;
   color: var(--text3);
   font-size: 0.78rem;
   letter-spacing: 0.1em;
   margin-top: 4rem;
-  min-height: 140px;
+  min-height: 220px;
 }
 
 /* ===== SCROLLBAR ===== */
@@ -317,20 +315,32 @@ section { padding: 4rem 0; }
 /* ===== THEME TOGGLE — hidden (light mode only) ===== */
 .theme-toggle { display: none; }
 
-/* ===== PAGE HEADER — colour wash ===== */
+/* ===== PAGE HEADER — colour wash + fade to white ===== */
 .page-header {
   position: relative;
-  overflow: hidden;
+  overflow: visible;          /* allow fade to bleed below the element */
 }
-.page-header::after {
+.page-header::before {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 18% 65%, rgba(28,163,88,0.22) 0%, transparent 52%),
-    radial-gradient(ellipse at 82% 38%, rgba(26,61,143,0.20) 0%, transparent 52%),
-    radial-gradient(ellipse at 50% 10%, rgba(26,61,143,0.10) 0%, transparent 60%);
+    radial-gradient(ellipse at 18% 60%, rgba(28,163,88,0.38) 0%, transparent 55%),
+    radial-gradient(ellipse at 82% 35%, rgba(26,61,143,0.34) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 5%,  rgba(26,61,143,0.18) 0%, transparent 60%);
   pointer-events: none;
+  z-index: 0;
+}
+/* bottom fade — extends 80px below the header to dissolve into page bg */
+.page-header::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  bottom: -80px;
+  height: 80px;
+  background: linear-gradient(to bottom, var(--bg), transparent);
+  pointer-events: none;
+  z-index: 0;
 }
 .page-header > * { position: relative; z-index: 1; }
 
