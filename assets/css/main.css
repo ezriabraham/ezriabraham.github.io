@@ -299,13 +299,14 @@ section { padding: 4rem 0; }
 
 /* ===== FOOTER ===== */
 .site-footer {
-  padding: 2.5rem;
+  padding: 0;
   text-align: center;
   border-top: 1px solid var(--border);
   color: var(--text3);
   font-size: 0.78rem;
   letter-spacing: 0.1em;
   margin-top: 4rem;
+  min-height: 140px;
 }
 
 /* ===== SCROLLBAR ===== */
