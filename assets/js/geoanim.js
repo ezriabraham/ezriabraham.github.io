@@ -133,7 +133,7 @@
   var S = document.createElement('style');
   S.textContent =
     /* margin creatures — absolute on page, visible only when margins exist */
-    '.mgn-creature{position:absolute;pointer-events:none;opacity:0.42;z-index:1;}' +
+    '.mgn-creature{position:absolute;pointer-events:none;opacity:0.42;z-index:200;}' +
     '@media(max-width:960px){.mgn-creature{display:none;}}' +
 
     '@keyframes frogHop{' +
