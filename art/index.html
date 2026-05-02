@@ -8,30 +8,7 @@
   <style>
     .art-feed { max-width: 900px; margin: 0 auto; padding: 0 2.5rem 5rem; }
 
-    .art-year-section { margin-bottom: 1rem; }
-
-    .art-year-header {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      margin: 4rem 0 1.75rem;
-      opacity: 0;
-      transform: translateX(-24px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
-    }
-    .art-year-header.visible { opacity: 1; transform: none; }
-    .art-year-num {
-      font-family: var(--font-display);
-      font-size: clamp(2.8rem, 5.5vw, 4.5rem);
-      font-weight: 400;
-      color: var(--text3);
-      letter-spacing: 0.06em;
-      line-height: 1;
-      flex-shrink: 0;
-    }
-    .art-year-line { flex: 1; height: 1px; background: var(--border); }
-
-    .art-year-grid { columns: 2 260px; column-gap: 1.1rem; }
+    .art-grid { columns: 2 260px; column-gap: 1.1rem; }
 
     .art-piece {
       break-inside: avoid;
@@ -124,9 +101,12 @@
 
     .art-empty { text-align:center;padding:5rem 2rem;color:var(--text3);border:1px dashed var(--border2);border-radius:4px;font-size:0.9rem;line-height:2; }
 
+    .art-piece-video-wrap { aspect-ratio: 16/9; overflow: hidden; }
+    .art-piece-video-wrap iframe { width:100%;height:100%;display:block;border:none; }
+
     @media (max-width: 600px) {
       .art-feed { padding: 0 1.25rem 4rem; }
-      .art-year-grid { columns: 1; }
+      .art-grid { columns: 1; }
     }
   </style>
 </head>
@@ -174,7 +154,6 @@
   <script src="../assets/js/geoanim.js"></script>
   <script>
     const PIECES = [
-      // ── 2026 ──
       {
         src: 'Art Text_Images/spider_silk.jpg',
         images: ['Art Text_Images/spider_silk.jpg', 'Art Text_Images/spider_image.jpg'],
@@ -192,9 +171,9 @@
         desc: 'Inspired by Tunisian tiles, each tile was drawn separately and composed before being traced in resist on silk. A lily motif is constant in all four tiles — this piece was a gift for someone who loves lilies.',
         alt: 'Silk painting of Tunisian tile patterns with lily motif',
       },
-      // ── 2025 ──
       {
         src: 'Art Text_Images/squidkid_presentation.jpg',
+        video: '0VgPBadKbfo',
         title: 'SquidKid',
         medium: 'Mixed Media + Biology',
         year: 2025,
@@ -204,7 +183,6 @@
           { label: 'Northeastern', href: 'https://news.northeastern.edu/2025/11/06/organic-tamagotchi-design-bioluminescent-bacteria/' },
           { label: 'Gizmodo', href: 'https://gizmodo.com/what-if-tamagotchis-were-really-alive-these-researchers-just-made-it-happen-2000683800' },
           { label: 'Newsweek', href: 'https://www.newsweek.com/living-tamagotchi-actually-dies-if-kids-neglect-it-11023121' },
-          { label: 'Watch ↗', href: 'https://www.youtube.com/watch?v=0VgPBadKbfo' },
         ],
       },
       {
@@ -224,11 +202,11 @@
         alt: 'Laser-cut and etched acrylic sign for the Joshi Lab',
       },
       {
+        video: 'l4mI4XTYS5k',
         title: 'The Mini Mini Mummy',
         medium: 'Mixed Media + Arduino',
         year: 2025,
         desc: 'A high-tech mini golf hole on a 2×2 ft board, built for class. Multiple sensors, moving parts, and sound effects.',
-        links: [{ label: 'Watch ↗', href: 'https://youtu.be/l4mI4XTYS5k' }],
       },
     ];
 
@@ -237,78 +215,71 @@
       '<svg viewBox="0 0 100 100" fill="none" stroke="var(--accent2)" stroke-width="1"><rect x="12" y="12" width="76" height="76" rx="3"/><rect x="26" y="26" width="48" height="48" rx="2"/><rect x="40" y="40" width="20" height="20"/></svg>',
     ];
 
-    /* ── build feed ── */
+    /* ── build flat feed ── */
     const feed = document.getElementById('artFeed');
-    const byYear = {};
-    PIECES.forEach(p => { (byYear[p.year] = byYear[p.year] || []).push(p); });
-    const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
+    const grid = document.createElement('div');
+    grid.className = 'art-grid';
+    feed.appendChild(grid);
 
+    const sorted = [...PIECES].sort((a, b) => b.year - a.year);
     let geoIdx = 0;
-    years.forEach(year => {
-      const section = document.createElement('div');
-      section.className = 'art-year-section';
 
-      const hdr = document.createElement('div');
-      hdr.className = 'art-year-header';
-      hdr.innerHTML = '<span class="art-year-num">' + year + '</span><div class="art-year-line"></div>';
-      section.appendChild(hdr);
+    sorted.forEach((p, i) => {
+      const imgs = p.images || (p.src ? [p.src] : []);
+      const card = document.createElement('div');
+      card.className = 'art-piece';
+      card.style.transitionDelay = (i % 4 * 0.08) + 's';
 
-      const grid = document.createElement('div');
-      grid.className = 'art-year-grid';
+      let mediaHtml;
+      if (p.video) {
+        mediaHtml = '<div class="art-piece-img-wrap art-piece-video-wrap">' +
+          '<iframe src="https://www.youtube.com/embed/' + p.video + '" title="' + p.title + '"' +
+          ' frameborder="0" allowfullscreen' +
+          ' allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">' +
+          '</iframe></div>';
+      } else if (p.src) {
+        mediaHtml = '<div class="art-piece-img-wrap">' +
+          '<img src="' + p.src + '" alt="' + (p.alt || p.title) + '" loading="lazy">' +
+          (imgs.length > 1 ? '<span class="img-count">1 / ' + imgs.length + '</span>' : '') +
+          '</div>';
+      } else {
+        mediaHtml = '<div class="art-piece-img-wrap"><div class="art-piece-geo">' + GEO[geoIdx++ % GEO.length] + '</div></div>';
+      }
 
-      byYear[year].forEach((p, i) => {
-        const imgs = p.images || (p.src ? [p.src] : []);
-        const card = document.createElement('div');
-        card.className = 'art-piece';
-        card.style.transitionDelay = (i % 4 * 0.08) + 's';
+      const linksHtml = (p.links && p.links.length)
+        ? '<div class="art-piece-links">' + p.links.map(l =>
+            '<a class="art-piece-link" href="' + l.href + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">' + l.label + '</a>'
+          ).join('') + '</div>'
+        : '';
+
+      card.innerHTML = mediaHtml +
+        '<div class="art-piece-info">' +
+        '<div class="art-piece-title">' + p.title + ', ' + p.year + '</div>' +
+        '<div class="art-piece-meta">' + p.medium + '</div>' +
+        (p.desc ? '<div class="art-piece-desc">' + p.desc + '</div>' : '') +
+        linksHtml +
+        '</div>';
+
+      if (!p.video && imgs.length > 0) {
         card.setAttribute('role', 'button');
         card.setAttribute('tabindex', '0');
         card.setAttribute('aria-label', p.title);
+        card.addEventListener('click', () => openLb(p, imgs, 0));
+        card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLb(p, imgs, 0); } });
+      }
 
-        let imgHtml;
-        if (p.src) {
-          imgHtml = '<div class="art-piece-img-wrap">' +
-            '<img src="' + p.src + '" alt="' + (p.alt || p.title) + '" loading="lazy">' +
-            (imgs.length > 1 ? '<span class="img-count">1 / ' + imgs.length + '</span>' : '') +
-            '</div>';
-        } else {
-          imgHtml = '<div class="art-piece-img-wrap"><div class="art-piece-geo">' + GEO[geoIdx++ % GEO.length] + '</div></div>';
-        }
-
-        const linksHtml = (p.links && p.links.length)
-          ? '<div class="art-piece-links">' + p.links.map(l =>
-              '<a class="art-piece-link" href="' + l.href + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">' + l.label + '</a>'
-            ).join('') + '</div>'
-          : '';
-
-        card.innerHTML = imgHtml +
-          '<div class="art-piece-info">' +
-          '<div class="art-piece-title">' + p.title + '</div>' +
-          '<div class="art-piece-meta">' + p.medium + '</div>' +
-          (p.desc ? '<div class="art-piece-desc">' + p.desc + '</div>' : '') +
-          linksHtml +
-          '</div>';
-
-        if (imgs.length > 0) {
-          card.addEventListener('click', () => openLb(p, imgs, 0));
-          card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLb(p, imgs, 0); } });
-        }
-
-        grid.appendChild(card);
-      });
-
-      section.appendChild(grid);
-      feed.appendChild(section);
+      grid.appendChild(card);
     });
 
     /* scroll-reveal */
     const io = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
     }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
-    document.querySelectorAll('.art-piece, .art-year-header').forEach(el => io.observe(el));
+    document.querySelectorAll('.art-piece').forEach(el => io.observe(el));
 
-    /* hover tilt */
+    /* hover tilt (skip video cards to avoid interfering with iframe) */
     document.querySelectorAll('.art-piece').forEach(card => {
+      if (card.querySelector('iframe')) return;
       card.addEventListener('mousemove', e => {
         const r = card.getBoundingClientRect();
         const x = (e.clientX - r.left) / r.width  - 0.5;

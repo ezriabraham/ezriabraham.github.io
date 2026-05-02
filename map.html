@@ -45,17 +45,17 @@
       pointer-events: none;
     }
     .map-title h1 {
-      font-size: clamp(1rem, 2.2vw, 1.5rem);
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
       font-weight: 700;
       letter-spacing: 0.32em;
       text-transform: uppercase;
-      margin-bottom: 0.18rem;
+      margin-bottom: 0.28rem;
     }
     .map-title .sub {
-      font-size: 0.6rem;
+      font-size: 0.78rem;
       letter-spacing: 0.3em;
       text-transform: uppercase;
-      color: rgba(210,175,80,0.55);
+      color: rgba(210,175,80,0.65);
       font-weight: 400;
     }
 
@@ -99,7 +99,7 @@
     }
 
     /* ── Leaflet overrides ── */
-    .leaflet-container { background: #3a2510; }
+    .leaflet-container { background: #c8b478; }
 
     .leaflet-control-zoom {
       border: 1px solid rgba(185,135,45,0.5) !important;
@@ -184,7 +184,7 @@
 
   <!-- Compass rose -->
   <div class="compass">
-    <svg width="88" height="88" viewBox="0 0 88 88" fill="none">
+    <svg width="120" height="120" viewBox="0 0 88 88" fill="none">
       <circle cx="44" cy="44" r="40" stroke="rgba(185,135,45,0.55)" stroke-width="1"/>
       <circle cx="44" cy="44" r="33" stroke="rgba(185,135,45,0.25)" stroke-width="0.5" stroke-dasharray="3 3"/>
       <!-- Cardinal spokes -->
@@ -216,7 +216,7 @@
 
   <div class="map-title">
     <h1>Places I've Been</h1>
-    <div class="sub">37 locations · 6 continents</div>
+    <div class="sub">37 locations · 5 continents</div>
   </div>
 
   <a href="index.html" class="map-back">
@@ -238,16 +238,18 @@
       zoomControl: false,
       minZoom: 2,
       maxZoom: 11,
+      maxBounds: [[-85, -180], [85, 180]],
+      maxBoundsViscosity: 1.0,
     });
 
     L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
-    /* CartoDB Voyager — no API key required */
+    /* OpenStreetMap — English labels at all zoom levels */
     L.tileLayer(
-      'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
-        subdomains: 'abcd',
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        subdomains: 'abc',
         maxZoom: 19,
       }
     ).addTo(map);
