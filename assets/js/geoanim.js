@@ -228,6 +228,39 @@
     '.sea-octo-2{animation-duration:13s;animation-delay:-6s;}' +
     '@keyframes octoFloat{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-16px) rotate(3deg);}}' +
 
+    /* treasure chest */
+    '.treasure-btn{position:fixed;bottom:1.4rem;right:1.4rem;z-index:4000;cursor:pointer;' +
+    'background:none;border:none;padding:0;transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1),filter 0.2s;}' +
+    '.treasure-btn:hover{transform:scale(1.13) rotate(-4deg);filter:drop-shadow(0 0 8px rgba(200,155,40,0.55));}' +
+    '.treasure-btn.open{transform:scale(1.08);}' +
+    '.treasure-scroll{position:fixed;bottom:5.2rem;right:1.4rem;z-index:3999;' +
+    'width:210px;overflow:hidden;' +
+    'transform:translateY(12px) scale(0.94);opacity:0;pointer-events:none;' +
+    'transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.25s;}' +
+    '.treasure-scroll.open{transform:translateY(0) scale(1);opacity:1;pointer-events:auto;}' +
+    '.treasure-scroll-inner{' +
+    'background:linear-gradient(160deg,#d9a94a 0%,#c0882a 50%,#d4a040 100%);' +
+    'border:1px solid rgba(220,175,70,0.8);border-radius:3px;' +
+    'box-shadow:0 6px 28px rgba(0,0,0,0.55),inset 0 1px 0 rgba(255,220,100,0.35);' +
+    'overflow:hidden;}' +
+    /* rolled-paper top edge */
+    '.treasure-scroll-roll{height:10px;background:linear-gradient(to bottom,rgba(0,0,0,0.22),rgba(0,0,0,0.04));' +
+    'border-bottom:1px solid rgba(155,95,15,0.5);}' +
+    '.treasure-scroll-body{padding:0.85rem 1rem 0.9rem;}' +
+    '.treasure-scroll-title{font-family:var(--font-serif);font-size:0.82rem;font-weight:700;' +
+    'color:#1a0a00;letter-spacing:0.04em;margin-bottom:0.18rem;}' +
+    '.treasure-scroll-sub{font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;' +
+    'color:rgba(40,15,0,0.6);margin-bottom:0.75rem;}' +
+    '.treasure-scroll-map{display:block;width:100%;border-radius:2px;overflow:hidden;' +
+    'margin-bottom:0.7rem;border:1px solid rgba(120,70,10,0.4);cursor:pointer;}' +
+    '.treasure-scroll-map:hover{opacity:0.88;}' +
+    '.treasure-scroll-link{display:block;font-family:var(--font-mono);font-size:0.65rem;' +
+    'color:#1a0a00;text-decoration:none;' +
+    'border:1px solid rgba(80,35,5,0.45);border-radius:2px;padding:0.32rem 0.6rem;' +
+    'text-align:center;letter-spacing:0.14em;text-transform:uppercase;' +
+    'transition:background 0.18s;}' +
+    '.treasure-scroll-link:hover{background:rgba(40,15,0,0.12);}' +
+
     /* floating sea links */
     '.sea-link{position:absolute;z-index:6;' +
     'font-family:var(--font-mono);font-size:0.6rem;font-weight:400;letter-spacing:0.12em;text-transform:uppercase;' +
@@ -474,5 +507,88 @@
     '<div style="position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);' +
     'z-index:6;font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.14em;' +
     'color:rgba(26,61,143,0.55);white-space:nowrap;">' + innerText + '</div>';
+
+  /* ═══════════════════════════════════════════════════
+     5. TREASURE CHEST — hidden map easter egg
+     ═══════════════════════════════════════════════════ */
+  (function () {
+    var depth = location.pathname.replace(/^\//, '').split('/').length - 1;
+    var mapHref = (depth > 0 ? '../' : '') + 'map.html';
+
+    if (location.pathname.indexOf('map.html') !== -1) return;
+
+    /* mini dot-map: equirectangular projection */
+    var MW = 188, MH = 88;
+    function pt(lat, lng) {
+      return [(lng + 180) / 360 * MW, (90 - lat) / 180 * MH];
+    }
+    var dots = [
+      pt(28.29,-16.63), pt(42.36,-71.06), pt(-23.65,-68.4), pt(-51.62,-72.5),
+      pt(-23.65,-70.4), pt(-6.79,39.21), pt(-6.17,39.2), pt(-3.07,36.0),
+      pt(43.74,-71.53), pt(55.95,-3.19), pt(57.12,-4.71), pt(51.51,-0.13),
+      pt(41.16,-8.63), pt(38.72,-9.14), pt(40.42,-3.7), pt(41.39,2.17),
+      pt(43.71,7.26), pt(48.86,2.35), pt(1.35,103.82), pt(5.42,100.33),
+      pt(7.88,98.39), pt(-8.34,115.09), pt(10.82,106.63), pt(16.05,108.2),
+      pt(21.03,105.85), pt(13.37,103.84), pt(38.91,-77.04), pt(34.05,-118.24),
+      pt(37.87,-122.27), pt(21.69,-71.8), pt(43.09,-79.08), pt(45.5,-73.57),
+      pt(46.81,-71.21), pt(21.16,-86.85), pt(37.77,-122.42), pt(35.37,-120.85),
+    ];
+    var dotsSVG = dots.map(function(d) {
+      return '<circle cx="' + d[0].toFixed(1) + '" cy="' + d[1].toFixed(1) + '" r="2.2" fill="rgba(160,35,20,0.85)"/>';
+    }).join('');
+    var miniMap =
+      '<svg width="' + MW + '" height="' + MH + '" viewBox="0 0 ' + MW + ' ' + MH + '">' +
+      '<rect width="' + MW + '" height="' + MH + '" fill="#c5992a"/>' +
+      '<line x1="0" y1="44" x2="' + MW + '" y2="44" stroke="rgba(100,55,5,0.25)" stroke-width="0.5"/>' +
+      '<line x1="94" y1="0" x2="94" y2="' + MH + '" stroke="rgba(100,55,5,0.25)" stroke-width="0.5"/>' +
+      dotsSVG + '</svg>';
+
+    var chestSVG =
+      '<svg width="42" height="36" viewBox="0 0 42 36" fill="none">' +
+      '<rect x="2" y="17" width="38" height="17" rx="2.5" fill="#6B3A1F" stroke="#C8922A" stroke-width="1.2"/>' +
+      '<line x1="2" y1="23" x2="40" y2="23" stroke="rgba(200,140,42,0.22)" stroke-width="0.6"/>' +
+      '<line x1="2" y1="28" x2="40" y2="28" stroke="rgba(200,140,42,0.18)" stroke-width="0.6"/>' +
+      '<path d="M2 19 C2 9 40 9 40 19 L40 21 L2 21 Z" fill="#8B4A25" stroke="#C8922A" stroke-width="1.2"/>' +
+      '<path d="M3 18.5 C3 10 39 10 39 18.5" fill="none" stroke="rgba(220,170,70,0.35)" stroke-width="1.2"/>' +
+      '<line x1="2" y1="25" x2="40" y2="25" stroke="rgba(200,146,42,0.55)" stroke-width="2.2"/>' +
+      '<rect x="2" y="17" width="4.5" height="17" rx="1" fill="rgba(200,146,42,0.3)"/>' +
+      '<rect x="35.5" y="17" width="4.5" height="17" rx="1" fill="rgba(200,146,42,0.3)"/>' +
+      '<rect x="17" y="22" width="8" height="7" rx="1.5" fill="rgba(200,146,42,0.75)"/>' +
+      '<circle cx="21" cy="24.5" r="1.8" fill="#3a1800"/>' +
+      '<rect x="19.8" y="24.5" width="2.4" height="3" fill="#3a1800"/>' +
+      '<circle cx="7.5" cy="19.5" r="1.4" fill="rgba(200,146,42,0.8)"/>' +
+      '<circle cx="34.5" cy="19.5" r="1.4" fill="rgba(200,146,42,0.8)"/>' +
+      '</svg>';
+
+    var btn = document.createElement('button');
+    btn.className = 'treasure-btn';
+    btn.setAttribute('aria-label', 'Hidden map');
+    btn.innerHTML = chestSVG;
+
+    var scrollEl = document.createElement('div');
+    scrollEl.className = 'treasure-scroll';
+    scrollEl.innerHTML =
+      '<div class="treasure-scroll-inner">' +
+      '<div class="treasure-scroll-roll"></div>' +
+      '<div class="treasure-scroll-body">' +
+      '<div class="treasure-scroll-title">Places I\'ve Been</div>' +
+      '<div class="treasure-scroll-sub">37 locations · 6 continents</div>' +
+      '<a class="treasure-scroll-map" href="' + mapHref + '" aria-label="Open adventure map">' + miniMap + '</a>' +
+      '<a class="treasure-scroll-link" href="' + mapHref + '">Open the Map →</a>' +
+      '</div></div>';
+
+    document.body.appendChild(btn);
+    document.body.appendChild(scrollEl);
+
+    var isOpen = false;
+    function openScroll()  { isOpen = true;  btn.classList.add('open'); scrollEl.classList.add('open'); }
+    function closeScroll() { isOpen = false; btn.classList.remove('open'); scrollEl.classList.remove('open'); }
+
+    btn.addEventListener('click', function(e) { e.stopPropagation(); isOpen ? closeScroll() : openScroll(); });
+    document.addEventListener('click', function(e) {
+      if (isOpen && !scrollEl.contains(e.target)) closeScroll();
+    });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeScroll(); });
+  })();
 
 })();

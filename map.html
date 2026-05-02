@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Places I've Been — Ezri Abraham</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #120900; }
+
+    /* Vintage filter on the map tile layer */
+    #map {
+      width: 100%; height: 100%;
+      filter: sepia(0.72) saturate(0.55) brightness(0.80) contrast(1.18) hue-rotate(-8deg);
+    }
+
+    /* Dark warm vignette */
+    .vignette {
+      position: fixed; inset: 0; z-index: 800; pointer-events: none;
+      background: radial-gradient(ellipse 90% 80% at 50% 50%, transparent 38%, rgba(10,5,0,0.78) 100%);
+    }
+
+    /* Decorative double border frame */
+    .map-frame {
+      position: fixed; inset: 0; z-index: 801; pointer-events: none;
+      box-shadow:
+        inset 0 0 0 10px rgba(8,4,0,0.85),
+        inset 0 0 0 12px rgba(185,135,45,0.28),
+        inset 0 0 0 14px rgba(8,4,0,0.85),
+        inset 0 0 60px rgba(8,4,0,0.6);
+    }
+
+    /* Title plate */
+    .map-title {
+      position: fixed; top: 1.6rem; left: 50%; transform: translateX(-50%);
+      z-index: 900;
+      font-family: 'Cinzel', 'Georgia', serif;
+      text-align: center;
+      color: #e8cc78;
+      text-shadow: 0 1px 10px rgba(0,0,0,0.95), 0 0 24px rgba(180,130,30,0.3);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .map-title h1 {
+      font-size: clamp(1rem, 2.2vw, 1.5rem);
+      font-weight: 700;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      margin-bottom: 0.18rem;
+    }
+    .map-title .sub {
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(210,175,80,0.55);
+      font-weight: 400;
+    }
+
+    /* Corner ornament lines */
+    .corner { position: fixed; z-index: 802; pointer-events: none; }
+    .corner svg path, .corner svg line { stroke: rgba(185,135,45,0.45); }
+    .corner-tl { top: 16px; left: 16px; }
+    .corner-tr { top: 16px; right: 16px; transform: scaleX(-1); }
+    .corner-bl { bottom: 16px; left: 16px; transform: scaleY(-1); }
+    .corner-br { bottom: 16px; right: 16px; transform: scale(-1,-1); }
+
+    /* Compass rose */
+    .compass {
+      position: fixed; bottom: 2.2rem; right: 2.2rem; z-index: 850;
+      pointer-events: none; opacity: 0.72;
+    }
+
+    /* Back link */
+    .map-back {
+      position: fixed; top: 1.5rem; left: 1.6rem; z-index: 900;
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(210,175,80,0.65);
+      text-decoration: none;
+      display: flex; align-items: center; gap: 0.45rem;
+      transition: color 0.2s;
+    }
+    .map-back:hover { color: #e8cc78; }
+
+    /* Count badge */
+    .map-count {
+      position: fixed; bottom: 2rem; left: 2rem; z-index: 850;
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(210,175,80,0.45);
+      pointer-events: none;
+    }
+
+    /* ── Leaflet overrides ── */
+    .leaflet-container { background: #3a2510; }
+
+    .leaflet-control-zoom {
+      border: 1px solid rgba(185,135,45,0.5) !important;
+      border-radius: 2px !important;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.6) !important;
+      margin-bottom: 4.5rem !important;
+    }
+    .leaflet-control-zoom a {
+      background: rgba(14,7,0,0.82) !important;
+      color: #e8cc78 !important;
+      border-color: rgba(185,135,45,0.35) !important;
+      font-family: 'Cinzel', serif !important;
+      font-weight: 700 !important;
+      line-height: 26px !important;
+    }
+    .leaflet-control-zoom a:hover { background: rgba(30,15,0,0.95) !important; }
+    .leaflet-bottom.leaflet-left { margin-left: 2rem; }
+
+    .leaflet-control-attribution {
+      background: rgba(8,4,0,0.65) !important;
+      color: rgba(185,135,45,0.4) !important;
+      font-size: 0.5rem !important;
+    }
+    .leaflet-control-attribution a { color: rgba(185,135,45,0.55) !important; }
+
+    /* Tooltip */
+    .leaflet-tooltip {
+      background: rgba(10,5,0,0.9) !important;
+      border: 1px solid rgba(185,135,45,0.6) !important;
+      color: #e8cc78 !important;
+      font-family: 'Cinzel', 'Georgia', serif !important;
+      font-size: 0.74rem !important;
+      letter-spacing: 0.07em !important;
+      border-radius: 2px !important;
+      padding: 0.4rem 0.8rem !important;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.75) !important;
+      white-space: nowrap !important;
+    }
+    .leaflet-tooltip::before,
+    .leaflet-tooltip-top::before {
+      border-top-color: rgba(185,135,45,0.6) !important;
+    }
+    .leaflet-tooltip-bottom::before {
+      border-bottom-color: rgba(185,135,45,0.6) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="vignette"></div>
+  <div class="map-frame"></div>
+
+  <!-- Corner ornaments -->
+  <div class="corner corner-tl">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke-width="1">
+      <path d="M2 2 L20 2 M2 2 L2 20" stroke-width="1.5"/>
+      <path d="M6 6 L16 6 M6 6 L6 16"/>
+      <circle cx="6" cy="6" r="1.5" fill="rgba(185,135,45,0.45)"/>
+    </svg>
+  </div>
+  <div class="corner corner-tr">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke-width="1">
+      <path d="M2 2 L20 2 M2 2 L2 20" stroke-width="1.5"/>
+      <path d="M6 6 L16 6 M6 6 L6 16"/>
+      <circle cx="6" cy="6" r="1.5" fill="rgba(185,135,45,0.45)"/>
+    </svg>
+  </div>
+  <div class="corner corner-bl">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke-width="1">
+      <path d="M2 2 L20 2 M2 2 L2 20" stroke-width="1.5"/>
+      <path d="M6 6 L16 6 M6 6 L6 16"/>
+      <circle cx="6" cy="6" r="1.5" fill="rgba(185,135,45,0.45)"/>
+    </svg>
+  </div>
+  <div class="corner corner-br">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke-width="1">
+      <path d="M2 2 L20 2 M2 2 L2 20" stroke-width="1.5"/>
+      <path d="M6 6 L16 6 M6 6 L6 16"/>
+      <circle cx="6" cy="6" r="1.5" fill="rgba(185,135,45,0.45)"/>
+    </svg>
+  </div>
+
+  <!-- Compass rose -->
+  <div class="compass">
+    <svg width="88" height="88" viewBox="0 0 88 88" fill="none">
+      <circle cx="44" cy="44" r="40" stroke="rgba(185,135,45,0.55)" stroke-width="1"/>
+      <circle cx="44" cy="44" r="33" stroke="rgba(185,135,45,0.25)" stroke-width="0.5" stroke-dasharray="3 3"/>
+      <!-- Cardinal spokes -->
+      <line x1="44" y1="4" x2="44" y2="84" stroke="rgba(185,135,45,0.2)" stroke-width="0.5"/>
+      <line x1="4" y1="44" x2="84" y2="44" stroke="rgba(185,135,45,0.2)" stroke-width="0.5"/>
+      <!-- North arrow (red) -->
+      <polygon points="44,6 40,36 44,32 48,36" fill="rgba(190,45,30,0.88)"/>
+      <!-- South arrow -->
+      <polygon points="44,82 40,52 44,56 48,52" fill="rgba(185,135,45,0.7)"/>
+      <!-- East arrow -->
+      <polygon points="82,44 52,40 56,44 52,48" fill="rgba(185,135,45,0.7)"/>
+      <!-- West arrow -->
+      <polygon points="6,44 36,40 32,44 36,48" fill="rgba(185,135,45,0.7)"/>
+      <!-- Intercardinal tick marks -->
+      <line x1="44" y1="4" x2="44" y2="10" stroke="rgba(185,135,45,0.6)" stroke-width="1"/>
+      <text x="44" y="2.5" text-anchor="middle" dominant-baseline="hanging"
+        font-family="Cinzel,serif" font-size="7" fill="rgba(232,204,120,0.85)" font-weight="700">N</text>
+      <text x="44" y="85.5" text-anchor="middle"
+        font-family="Cinzel,serif" font-size="6" fill="rgba(185,135,45,0.6)">S</text>
+      <text x="85.5" y="44" dominant-baseline="middle"
+        font-family="Cinzel,serif" font-size="6" fill="rgba(185,135,45,0.6)">E</text>
+      <text x="2.5" y="44" text-anchor="end" dominant-baseline="middle"
+        font-family="Cinzel,serif" font-size="6" fill="rgba(185,135,45,0.6)">W</text>
+      <!-- Center -->
+      <circle cx="44" cy="44" r="4.5" fill="rgba(185,135,45,0.8)"/>
+      <circle cx="44" cy="44" r="2" fill="rgba(10,5,0,0.9)"/>
+    </svg>
+  </div>
+
+  <div class="map-title">
+    <h1>Places I've Been</h1>
+    <div class="sub">37 locations · 6 continents</div>
+  </div>
+
+  <a href="index.html" class="map-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <polyline points="15 18 9 12 15 6"/>
+    </svg>
+    Return
+  </a>
+
+  <div class="map-count">37 pins marked</div>
+
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map', {
+      center: [22, 15],
+      zoom: 2,
+      zoomControl: false,
+      minZoom: 2,
+      maxZoom: 11,
+    });
+
+    L.control.zoom({ position: 'bottomleft' }).addTo(map);
+
+    /* CartoDB Voyager — no API key required */
+    L.tileLayer(
+      'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+      {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19,
+      }
+    ).addTo(map);
+
+    const PLACES = [
+      { name: 'Tenerife, Canary Islands', year: 2022, lat: 28.2916, lng: -16.6291 },
+      { name: 'Boston, MA', year: 2021, lat: 42.3601, lng: -71.0589 },
+      { name: 'Atacama Desert, Chile', year: 2024, lat: -23.6509, lng: -68.4004 },
+      { name: 'Patagonia, Chile', year: 2024, lat: -51.6226, lng: -72.5042 },
+      { name: 'Antofagasta, Chile', year: 2024, lat: -23.6509, lng: -70.3975 },
+      { name: 'Dar es Salaam, Tanzania', year: 2022, lat: -6.7924, lng: 39.2083 },
+      { name: 'Zanzibar, Tanzania', year: 2022, lat: -6.1659, lng: 39.1989 },
+      { name: 'National Parks, Tanzania', year: 2022, lat: -3.0674, lng: 36.0 },
+      { name: 'Squam Lake, NH', year: 2025, lat: 43.7373, lng: -71.5286 },
+      { name: 'Edinburgh, Scotland', year: 2025, lat: 55.9533, lng: -3.1883 },
+      { name: 'Scottish Highlands', year: 2025, lat: 57.1203, lng: -4.7144 },
+      { name: 'London, England', year: 2025, lat: 51.5074, lng: -0.1278 },
+      { name: 'Porto, Portugal', year: 2025, lat: 41.1579, lng: -8.6291 },
+      { name: 'Lisbon, Portugal', year: 2025, lat: 38.7223, lng: -9.1393 },
+      { name: 'Madrid, Spain', year: 2025, lat: 40.4168, lng: -3.7038 },
+      { name: 'Barcelona, Spain', year: 2025, lat: 41.3851, lng: 2.1734 },
+      { name: 'French Riviera, France', year: 2025, lat: 43.7102, lng: 7.2620 },
+      { name: 'Paris, France', year: 2025, lat: 48.8566, lng: 2.3522 },
+      { name: 'Singapore', year: 2024, lat: 1.3521, lng: 103.8198 },
+      { name: 'Penang, Malaysia', year: 2024, lat: 5.4164, lng: 100.3327 },
+      { name: 'Phuket, Thailand', year: 2024, lat: 7.8804, lng: 98.3923 },
+      { name: 'Bali, Indonesia', year: 2024, lat: -8.3405, lng: 115.0920 },
+      { name: 'Ho Chi Minh City, Vietnam', year: 2024, lat: 10.8231, lng: 106.6297 },
+      { name: 'Da Nang, Vietnam', year: 2024, lat: 16.0544, lng: 108.2022 },
+      { name: 'Hanoi, Vietnam', year: 2024, lat: 21.0285, lng: 105.8542 },
+      { name: 'Siem Reap, Cambodia', year: 2024, lat: 13.3671, lng: 103.8448 },
+      { name: 'Washington DC', year: 2022, lat: 38.9072, lng: -77.0369 },
+      { name: 'Los Angeles, CA', year: 2026, lat: 34.0522, lng: -118.2437 },
+      { name: 'Berkeley, CA', year: 2025, lat: 37.8716, lng: -122.2727 },
+      { name: 'Turks and Caicos', year: 2019, lat: 21.6940, lng: -71.7979 },
+      { name: 'Niagara Falls, Canada', year: 2005, lat: 43.0896, lng: -79.0849 },
+      { name: 'Montreal, Canada', year: 2024, lat: 45.5017, lng: -73.5673 },
+      { name: 'Quebec City, Canada', year: 2024, lat: 46.8139, lng: -71.2082 },
+      { name: 'Cancun, Mexico', year: 2016, lat: 21.1619, lng: -86.8515 },
+      { name: 'San Francisco, CA', year: 2026, lat: 37.7749, lng: -122.4194 },
+      { name: 'Morro Bay, CA', year: 2026, lat: 35.3658, lng: -120.8498 },
+    ];
+
+    function pinIcon(active) {
+      const fill = active ? 'rgba(210,70,40,1)' : 'rgba(175,35,22,0.85)';
+      const glow = active ? '<circle cx="9" cy="9" r="10" fill="rgba(220,100,50,0.25)"/>' : '';
+      return L.divIcon({
+        className: '',
+        html:
+          '<svg width="18" height="26" viewBox="0 0 18 26" fill="none">' +
+          glow +
+          '<path d="M9 1 C4.03 1 1 4.72 1 8.8 C1 14.4 9 25 9 25 C9 25 17 14.4 17 8.8 C17 4.72 13.97 1 9 1 Z"' +
+          ' fill="' + fill + '" stroke="#e8cc78" stroke-width="1.3"/>' +
+          '<circle cx="9" cy="9" r="3.2" fill="rgba(232,204,120,0.65)"/>' +
+          '</svg>',
+        iconSize: [18, 26],
+        iconAnchor: [9, 25],
+        tooltipAnchor: [0, -26],
+      });
+    }
+
+    PLACES.forEach(function(p) {
+      const marker = L.marker([p.lat, p.lng], { icon: pinIcon(false) }).addTo(map);
+
+      marker.bindTooltip(
+        '<span style="font-weight:600;">' + p.name + '</span>' +
+        '<span style="display:block;font-size:0.65rem;opacity:0.6;letter-spacing:0.1em;margin-top:2px;">' + p.year + '</span>',
+        { permanent: false, direction: 'top', offset: [0, -4], opacity: 1 }
+      );
+
+      marker.on('mouseover', function() { this.setIcon(pinIcon(true)); });
+      marker.on('mouseout',  function() { this.setIcon(pinIcon(false)); });
+    });
+  </script>
+</body>
+</html>
