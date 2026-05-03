@@ -2,3 +2,4 @@
 .DS_Store
 Fonts/
 art/Art Text_Images/
+photos/**/*.png
