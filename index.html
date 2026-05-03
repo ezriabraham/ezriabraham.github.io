@@ -156,28 +156,17 @@
 
     /* ── Portrait photo ── */
     .bio-photo {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
+      width: 100%;
+      border-radius: 6px;
       overflow: hidden;
       border: 1px solid var(--border2);
       margin-bottom: 1.75rem;
       background: var(--bg3);
-      flex-shrink: 0;
     }
     .bio-photo img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-    }
-    .bio-photo-ph {
-      width: 100%; height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text3);
+      width: 100%;
+      height: auto;
+      display: block;
     }
     .bio-label {
       display: block;
@@ -324,14 +313,14 @@
   <!-- ═══ BIO ═══ -->
   <div class="bio-wrap">
     <div class="bio-body">
-      <!-- Replace .bio-photo-ph with an <img> when you have a portrait photo -->
       <div class="bio-photo">
-        <div class="bio-photo-ph">Photo</div>
+        <img src="assets/img/ezri_photo.jpg" alt="Ezri Abraham at Yosemite Valley">
       </div>
       <span class="bio-label">About</span>
-<p>[Bio paragraph 1 — add your own text here.]</p>
-      <p>[Bio paragraph 2 — add your own text here.]</p>
-      <p>[Bio paragraph 3 — add your own text here.]</p>
+      <p>Welcome! My name is Ezri and I am excited for you to check out my new-and-improved website (the last one was for strictly photography, and all photos can be found on the photography page). While I spend most of my day doing synthetic biology and machine learning research in the Wang Lab at Caltech, I want my online presence to contain more than just science. On here, you will find pages detailing the other ways I spend my time (well at least the productive ways), in addition to a formal page for science-related things (work history, publications, etc.).</p>
+      <p>I used to think that my life choices were driven by an enthusiastic curiosity for the world. Recently, I've come to realize that a different, but often complementary, force also influences my actions: the desire to create. Throughout my life, I have created music with drums, art pieces with various mediums, proteins with the help of cells, and photos with my trusty Nikon D7200. Moreover, I have found that I can most easily enter a "flow state" when I am designing or creating something, whether it is an art piece or genetic component (or this website, for that matter). Therefore, I aim for this site to serve as a living memory of what I have created and an advertisement for others to think and create with me.</p>
+      <p>People have asked me why I made a website. The first reason was that my adobe subscription was running out so I needed to make my own website to present my photos. My plan was to have Claude make an identical website, but that didn't feel as fun, especially since vibe coding tools have gotten so good.. The second reason is a lot of the people in the Bio/AI field that I admire have websites, which seem to be a mix of introducing themselves to strangers, creative expression through coding, showing off their front-end skills (or in my case, showing off the amount of time I have spent vibe-coding), or controlling what information chatbots/search engines are given about them. My remaining reasons are some combination of those.</p>
+      <p>There are a lot of fun moving parts and hidden things on this website, and any strange looking and strangely-moving creature was designed by Claude. I may replace them with animals I design in Illustrator some day, but they are too absurd and bring me too much joy to delete at the moment. Please let me know if you have any comments about the website or bugs you have found and I will relay them to Claude.</p>
     </div>
 
     <div class="bio-links">
