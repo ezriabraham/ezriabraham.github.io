@@ -6,118 +6,81 @@
   <title>Music — Ezri Abraham</title>
   <link rel="stylesheet" href="../assets/css/main.css">
   <style>
-    .music-wrap { max-width: 1100px; margin: 0 auto; padding: 0 2.5rem 5rem; }
+    .music-wrap { max-width: 860px; margin: 0 auto; padding: 0 2.5rem 5rem; }
 
     /* ── Bio strip ── */
     .music-bio {
-      max-width: 700px;
-      margin: 0 auto 4rem;
-      text-align: center;
+      display: grid;
+      grid-template-columns: 0.55fr 1fr;
+      gap: 3.5rem;
+      align-items: start;
+      margin-bottom: 4rem;
     }
-    .music-bio p {
+    .music-bio-photo {
+      width: 100%;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border2);
+    }
+    .music-bio-photo img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .music-bio-text p {
       color: var(--text2);
       font-size: 1rem;
       line-height: 1.8;
+      margin-bottom: 0;
     }
 
-    /* ── Media grid ── */
-    .media-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.5rem;
+    /* ── Single-column video list ── */
+    .video-list {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      border-top: 1px solid var(--border);
+      padding-top: 3rem;
     }
-
-    .media-card {
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      overflow: hidden;
-      background: var(--bg2);
-      transition: border-color var(--t), transform var(--ts);
-    }
-    .media-card:hover { border-color: var(--border2); transform: translateY(-4px); }
-
-    /* Photo card */
-    .media-card-photo {
-      position: relative;
-      aspect-ratio: 4/3;
-      overflow: hidden;
-      cursor: pointer;
-    }
-    .media-card-photo img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      transition: transform var(--ts);
-    }
-    .media-card:hover .media-card-photo img { transform: scale(1.04); }
-    .media-card-photo-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(transparent 40%, rgba(0,0,0,0.75));
-      opacity: 0;
-      transition: opacity var(--t);
-    }
-    .media-card:hover .media-card-photo-overlay { opacity: 1; }
-
-    /* Video card */
-    .media-card-video {
+    .video-entry {}
+    .video-embed {
       position: relative;
       aspect-ratio: 16/9;
       background: var(--bg3);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.9rem;
     }
-    .media-card-video iframe,
-    .media-card-video video {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
+    .video-embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
       border: none;
     }
-
-    /* Card info */
-    .media-card-info { padding: 1rem 1.25rem 1.25rem; }
-    .media-card-title {
+    .video-title {
       font-family: var(--font-serif);
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 400;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.25rem;
     }
-    .media-card-sub {
-      font-size: 0.75rem;
+    .video-sub {
+      font-size: 0.78rem;
       color: var(--text3);
       letter-spacing: 0.06em;
     }
 
-    /* Placeholder */
-    .media-ph {
-      background: var(--bg3);
-      border: 1px dashed var(--border2);
-      border-radius: 4px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      font-size: 0.75rem;
-      color: var(--text3);
-      text-align: center;
-      padding: 2.5rem;
-      aspect-ratio: 4/3;
+    @media (max-width: 640px) {
+      .music-wrap { padding: 0 1.25rem 4rem; }
+      .music-bio { grid-template-columns: 1fr; gap: 2rem; }
     }
-    .media-ph svg { width: 32px; height: 32px; stroke: var(--text3); fill: none; opacity: 0.4; }
-
-    /* Lightbox */
-    .lightbox { position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.93); display: none; align-items: center; justify-content: center; padding: 2rem; cursor: zoom-out; }
-    .lightbox.open { display: flex; }
-    .lightbox img { max-width: 90vw; max-height: 85vh; object-fit: contain; border-radius: 3px; cursor: default; }
-    .lb-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .lb-close:hover { border-color: rgba(255,255,255,0.6); }
-    .lb-caption { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); text-align: center; color: rgba(255,255,255,0.7); font-size: 0.85rem; pointer-events: none; }
-
-    @media (max-width: 768px) { .music-wrap { padding: 0 1.25rem 4rem; } }
   </style>
 </head>
 <body>
   <nav class="site-nav">
-    <a href="../index.html" class="nav-logo">Ezri Abraham</a>
+    <a href="../about.html" class="nav-logo">Ezri Abraham</a>
     <ul class="nav-links">
-      <li><a href="../index.html">About</a></li>
+      <li><a href="../about.html">About</a></li>
       <li><a href="../science.html">Science</a></li>
       <li><a href="../photos/index.html">Photography</a></li>
       <li><a href="../art/index.html">Art</a></li>
@@ -135,93 +98,75 @@
   </header>
 
   <div class="music-wrap">
+
     <div class="music-bio">
-      <p>[Add your music bio here.]</p>
+      <div class="music-bio-photo">
+        <img src="../assets/img/ezri_bells.jpg" alt="Ezri Abraham playing percussion">
+      </div>
+      <div class="music-bio-text">
+        <p>I have been playing drums since birth but started learning formally at 10 years old. I have played in all types of settings including: cajon in Jewish worship services, congas in the Caltech Jazz Band, drumset in the Northeastern University Pep Band, and cajon on the streets of Boston, Lisbon, Nice, and Hollywood. Below are some fun memories I have captured over the years. Feel free to reach out if you need a drummer/percussionist for a gig!</p>
+      </div>
     </div>
 
-    <!--
-      ════════════════════════════════════
-      HOW TO ADD MUSIC CONTENT
-      ════════════════════════════════════
+    <div class="video-list">
 
-      For a PHOTO:
-        <div class="media-card">
-          <div class="media-card-photo" data-title="Caption">
-            <img src="../assets/images/drumming-1.jpg" alt="Drumming at Northeastern">
-            <div class="media-card-photo-overlay"></div>
-          </div>
-          <div class="media-card-info">
-            <div class="media-card-title">Pep Band</div>
-            <div class="media-card-sub">Northeastern University · 2022</div>
-          </div>
+      <div class="video-entry">
+        <div class="video-embed">
+          <iframe src="https://drive.google.com/file/d/1Y2DJqlembAFqDILPXHlY9G6pVn7rKpa4/preview" allowfullscreen title="Northeastern Pep Band - Time Warp"></iframe>
         </div>
-
-      For a LOCAL VIDEO:
-        <div class="media-card">
-          <div class="media-card-video">
-            <video src="../assets/videos/drumming.mp4" controls poster="../assets/images/drum-thumb.jpg"></video>
-          </div>
-          <div class="media-card-info">
-            <div class="media-card-title">Solo</div>
-            <div class="media-card-sub">Recording · 2024</div>
-          </div>
-        </div>
-
-      For a YOUTUBE VIDEO:
-        <div class="media-card">
-          <div class="media-card-video">
-            <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen title="Video title"></iframe>
-          </div>
-          <div class="media-card-info">
-            <div class="media-card-title">Video Title</div>
-            <div class="media-card-sub">Source · Year</div>
-          </div>
-        </div>
-    -->
-
-    <div class="media-grid" id="mediaGrid">
-
-      <!-- Placeholder cards — replace with real content -->
-      <div class="media-card">
-        <div class="media-ph">
-          <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="9" cy="18" r="3"/><circle cx="18" cy="15" r="3"/><path d="M12 18V6l9-3v9"/></svg>
-          Add a photo or video<br><small>See comments above</small>
-        </div>
-        <div class="media-card-info">
-          <div class="media-card-title">Your Title</div>
-          <div class="media-card-sub">Context · Year</div>
-        </div>
+        <div class="video-title">Northeastern Pep Band — Time Warp</div>
+        <div class="video-sub">Drumset &nbsp;·&nbsp; Boston, MA, USA</div>
       </div>
 
-      <div class="media-card">
-        <div class="media-ph">
-          <svg viewBox="0 0 24 24" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Add a video<br><small>YouTube embed or local .mp4</small>
+      <div class="video-entry">
+        <div class="video-embed">
+          <iframe src="https://drive.google.com/file/d/1120IjqOQtbo2H0bJvQOCGTwhueDvmwSr/preview" allowfullscreen title="Train Station - Just the Two of Us"></iframe>
         </div>
-        <div class="media-card-info">
-          <div class="media-card-title">Your Title</div>
-          <div class="media-card-sub">Context · Year</div>
-        </div>
+        <div class="video-title">Train Station — Just the Two of Us</div>
+        <div class="video-sub">Cajon &nbsp;·&nbsp; Lisbon, Portugal</div>
       </div>
 
-      <div class="media-card">
-        <div class="media-ph">
-          <svg viewBox="0 0 24 24" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/><path d="m21 15-5-5L5 21"/></svg>
-          Add a photo<br><small>src="../assets/images/photo.jpg"</small>
+      <div class="video-entry">
+        <div class="video-embed">
+          <iframe src="https://www.youtube.com/embed/8WTLuK-yxCk" allowfullscreen title="Purple Christmas Benefit Show - Mr. Grinch"></iframe>
         </div>
-        <div class="media-card-info">
-          <div class="media-card-title">Your Title</div>
-          <div class="media-card-sub">Context · Year</div>
+        <div class="video-title">Purple Christmas Benefit Show — Mr. Grinch</div>
+        <div class="video-sub">Voice &nbsp;·&nbsp; Garwood, NJ, USA</div>
+      </div>
+
+      <div class="video-entry">
+        <div class="video-embed">
+          <iframe src="https://drive.google.com/file/d/1OK-AyumwvIu8ApNI_pJ2ez7b3CXJN8Vr/preview" allowfullscreen title="The Bebop - House of the Rising Sun"></iframe>
         </div>
+        <div class="video-title">The Bebop — House of the Rising Sun</div>
+        <div class="video-sub">Drumset &nbsp;·&nbsp; Boston, MA, USA</div>
+      </div>
+
+      <div class="video-entry">
+        <div class="video-embed">
+          <iframe src="https://drive.google.com/file/d/13GKhLLr1VCrroMv9OFDcfIG0PwAL6qnC/preview" allowfullscreen title="Mario Kart Live!"></iframe>
+        </div>
+        <div class="video-title">Mario Kart Live!</div>
+        <div class="video-sub">Drumset &nbsp;·&nbsp; Boston, MA, USA</div>
+      </div>
+
+      <div class="video-entry">
+        <div class="video-embed">
+          <iframe src="https://drive.google.com/file/d/1oN3XXYvIVOiLMPjwytXhVxvecI3nLOz7/preview" allowfullscreen title="Hollywood Walk of Fame - Oye Como Va"></iframe>
+        </div>
+        <div class="video-title">Hollywood Walk of Fame — Oye Como Va</div>
+        <div class="video-sub">Cajon &nbsp;·&nbsp; Los Angeles, CA, USA</div>
+      </div>
+
+      <div class="video-entry">
+        <div class="video-embed">
+          <iframe src="https://drive.google.com/file/d/1UKR6iM-0EduDjSh0aOQ4Z2t1-pgFsda-/preview" allowfullscreen title="The Dissident Club"></iframe>
+        </div>
+        <div class="video-title">The Dissident Club</div>
+        <div class="video-sub">Drumset &nbsp;·&nbsp; Paris, France</div>
       </div>
 
     </div>
-  </div>
-
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
-    <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
-    <img id="lbImg" src="" alt="">
-    <div class="lb-caption" id="lbCaption"></div>
   </div>
 
   <footer class="site-footer">
@@ -229,21 +174,5 @@
   </footer>
   <script src="../assets/js/theme.js"></script>
   <script src="../assets/js/geoanim.js"></script>
-  <script>
-    const lb = document.getElementById('lightbox');
-    const lbImg = document.getElementById('lbImg');
-    const lbCap = document.getElementById('lbCaption');
-    document.getElementById('mediaGrid').addEventListener('click', e => {
-      const photo = e.target.closest('.media-card-photo'); if (!photo) return;
-      const img = photo.querySelector('img'); if (!img) return;
-      lbImg.src = img.src; lbImg.alt = img.alt;
-      lbCap.textContent = photo.dataset.title || '';
-      lb.classList.add('open'); document.body.style.overflow = 'hidden';
-    });
-    function closeLb() { lb.classList.remove('open'); document.body.style.overflow = ''; }
-    document.getElementById('lbClose').addEventListener('click', closeLb);
-    lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
-  </script>
 </body>
 </html>
