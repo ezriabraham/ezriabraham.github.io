@@ -148,10 +148,16 @@
       max-width: 960px;
       margin: 0 auto;
       padding: 7rem 2.5rem 5rem;
+    }
+    .bio-top {
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
       gap: 5rem;
       align-items: start;
+      margin-bottom: 2.5rem;
+    }
+    .bio-text {
+      /* full width below the top row */
     }
 
     /* ── Portrait photo ── */
@@ -258,7 +264,8 @@
     .explore-sub  { font-size: 0.72rem; color: var(--text3); letter-spacing: 0.05em; line-height: 1.4; }
 
     @media (max-width: 820px) {
-      .bio-wrap { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 1.5rem 3rem; }
+      .bio-top { grid-template-columns: 1fr; gap: 2rem; }
+      .bio-wrap { padding: 4rem 1.5rem 3rem; }
       .explore-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 480px) {
@@ -312,36 +319,38 @@
 
   <!-- ═══ BIO ═══ -->
   <div class="bio-wrap">
-    <div class="bio-body">
+    <div class="bio-top">
       <div class="bio-photo">
         <img src="assets/img/ezri_photo.jpg" alt="Ezri Abraham at Yosemite Valley">
       </div>
+      <div class="bio-links">
+        <h3 class="connect-heading">Connect</h3>
+        <nav class="link-list" aria-label="External profiles">
+          <a href="https://orcid.org/0009-0005-9580-2712" class="link-item" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 7h1.5M8 17V9.5H9.5a3.5 3.5 0 0 1 0 7H8z"/><circle cx="8.75" cy="6" r="0.75" fill="currentColor" stroke="none"/></svg>
+            <span>ORCID Profile</span>
+            <span class="link-arr">→</span>
+          </a>
+          <a href="https://www.linkedin.com/in/ezriabraham/" class="link-item" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM3.56 20.45V9h3.56v11.45H3.56z"/></svg>
+            <span>LinkedIn</span>
+            <span class="link-arr">→</span>
+          </a>
+          <a href="mailto:ezribabraham@gmail.com" class="link-item">
+            <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>
+            <span>ezribabraham@gmail.com</span>
+            <span class="link-arr">→</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+
+    <div class="bio-text">
       <span class="bio-label">About</span>
       <p>Welcome! My name is Ezri and I am excited for you to check out my new-and-improved website (the last one was for strictly photography, and all photos can be found on the photography page). While I spend most of my day doing synthetic biology and machine learning research in the Wang Lab at Caltech, I want my online presence to contain more than just science. On here, you will find pages detailing the other ways I spend my time (well at least the productive ways), in addition to a formal page for science-related things (work history, publications, etc.).</p>
       <p>I used to think that my life choices were driven by an enthusiastic curiosity for the world. Recently, I've come to realize that a different, but often complementary, force also influences my actions: the desire to create. Throughout my life, I have created music with drums, art pieces with various mediums, proteins with the help of cells, and photos with my trusty Nikon D7200. Moreover, I have found that I can most easily enter a "flow state" when I am designing or creating something, whether it is an art piece or genetic component (or this website, for that matter). Therefore, I aim for this site to serve as a living memory of what I have created and an advertisement for others to think and create with me.</p>
       <p>People have asked me why I made a website. The first reason was that my adobe subscription was running out so I needed to make my own website to present my photos. My plan was to have Claude make an identical website, but that didn't feel as fun, especially since vibe coding tools have gotten so good.. The second reason is a lot of the people in the Bio/AI field that I admire have websites, which seem to be a mix of introducing themselves to strangers, creative expression through coding, showing off their front-end skills (or in my case, showing off the amount of time I have spent vibe-coding), or controlling what information chatbots/search engines are given about them. My remaining reasons are some combination of those.</p>
       <p>There are a lot of fun moving parts and hidden things on this website, and any strange looking and strangely-moving creature was designed by Claude. I may replace them with animals I design in Illustrator some day, but they are too absurd and bring me too much joy to delete at the moment. Please let me know if you have any comments about the website or bugs you have found and I will relay them to Claude.</p>
-    </div>
-
-    <div class="bio-links">
-      <h3 class="connect-heading">Connect</h3>
-      <nav class="link-list" aria-label="External profiles">
-        <a href="https://orcid.org/0009-0005-9580-2712" class="link-item" target="_blank" rel="noopener noreferrer">
-          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 7h1.5M8 17V9.5H9.5a3.5 3.5 0 0 1 0 7H8z"/><circle cx="8.75" cy="6" r="0.75" fill="currentColor" stroke="none"/></svg>
-          <span>ORCID Profile</span>
-          <span class="link-arr">→</span>
-        </a>
-        <a href="https://www.linkedin.com/in/ezriabraham/" class="link-item" target="_blank" rel="noopener noreferrer">
-          <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM3.56 20.45V9h3.56v11.45H3.56z"/></svg>
-          <span>LinkedIn</span>
-          <span class="link-arr">→</span>
-        </a>
-<a href="mailto:ezribabraham@gmail.com" class="link-item">
-          <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>
-          <span>ezribabraham@gmail.com</span>
-          <span class="link-arr">→</span>
-        </a>
-      </nav>
     </div>
   </div>
 
