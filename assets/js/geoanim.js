@@ -534,10 +534,10 @@
   (function () {
     var parts = location.pathname.split('/');
     var parentDir = parts[parts.length - 2];
-    var inSubdir = ['photos', 'art', 'music'].indexOf(parentDir) !== -1;
-    var mapHref = (inSubdir ? '../' : '') + 'map.html';
+    var inSubdir = ['photos', 'art', 'music', 'about', 'science', 'map', 'music'].indexOf(parentDir) !== -1;
+    var mapHref = (inSubdir ? '../map/' : '/map/');
 
-    if (location.pathname.indexOf('map.html') !== -1) return;
+    if (location.pathname.indexOf('/map') !== -1) return;
 
     var chestEl  = document.getElementById('seaChest');
     var mapPopEl = document.getElementById('chestMapPop');
